@@ -1,0 +1,5 @@
+.login-page{background-image: url('../img/bg-login.png');background-repeat:no-repeat; background-position:center; background-size:cover;}
+.login-box{margin:7% 0!important;margin-left:3%!important;}
+.login-box-msg{font-size: 17pt!important;}
+.login-box-body{background-color:rgba(255,255,255,0.5);margin-top:-1em!important;}
+.login-box-body h3{color: #4a7bca;font-size:30pt!important;font-weight:600!important;text-align:center!important;}
