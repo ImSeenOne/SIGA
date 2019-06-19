@@ -192,9 +192,158 @@ function estacionamiento_listado(){
 }
 
 
+//addEstacionamiento
+$('#btnGuadaEstacionamiento').click(function(){
+    if($('#txtNombre').val().length < 1){
+      $('#txtNombre').focus();
+      $('#reqTxtNombre').html('*');
+      return false;
+    }else{
+      $('#reqTxtNombre').empty();
+    }
+
+    let formData = new FormData(document.getElementById("frmEstacionamiento"));
+  
+    $.ajax({
+      beforeSend: function(){
+        $("#respServer").html(guardando);
+      },
+      url: urlSubir,
+      type: "post",
+      dataType: "json",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(resp){
+          $("#respServer").empty();
+          console.log(resp);     
+          if(resp.resp == 1){
+            estacionamiento_listado();
+            $('#opcion').val(201);
+            resetForm('frmEstacionamiento');
+          }else{
+            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+          }
+      }
+    });
+});
+
+
+
+function editarRegEstacionamiento(id){  
+  let params = {'id':id, 'opt':201}
+  $.ajax({
+        beforeSend: function(){
+            $("#respServer").html(cargando);
+        },
+        type:    "post",
+        url:     urlConsultas,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+            console.log(resp);           
+            $('#respServer').empty('');
+            $('#txtNombre').val(resp.nombre);            
+            $('#hdFlIcono').val(resp.icono);
+            $('#idEstacionamiento').val(resp.id_estacionamiento);
+            $('#opcion').val(202);
+        }
+  });
+}
+
+
+function eliminarRegEstacionamiento(id, icono, nombre){
+  swal({
+        html: true,
+        title: "¿Está seguro?",
+        text: "eliminar el registro <strong>" + nombre + "</strong>",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonClass: "btn-primary",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'icono':icono, 'opt':1};
+          $.ajax({
+              type:    "post",
+              url:     urlEliminar,
+              data:    params,
+              dataType: 'json',
+              success: function(resp){
+                    console.log(resp);
+                    if(resp.resp == 1){
+                        estacionamiento_listado();
+                    }
+              }
+          });
+      });
+}
+
+
+$('#btnCancelar').click(function(){
+  resetForm('frmEstacionamiento');
+});
+
+
+
+
+
+
+//CATÁLOGO NÚMERO DE BAÑOS
+function wc_listado(){
+  urlPag = 'pg/wc_listado.php';
+
+  $.ajax({
+        beforeSend: function(){
+            $("#cntnListWc").html(cargando);
+        },
+        type:    "post",
+        url:     urlPag,
+        //data:    params,
+        dataType: 'html',
+        success: function(data){            
+            $('#cntnListWc').html(data);
+            loadDataTable('listWc', true);
+        }
+  });
+}
+
+
+
+
+
+//SERVICIOS Y AMENIDADES
+function servicio_amenidades_listado(){
+  urlPag = 'pg/wc_listado.php';
+
+  $.ajax({
+        beforeSend: function(){
+            $("#cntnListServicioAmenidades").html(cargando);
+        },
+        type:    "post",
+        url:     urlPag,
+        //data:    params,
+        dataType: 'html',
+        success: function(data){            
+            $('#cntnListServicioAmenidades').html(data);
+            loadDataTable('listAmenidades', true);
+        }
+  });
+}
+
 
 
 //FUNCIONES++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function resetForm(formulario){
+  $('#'+formulario)[0].reset();
+}
+
+
+
 function loadDataTable(table, busqueda, setPage = ''){
     dataTable = '';
     dataTable = $('#'+table).DataTable({

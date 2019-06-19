@@ -10,8 +10,8 @@ class Variables {
 			case 1:
 				$this->BaseDatos = "demosystem_siga";
 				$this->Servidor = "localhost";
-				$this->Usuario = "demosystem_siga";
-				$this->Clave = "35JG0xdwrK";
+				$this->Usuario = "root";
+				$this->Clave = "";
 			break;
 			
 			default:
