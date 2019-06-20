@@ -1,4 +1,10 @@
-<table id="listDesarrolloss" class="table table-bordered table-striped">
+<?php
+  require '../php/inicializandoDatosExterno.php';
+   $listado = @$conexion->obtenerlista($querys->getListadoDesarrollo());
+  $totRegs = $conexion->numregistros();
+   if($totRegs > 0){
+?>
+<table id="listDesarrollo" class="table table-bordered table-striped">
   <thead>
     <tr>
       <th class="text-center" style="width:15%;">Id</th>
@@ -10,17 +16,19 @@
     </tr>
   </thead>
   <tbody>
+    <?php foreach ($listado as $key) { ?>
     <tr>
-      <td class="text-center">1</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-left">Alias</td>
-      <td class="text-center">29000</td>
-      <td class="text-center"><img src="archivos/desarrollos/homeIcon.png" class="iconSize" /></td>
+      <td class="text-center"><?= $key->id_listado ?></td>
+      <td class="text-left"><?= $key->nombre ?></td>
+      <td class="text-left"><?= $key->alias ?></td>
+      <td class="text-center"><?= $key->codigo_postal ?> ?></td>
+      <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize"/></td>
       <td class="text-center">
-       	<button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-       	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+       	<button type="button" class="btn btn-success btn-sm" onclick="editarRegDesarrollo(<?= $key->id_desarrollo ?>);"><i class="fa fa-edit"></i></button>
+       	<button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegDesarrollo(<?= $key->id_desarrollo ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
       </td>
     </tr>
+    <?php } ?>
   </tbody>
   <tfoot>
     <tr>
@@ -33,3 +41,6 @@
     </tr>
   </tfoot>
 </table>
+<?php }else{ ?>
+  <center><h4>¡No existen registros!</h4></center>
+<?php } ?>

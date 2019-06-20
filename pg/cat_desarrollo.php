@@ -36,7 +36,7 @@
             <div class="form-group">
               <label for="txtNombre">Nombre</label>
               <input type="text" id="txtNombre" name="txtNombre" class="form-control" placeholder="Nombre">
-              <div id="reqTxtNombre"></div>
+              <div id="reqTxtNombre" style="color: red;"></div>
             </div>
           </div>
 
@@ -59,37 +59,17 @@
           <div class="col-lg-3">
             <div class="form-group">
               <label for="txtMonto">Icono</label>
-              <input type="file" id="flIcono" name="flIcono" class="form-control" />
+              <input type="file" id="flIcono" name="flIcono" class="form-control"/>
               <div id="reqFlIcono"></div>
             </div>
           </div>
 
-          <div class="col-lg-12 text-center">
-
-            <script type="text/javascript">
-              var formData = new FormData(document.getElementById("btnGuardaDesarrollo"));
-              var name = formData.get('txtNombre');
-              var alias = formData.get('txtAlias');
-              var zipCode = formData.get('txtCp');
-              var file = formData.get('flIcono');
-              function nuevoDesarrollo(name, alias, zipCode, file){
-                    url    = 'pg/cat_desarrollo.php';
-                    params = {'name': name, 'alias': alias, 'zipCode': zipCode, 'file': file};
-                    $.ajax({
-                        beforeSend: function(){
-                            $("#contenidotab").html(cargando);
-                        },
-                        type:    "post",
-                        url:     url,
-                        data:    params,
-                        success: function(data){
-                            desarrollo_listado();
-                        }
-                    });
-                }
-            </script>
-              <button type="button" id="btnGuardaDesarrollo" class="btn btn-primary btn-sm">Guardar</button>
-              <button id="btnCancelarDesarrollo" class="btn btn-secondary btn-sm">Cancelar</button>
+          <div id="respServer"></div>
+          <div class="form-group">
+            <input type="hidden" id="idDesarrollo" name="idDesarrollo">
+            <input type="hidden" id="opcion" name="opcion" value="1">
+            <button id="btnGuardaDesarrollo" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+            <button id="btnCancelarDesarrollo" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@
   <tfoot>
     <tr>
       <th class="text-center">Id</th>
-      <th class="text-center">Nombre</th>      
+      <th class="text-center">Nombre</th>
       <th class="text-center">Icono</th>
       <th class="text-center">Fecha registro</th>
       <th class="text-center">Acciones</th>

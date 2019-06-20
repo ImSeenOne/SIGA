@@ -62,7 +62,7 @@
       </div>
           <!-- /.box-header -->
       <div id="cntnListEstacionamiento" class="box-body">
-        
+
       </div>
 
       <div class="box-footer">

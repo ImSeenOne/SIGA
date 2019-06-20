@@ -9,16 +9,16 @@ class Variables {
 		switch($opc){
 			case 1:
 				$this->BaseDatos = "demosystem_siga";
-				$this->Servidor = "localhost";
-				$this->Usuario = "root";
-				$this->Clave = "";
+				$this->Servidor = "mysql.us.cloudlogin.co";
+				$this->Usuario = "demosystem_siga";
+				$this->Clave = "35JG0xdwrK";
 			break;
-			
+
 			default:
 				header('Location: http://demosistemas.com/siga');
 				exit(0);
 			break;
-		} 
+		}
 	}
 }
 ?>

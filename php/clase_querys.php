@@ -42,5 +42,47 @@ class Querys {
 
 		return $strQuery;
 	}
+	//QUERY PARA OBTENER EL LISTADO DEL CATÁLOGO DE DESARROLLO
+	public function getListadoDesarrollo($id = ''){
+		$cond = ' ';
+
+		if($id != '') {
+			$cond = ' AND id_desarrollo = '.$id.' ';
+		}
+
+		$strQuery = 'SELECT id_desarrollo, nombre, alias, codigo_postal, fecha_registro ';
+		$strQuery.= 'FROM tblc_desarrollo ';
+		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_desarrollo DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN REGISTRO AL CATÁLOGO DE DESARROLLO
+	public function addCatDesarrollo($nombre, $alias, $codigo_postal, $icono, $fechaRegistro){
+		$strQuery = 'INSERT INTO tblc_desarrollo ';
+		$strQuery.= '(nombre, alias, codigo_postal, icono, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$alias.'", "'.$codigo_postal.'", "'.$icono.'", "'.$fechaRegistro.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA EDITAR UN REGISTRO DEL CATÁLOGO DESARROLLO
+	public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $codigo_postal, $icono){
+		$strQuery = 'UPDATE tblc_desarrollo ';
+		$strQuery.= 'SET nombre = "'.$nombre.'", alias = "'.$alias.'", codigo_postal = "'.$codigo_postal.'", icono = "'.$icono.'" ';
+		$strQuery.= 'WHERE id_desarrollo = '.$idDesarrollo;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATÁLOGO DE ESTACIONAMIENTO
+	public function eliminaRegCatDesarrollo($id, $fecha){
+		$strQuery = 'UPDATE tblc_desarrollo ';
+		$strQuery.= 'SET fecha_eliminacion = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_desarrollo = '.$id;
+
+		return $strQuery;
+	}
 }
 ?>
