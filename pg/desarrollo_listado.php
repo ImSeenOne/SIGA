@@ -18,10 +18,10 @@
   <tbody>
     <?php foreach ($listado as $key) { ?>
     <tr>
-      <td class="text-center"><?= $key->id_listado ?></td>
+      <td class="text-center"><?= $key->id_desarrollo ?></td>
       <td class="text-left"><?= $key->nombre ?></td>
       <td class="text-left"><?= $key->alias ?></td>
-      <td class="text-center"><?= $key->codigo_postal ?> ?></td>
+      <td class="text-center"><?= $key->codigo_postal ?></td>
       <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize"/></td>
       <td class="text-center">
        	<button type="button" class="btn btn-success btn-sm" onclick="editarRegDesarrollo(<?= $key->id_desarrollo ?>);"><i class="fa fa-edit"></i></button>

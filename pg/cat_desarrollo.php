@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div id="frmDesarrollo" class="row cntntFrm mt-1em" style="display:none;">
+      <form id="frmDesarrollo" class="row cntntFrm mt-1em" style="display:none;">
         <div class="col-lg-12">
           <div class="col-lg-3">
             <div class="form-group">
@@ -58,8 +58,9 @@
 
           <div class="col-lg-3">
             <div class="form-group">
-              <label for="txtMonto">Icono</label>
+              <label for="flIcono">Icono</label>
               <input type="file" id="flIcono" name="flIcono" class="form-control"/>
+              <input type="hidden" id="hdFlIcono" name="hdFlIcono" class="form-control"/>
               <div id="reqFlIcono"></div>
             </div>
           </div>
@@ -72,7 +73,7 @@
             <button id="btnCancelarDesarrollo" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
           </div>
         </div>
-      </div>
+      </form>
       <hr>
       <div class="row">
         <div id="cntnListPagos" class="col-lg-12 col-md-12 col-sm-12">

@@ -50,7 +50,7 @@ class Querys {
 			$cond = ' AND id_desarrollo = '.$id.' ';
 		}
 
-		$strQuery = 'SELECT id_desarrollo, nombre, alias, codigo_postal, fecha_registro ';
+		$strQuery = 'SELECT id_desarrollo, nombre, alias, codigo_postal, icono, fecha_registro ';
 		$strQuery.= 'FROM tblc_desarrollo ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_desarrollo DESC';

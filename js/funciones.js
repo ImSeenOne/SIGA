@@ -307,14 +307,14 @@ $('#btnGuardaDesarrollo').click(function(){
       },
       url: urlSubir,
       type: "post",
-      dataType: "json",
+      dataType: "json", //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
+				console.log(resp);
           $("#respServer").empty();
-          console.log(resp);
           if(resp.resp == 1){
             desarrollo_listado();
             $('#opcion').val(1);
@@ -343,9 +343,13 @@ function editarRegDesarrollo(id){
             $('#respServer').empty('');
             $('#txtNombre').val(resp.nombre);
 						$('#txtAlias').val(resp.alias);
-            $('#flIcono').val(resp.icono);
+						$('#txtCp').val(resp.codigo_postal);
+            $('#hdFlIcono').val(resp.icono);
             $('#idDesarrollo').val(resp.id_desarrollo);
             $('#opcion').val(2);
+						$('#frmDesarrollo').slideToggle();
+					  $('#btnNvoDesarrollo').slideToggle();
+					  $('#txtNombre').focus();
         }
   });
 }
