@@ -1,120 +1,147 @@
-<br><br>
-<form class="container">
-<div class="form-row">
-  <div class="form-group col-md-6">
-    <label for="inputWorkName">Obra</label>
-    <input type="text" class="form-control" id="inputWorkName" placeholder="Nombre de la obra">
-  </div>
-  <div class="form-group col-md-6">
-    <label for="inputType">Tipo</label>
-    <select id="inputType" class="form-control">
-      <option selected>Choose...</option>
-      <option>Licitación</option>
-      <option>Asignación directa</option>
-    </select>
-  </div>
-</div>
-<div class="form-row">
-  <div class="form-group col-md-6">
-    <label for="inputDependency">Dependencia</label>
-    <input type="text" class="form-control" id="inputAmount" placeholder="">
-  </div>
-  <div class="form-group col-md-6">
-    <label for="period">Período</label>
-    <div class="input-group">
-      <div name="period" class="input-group-prepend">
-        <span class="input-group-text"></span>
-      </div>
-      <input name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
-      <input name="date2" type="text" aria-label="Fecha de finalización" class="form-control" value="<?= date('d-m-Y') ?>">
-    </div>
-  </div>
-</div>
-<div class="form-row">
-  <div class="form-group col-md-6">
-    <label for="inputAmount">Monto</label>
-    <input type="text" class="form-control" id="inputCity">
-  </div>
-  <div class="form-group col-md-6">
-    <label for="inputAddedType">Tipo agregado</label>
-    <select id="inputAddedType" class="form-control">
-      <option selected>Choose...</option>
-      <option>1</option>
-      <option>2</option>
-    </select>
-  </div>
-</div>
+<section class="content-header">
+  <h1>
+    Estimaciones
+    <small>Obras</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="inicio"><i class="fa fa-home"></i> Inicio</a></li>
+    <li><a href="#">Estimaciones</a></li>
+    <li href="#" class = "active">Obras</li>
+  </ol>
+</section>
+<section>
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title">&nbsp;</h3>
 
-<div class="form-row">
-  <div class="form-group col-md-6">
-    <button type="submit" class="btn btn-primary">Agregar obra</button>
-  </div>
-</div>
-</form>
-<br><br>
-<div class="container">
-  <table class="table table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Obra</th>
-        <th>Dependencia</th>
-        <th>Monto</th>
-        <th>Período</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Edificio HHM</td>
-        <td>Lorem Ipsum</td>
-        <td>$15,000,000</td>
-        <td>20/01/2015 a 31/01/2019</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="row" style="margin-top:-1.2em!important;">
+        <div class="col-lg-6"></div>
+        <div class="col-lg-6 alignMiddle">
+          <button id="btnNewWork" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >Nueva obra</button>
+        </div>
+      </div>
+
+      <form id="frmWork" class="cntntFrm mt-1em" style="display:none;">
+          <div class="row col-lg-12">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="txtName">Nombre</label>
+                <input type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="45">
+                <div id="reqTxtName" class="text-danger"></div>
+              </div>
+            </div>
+
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="txtType">Tipo</label>
+                <select id="inputType" class="form-control">
+                  <!-- <option selected>Escoger un tipo</option> -->
+                  <option>Licitación</option>
+                  <option>Asignación directa</option>
+                </select>
+                <div id="reqSelType"></div>
+              </div>
+            </div>
+
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="txtDependency">Dependencia</label>
+                <input type="text" maxlength="50" id="txtDependency" name="txtDependency" class="form-control" placeholder="Dependencia">
+                <div id="reqTxtDependency" class="text-danger"></div>
+              </div>
+            </div>
+
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="inputAmount">Monto</label>
+                <input type="text" id="inputAmount" name="inputAmount" class="form-control"/>
+                <input type="hidden" id="hdInputAmount" name="hdInputAmount" class="form-control"/>
+                <div id="reqInputAmount" class="text-danger"></div>
+              </div>
+            </div>
           </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Conjunto Habitacional #12</td>
-        <td>Lorem Ipsum</td>
-        <td>$35,000,000</td>
-        <td>20/01/2018</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
+          <div class="row col-lg-12">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="">Fecha inicio</label>
+                <input id = "date1" name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
+                <div id="reqDateStart" class="text-danger"></div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="date2">Fecha finalización</label>
+                <input id = "date2" name="date2" type="text" aria-label="Fecha de finalización" class="form-control">
+                <div id="reqDateFinish" class="text-danger"></div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="txtFolderVol">Volumenes carpeta</label>
+                <input type="text" maxlength="50" name="txtFolderVol" id="txtFolderVol" class="form-control">
+                <div id="reqFolderVol" class="text-danger"></div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label for="addedType">Tipo agregado</label><br><br>
+                <select class="custom-select" name="addedType" id="addedType">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+              </div>
+            </div>
+            <div class="row col-lg-12">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="txtConcreteVol">Volumen de concreto</label>
+                  <input class="form-control" type="text" name="txtConcreteVol" id="txtConcreteVol">
+                  <div id="reqConcreteVol" class="text-danger"></div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="txtWorkArea">Área de la obra</label>
+                  <input class="form-control" type="text" name="txtWorkArea" id="txtWorkArea">
+                  <div id="reqWorkArea" class="text-danger"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row col-lg-12">
+              <div class="form-group text-right text-bottom">
+                <input type="hidden" id="idWork" name="idWork">
+                <input type="hidden" id="opcion" name="opcion" value="1">
+                <div id="respServer"></div>
+                <br>
+                <button id="btnSaveWork" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+                <button id="btnCancelWork" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
+              </div>
+            </div>
           </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Casa habitación</td>
-        <td>Lorem Ipsum</td>
-        <td>$300,000</td>
-        <td>19/02/2018 a 25/06/2018</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+      </form>
+      <hr>
+      <div class="row">
+        <div id="cntnListPagos" class="col-lg-12 col-md-12 col-sm-12">
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- Main content -->
+
+    <!-- /.content -->
+
+<script type="text/javascript">
+  window.onload = function(){
+    activaDatePicker("date1");
+    activaDatePicker("date2");
+    work_list();
+  }
+</script>
