@@ -52,119 +52,22 @@ $('#btnBusquedaGastos').click(function(){
 
 //CATÁLOGOS INMOBILIARIA +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//CATÁLOGO DESARROLLOS
-$('#btnNvoDesarrollo, #btnCancelarDesarrollo').click(function(){
-  $('#frmDesarrollo').slideToggle();
-  $('#btnNvoDesarrollo').slideToggle();
-  $('#txtNombre').focus();
-});
-
-
-function desarrollo_listado(){
-  urlPag = 'pg/desarrollo_listado.php';
-
-  $.ajax({
-        beforeSend: function(){
-            $("#cntnListPagos").html(cargando);
-        },
-        type:    "post",
-        url:     urlPag,
-        //data:    params,
-        dataType: 'html',
-        success: function(data){
-            $('#cntnListPagos').html(data);
-            loadDataTable('listDesarrollo', true);
-        }
-  });
-}
-
-
-
-
-
-//CATÁLOGO ANTIGÜEDAD
-function antiguedad_listado(){
-  urlPag = 'pg/antiguedad_listado.php';
-
-  $.ajax({
-        beforeSend: function(){
-            $("#cntnListAntiguedad").html(cargando);
-        },
-        type:    "post",
-        url:     urlPag,
-        //data:    params,
-        dataType: 'html',
-        success: function(data){
-            $('#cntnListAntiguedad').html(data);
-            loadDataTable('listAntiguedad', true);
-        }
-  });
-}
-
-
-
-
-
-//CATÁLOGO COCINA
-function cocina_listado(){
-  urlPag = 'pg/cocina_listado.php';
-
-  $.ajax({
-        beforeSend: function(){
-            $("#cntnListCocina").html(cargando);
-        },
-        type:    "post",
-        url:     urlPag,
-        //data:    params,
-        dataType: 'html',
-        success: function(data){
-            $('#cntnListCocina').html(data);
-            loadDataTable('listCocina', true);
-        }
-  });
-}
-
-
-
-
-//CATÁLOGO CALIDAD ACABADO
-function calidad_acabado_listado(){
-  urlPag = 'pg/calidad_acabado_listado.php';
-
-  $.ajax({
-        beforeSend: function(){
-            $("#cntnListCalidadAcabado").html(cargando);
-        },
-        type:    "post",
-        url:     urlPag,
-        //data:    params,
-        dataType: 'html',
-        success: function(data){
-            $('#cntnListCalidadAcabado').html(data);
-            loadDataTable('listCalidadAcabado', true);
-        }
-  });
-}
-
-
-
-
 
 //CATÁLOGO CLOSETS LISTADO
 function closets_listado(){
-  urlPag = 'pg/closets_listado.php';
+  urlPag1 = 'pg/closets_listado.php';
 
   $.ajax({
         beforeSend: function(){
             $("#cntnListClosets").html(cargando);
         },
         type:    "post",
-        url:     urlPag,
+        url:     urlPag1,
         //data:    params,
         dataType: 'html',
         success: function(data){
             $('#cntnListClosets').html(data);
-            loadDataTable('listCloset', true);
+            loadDataTable1('listCloset', true);
         }
   });
 }
@@ -174,14 +77,14 @@ function closets_listado(){
 
 //CATÁLOGO ESTACIONAMIENTO
 function estacionamiento_listado(){
-  urlPag = 'pg/estacionamiento_listado.php';
+  urlPag1 = 'pg/estacionamiento_listado.php';
 
   $.ajax({
         beforeSend: function(){
             $("#cntnListEstacionamiento").html(cargando);
         },
         type:    "post",
-        url:     urlPag,
+        url:     urlPag1,
         //data:    params,
         dataType: 'html',
         success: function(data){
@@ -268,14 +171,13 @@ function eliminarRegEstacionamiento(id, icono, nombre){
         closeOnConfirm: true
       },
       function(){
-          let params = {'id':id, 'icono':icono, 'opt':1};
+          let params = {'id':id, 'icono':icono, 'opt':201};
           $.ajax({
               type:    "post",
               url:     urlEliminar,
               data:    params,
               dataType: 'json',
               success: function(resp){
-                    console.log(resp);
                     if(resp.resp == 1){
                         estacionamiento_listado();
                     }
@@ -389,14 +291,14 @@ function eliminarRegDesarrollo(id, icono, nombre){
 
 //CATÁLOGO NÚMERO DE BAÑOS
 function wc_listado(){
-  urlPag = 'pg/wc_listado.php';
+  urlPag1 = 'pg/wc_listado.php';
 
   $.ajax({
         beforeSend: function(){
             $("#cntnListWc").html(cargando);
         },
         type:    "post",
-        url:     urlPag,
+        url:     urlPag1,
         //data:    params,
         dataType: 'html',
         success: function(data){
@@ -407,19 +309,112 @@ function wc_listado(){
 }
 
 
+//addwC
+$('#idBtnGuardaWc').click(function(){
+    if($('#txtNombre').val().length < 1){
+      $('#txtNombre').focus();
+      $('#reqTxtNombre').html('*');
+      return false;
+    }else{
+      $('#reqTxtNombre').empty();
+    }
+
+    let formData = new FormData(document.getElementById("frmWc"));
+
+    $.ajax({
+      beforeSend: function(){
+        $("#respServer").html(guardando);
+      },
+      url: urlSubir,
+      type: "post",
+      dataType: "json",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(resp){
+          $("#respServer").empty();
+          if(resp.resp == 1){
+            wc_listado();
+            $('#opcion').val(203);
+            resetForm('frmWc');
+          }else{
+            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+          }
+      }
+    });
+});
+
+function editarRegWc(id){
+  let params = {'id':id, 'opt':202}
+  $.ajax({
+        beforeSend: function(){
+            $("#respServer").html(cargando);
+        },
+        type:    "post",
+        url:     urlConsultas,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+            $('#respServer').empty('');
+            $('#txtNombre').val(resp.nombre);
+            $('#hdFlIcono').val(resp.icono);
+            $('#idWc').val(resp.id_num_banio);
+            $('#opcion').val(204);
+        }
+  });
+}
+
+function eliminarRegWc(id, icono, nombre){
+  swal({
+        html: true,
+        title: "¿Está seguro?",
+        text: "eliminar el registro <strong>" + nombre + "</strong>",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonClass: "btn-primary",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'icono':icono, 'opt':202};
+          $.ajax({
+              type:    "post",
+              url:     urlEliminar,
+              data:    params,
+              dataType: 'json',
+              success: function(resp){
+                    if(resp.resp == 1){
+                        wc_listado();
+                    }
+              }
+          });
+      });
+}
+
+
+$('#idBtnCancelarWc').click(function(){
+  resetForm('frmWc');
+});
+
+
+
+
 
 
 
 //SERVICIOS Y AMENIDADES
 function servicio_amenidades_listado(){
-  urlPag = 'pg/wc_listado.php';
+  urlPag1 = 'pg/servicios_amenidades_listado.php';
 
   $.ajax({
         beforeSend: function(){
             $("#cntnListServicioAmenidades").html(cargando);
         },
         type:    "post",
-        url:     urlPag,
+        url:     urlPag1,
         //data:    params,
         dataType: 'html',
         success: function(data){
@@ -428,6 +423,102 @@ function servicio_amenidades_listado(){
         }
   });
 }
+
+
+$('#btnGuardaServAmenidad').click(function(){
+    if($('#txtNombre').val().length < 1){
+      $('#txtNombre').focus();
+      $('#reqTxtNombre').html('*');
+      return false;
+    }else{
+      $('#reqTxtNombre').empty();
+    }
+
+    let formData = new FormData(document.getElementById("frmAmenidades"));
+
+    $.ajax({
+      beforeSend: function(){
+        $("#respServer").html(guardando);
+      },
+      url: urlSubir,
+      type: "post",
+      dataType: "json",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(resp){
+          console.log(resp);
+          $("#respServer").empty();
+          if(resp.resp == 1){
+            servicio_amenidades_listado();
+            $('#opcion').val(205);
+            resetForm('frmAmenidades');
+          }else{
+            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+          }
+      }
+    });
+});
+
+
+function editarServAmd(id){
+  let params = {'id':id, 'opt':203}
+  $.ajax({
+        beforeSend: function(){
+            $("#respServer").html(cargando);
+        },
+        type:    "post",
+        url:     urlConsultas,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+            $('#respServer').empty('');
+            $('#txtNombre').val(resp.nombre);
+            $('#hdFlIcono').val(resp.icono);
+            $('#idServAmenidad').val(resp.id_servicio_amenidad);
+            $('#opcion').val(206);
+        }
+  });
+}
+
+
+$('#btnCancelaServAmenidad').click(function(){
+  resetForm('frmAmenidades');
+});
+
+
+
+function eliminarServAmd(id, icono, nombre){
+  swal({
+        html: true,
+        title: "¿Está seguro?",
+        text: "eliminar el registro <strong>" + nombre + "</strong>",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonClass: "btn-primary",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'icono':icono, 'opt':203};
+          $.ajax({
+              type:    "post",
+              url:     urlEliminar,
+              data:    params,
+              dataType: 'json',
+              success: function(resp){
+                    console.log(resp);
+                    if(resp.resp == 1){
+                        servicio_amenidades_listado();
+                    }
+              }
+          });
+      });
+}
+
 
 
 
@@ -466,7 +557,7 @@ function loadDataTable(table, busqueda, setPage = ''){
       });
         if(setPage !== ''){
             setTimeout( function () {
-                dataTable.page(setPage).draw('page');
+                dataTable1.page(setPage).draw('page');
             }, 10 );
         }
 }

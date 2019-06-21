@@ -109,13 +109,14 @@
         <!-- funciones -->
         <script src="js/sweetalert.min.js" charset="UTF-8"></script>
         <script src="js/funciones.js" charset="UTF-8"></script>
-
+        <script src="js/funciones2.js" charset="UTF-8"></script>
+        <script src="js/funciones3.js" charset="UTF-8"></script>
 
 
         <!-- AdminLTE App -->
         <script src="dist/js/adminlte.min.js"></script>
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="dist/js/pages/dashboard.js"></script>
+        <!--<script src="dist/js/pages/dashboard.js"></script>-->
         <!-- AdminLTE for demo purposes -->
         <script src="dist/js/demo.js"></script>
 
