@@ -61,7 +61,7 @@
                 <div class="pull-right hidden-xs">
                     <b>Version</b> 1.0.0
                 </div>
-                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Recervados.
+                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Reservados.
             </footer>
         </div>
         <!-- jQuery 3 -->
@@ -102,6 +102,8 @@
         <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
         <!-- Bootstrap WYSIHTML5 -->
         <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+        <!-- Input Mask -->
+        <script src="plugins/input-mask/jquery.inputmask.js"></script>
         <!-- Slimscroll -->
         <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
         <!-- FastClick -->

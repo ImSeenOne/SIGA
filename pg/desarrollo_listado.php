@@ -1,6 +1,6 @@
 <?php
   require '../php/inicializandoDatosExterno.php';
-   $listado = @$conexion->obtenerlista($querys->getListadoDesarrollo());
+   $listado = @$conexion->obtenerlista($querys3->getListadoDesarrollo());
   $totRegs = $conexion->numregistros();
    if($totRegs > 0){
 ?>

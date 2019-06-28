@@ -44,6 +44,9 @@
                     <li><a href="cat_closets"><i class="fa fa-angle-right"></i> Espacio para guardar (Closet)</a></li>
                     <li><a href="cat_estacionamiento"><i class="fa fa-angle-right"></i> Estacionamiento</a></li>
                     <li><a href="cat_wc"><i class="fa fa-angle-right"></i> Número de baños</a></li>
+                    <li><a href="cat_servicio_amenidades"><i class="fa fa-angle-right"></i> Servicios y Amenidades</a></li>
+                    <li><a href="cat_estatus_propiedades"><i class="fa fa-angle-right"></i> Estatus Inmuebles</a></li>
+                    <li><a href="cat_propietario_propiedades"><i class="fa fa-angle-right"></i> Propietarios Inmubles</a></li>
                 </ul>
 
               </li>
@@ -68,6 +71,20 @@
           </ul>
 
         </li>
+        <li class="treeview">
+        <a href="#">
+          <i class="fa fa-users"></i> <span>Recursos Humanos</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="empleados"><i class="fa fa-user"></i>Empleados</a></li>
+            <li><a href="#"><i class="fa fa-user"></i>Raya</a></li>
+            <li><a href="#"><i class="fa fa-user"></i>Nomina Administrativa</a></li>
+        </ul>
+
+      </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Requisiciones</span>

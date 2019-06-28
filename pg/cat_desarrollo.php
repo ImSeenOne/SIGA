@@ -51,7 +51,7 @@
           <div class="col-lg-3">
             <div class="form-group">
               <label for="txtCp">C.P.</label>
-              <input type="text" id="txtCp" name="txtCp" class="form-control" placeholder="Código postal" maxlength="5">
+              <input type="text" id="txtCp" onkeypress="isNumberKey(event)" name="txtCp" class="form-control" placeholder="Código postal" maxlength="5">
               <div id="reqTxtCp"></div>
             </div>
           </div>
@@ -92,4 +92,20 @@
   window.onload = function() {
     desarrollo_listado();
   }
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+
+function isNumberKey(evt) {
+  var charCode = (evt.which) ? evt.which : evt.keyCode;
+  // Added to allow decimal, period, or delete
+  if (charCode == 110 || charCode == 190 || charCode == 46)
+    return true;
+
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+
+    return true;
+}
 </script>

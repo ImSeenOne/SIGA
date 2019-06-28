@@ -1,125 +1,126 @@
-  <br/>
-  <form class="container">
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputWorkName">Obra</label>
-      <input type="email" class="form-control" id="inputWorkName" placeholder="Nombre de la obra">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputEstimateNum">Número de estimación</label>
-      <input type="text" class="form-control" id="inputEstimateNum">
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputAmount">Monto</label>
-      <input type="text" class="form-control" id="inputAmount" placeholder="">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="period">Período</label>
-      <div class="input-group">
-        <div name="period" class="input-group-prepend">
-          <span class="input-group-text"></span>
-        </div>
-        <input name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
-        <input name="date2" type="text" aria-label="Fecha de finalización" class="form-control" value="<?= date('d-m-Y') ?>">
+<br/>
+<section class="content-header">
+  <h1>
+    Estimaciones
+    <small>Seguimiento</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="inicio"><i class="fa fa-home"></i> Inicio</a></li>
+    <li><a href="">Estimaciones</a></li>
+    <li href="">Seguimiento estimaciones</li>
+  </ol>
+</section>
+<br/>
+<section class="content">
+  <div class="box box-default">
+    <div class="box-header">
+      <h3 class="box-title">Seguimiento</h3>
+      <div class="box-tools pull-right">
+        <button class="btn btn-box-tool" type="button" name="button" data-widget="collapse">
+          <i class="fa fa-minus"></i>
+        </button>
       </div>
     </div>
+    <div class="box-body">
+      <div class="row" style="margin-top:-1.2em!important;">
+        <div class="col-lg-6"></div>
+        <div class="col-lg-6 alignMiddle">
+        	<button id="btnNewEstTrack" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
+            Nuevo seguimiento de estimación
+          </button>
+        </div>
+      </div>
+      <form class="container" id="frmEstTrack" class="mt-1em" style="display:none;">
+      <div class="row col-lg-12">
+        <div class="form-group col-md-6">
+          <label for="inputTrackEst">Obra</label>
+          <input type="email" class="form-control" id="inputTrackEst" name="inputTrackEst" placeholder="Nombre de la obra">
+          <div id="reqInputTrackEst" class="text-danger"></div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEstimateNum">Número de estimación</label>
+          <input type="text" class="form-control" id="inputEstimateNum" name="inputEstimateNum" placeholder="Número de estimación">
+          <div id="reqInputEstimateNum" class="text-danger"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputAmount">Monto</label>
+          <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="inputAmount" id="inputAmount" placeholder="Monto" >
+          <div id="reqInputAmount" class="text-danger"></div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="period">Período</label>
+          <div class="input-group">
+            <div name="period" class="input-group-prepend">
+              <span class="input-group-text"></span>
+            </div>
+            <div id="reqDate1" class="text-danger"></div>
+            <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
+            <input onkeypress="return isNumberKey(event) && formatNumber()" data-toggle="tooltip" data-placement="right" title="Fecha de finalización" id="date2" name="date2" type="text" aria-label="Fecha de finalización" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPhysicAdv">Avance Físico</label>
+          <input type="text" class="form-control" id="inputPhysicAdv" name="inputPhysicAdv" placeholder="Avance Físico">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputStatus">Status</label>
+          <select id="inputStatus" name="inputStatus" class="form-control">
+            <option>Elaboración</option>
+            <option>Revisión/Supervisión</option>
+            <option>Terminada</option>
+          </select>
+          <div id="reqInputStatus" class="text-danger"></div>
+        </div>
+        <div class="form-group col-md-2">
+          <div class="form-group">
+            <label for="flsImg">Imágenes</label>
+            <input type="file" id="flsImg" name="flsImg" class="form-control"/>
+            <input type="hidden" id="hdFlsImg" name="hdFlsImg" class="form-control"/>
+            <div id="reqFlsImg"></div>
+          </div>
+        </div>
+      </div>
+      <div id="respServer"></div>
+      <div class="form-group pull-right">
+        <input type="hidden" id="idEstTrack" name="idEstTrack">
+        <input type="hidden" id="opcion" name="opcion" value="4">
+        <button id="btnCancelEstTrack" class="btn btn-secondary btn-sm mt-2em" type="button" name="button">Cancelar</button>
+        &nbsp;&nbsp;
+        <button type="button" id="saveTrackEst" class="btn btn-primary btn-sm mt-2em">Generar estimación</button>
+      </div>
+      </form>
+      <div class="row">
+        <div id="cntnListPagos" class="col-lg-12 col-md-12 col-sm-12">
+        </div>
+      </div>
   </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">Avance Físico</label>
-      <input type="text" class="form-control" id="inputCity">
-    </div>
-    <div class="form-group col-md-4">
-      <label for="inputStatus">Status</label>
-      <select id="inputStatus" class="form-control">
-        <option selected>Choose...</option>
-        <option>Elaboración</option>
-        <option>Revisión/Supervisión</option>
-        <option>Terminada</option>
-      </select>
-    </div>
-    <div class="form-group col-md-2">
-      <label for="inputImages">Imágenes</label><br>
-      <button type="file" name="inputImages" class="btn btn-light form-control-file">Examinar...</button>
-      <button type="button" name="inputImages" class="btn btn-secondary">Subir</button>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Generar estimación</button>
-</form>
-<br>
-<br>
-<div class="container">
-  <table class="table table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Obra</th>
-        <th>Status</th>
-        <th>Período</th>
-        <th>Monto</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Edificio HHM</td>
-        <td>Terminada</td>
-        <td>20/01/2015 a 31/01/2019</td>
-        <td>$15,000,000</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Conjunto Habitacional #12</td>
-        <td>Elaboración</td>
-        <td>20/01/2018</td>
-        <td>$35,000,000</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Casa habitación</td>
-        <td>Terminada</td>
-        <td>19/02/2018 a 25/06/2018</td>
-        <td>$300,000</td>
-        <td>
-          <div class="margin">
-              <div class="btn-group">
-                <a type="button" href="clientesregistro" class="btn btn-inline btn-sm btn-primary" title="Editar">
-                      <i class="fa fa-edit"></i>
-                </a>
-                <a type="button" href="eliminar" class="btn btn-inline btn-sm btn-danger" title="eliminar">
-                      <i class="fa fa-remove"></i>
-                </a>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-  <script src="funciones.js" charset="utf-8"></script>
+</section>
+<br/>
   <script type="text/javascript">
-    activaDatePicker('date1');
-    activaDatePicker('date2');
+    window.onload = function(){
+      activaDatePicker("date1");
+      activaDatePicker("date2");
+      estimation_list();
+
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+    }
+
+    function isNumberKey(evt) {
+    	var charCode = (evt.which) ? evt.which : evt.keyCode;
+    	// Added to allow decimal, period, or delete
+    	if (charCode == 110 || charCode == 190 || charCode == 46)
+    		return true;
+
+    	if (charCode > 31 && (charCode < 48 || charCode > 57))
+      		return false;
+
+      	return true;
+    }
+
   </script>

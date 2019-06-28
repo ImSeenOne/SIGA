@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <form id="frmWork" class="cntntFrm mt-1em" style="display:none;">
+      <form id="frmWork" name="frmWork" class="cntntFrm mt-1em" style="display:none;">
           <div class="row col-lg-12">
             <div class="col-lg-3">
               <div class="form-group">
@@ -38,8 +38,8 @@
 
             <div class="col-lg-3">
               <div class="form-group">
-                <label for="txtType">Tipo</label>
-                <select id="inputType" class="form-control">
+                <label for="inputType">Tipo</label>
+                <select id="inputType" name="inputType" class="form-control">
                   <!-- <option selected>Escoger un tipo</option> -->
                   <option>Licitación</option>
                   <option>Asignación directa</option>
@@ -60,7 +60,6 @@
               <div class="form-group">
                 <label for="inputAmount">Monto</label>
                 <input type="text" id="inputAmount" name="inputAmount" class="form-control"/>
-                <input type="hidden" id="hdInputAmount" name="hdInputAmount" class="form-control"/>
                 <div id="reqInputAmount" class="text-danger"></div>
               </div>
             </div>
@@ -95,8 +94,8 @@
                   <option value="2">2</option>
                 </select>
               </div>
-              </div>
             </div>
+          </div>
             <div class="row col-lg-12">
               <div class="col-lg-3">
                 <div class="form-group">
@@ -116,7 +115,8 @@
             <div class="row col-lg-12">
               <div class="form-group text-right text-bottom">
                 <input type="hidden" id="idWork" name="idWork">
-                <input type="hidden" id="opcion" name="opcion" value="1">
+                <input type="hidden" id="opcion" name="opcion" value="3">
+                <!-- change opcion to corresponding case value on subir3.php -->
                 <div id="respServer"></div>
                 <br>
                 <button id="btnSaveWork" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;

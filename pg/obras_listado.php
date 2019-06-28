@@ -1,3 +1,9 @@
+<?php
+  require '../php/inicializandoDatosExterno.php';
+   $listado = @$conexion->obtenerlista($querys3->getListadoObras());
+  $totRegs = $conexion->numregistros();
+   if($totRegs > 0){
+?>
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
@@ -17,16 +23,18 @@
             </tr>
             </thead>
             <tbody>
+              <?php foreach ($listado as $key) { ?>
               <tr>
-                <td>Edificio HHM</td>
-                <td>Lorem Ipsum</td>
-                <td>$15,000,000</td>
-                <td>20/01/2015 a 31/01/2019</td>
+                <td><?= $key->nombre ?>  </td>
+                <td><?= $key->dependencia ?></td>
+                <td><?= $key->monto ?></td>
+                <td><?= $key->fecha_inicio ?> a <?= $key->fecha_finalizacion ?></td>
                 <td class="text-center">
-                  <button type="button" class="btn btn-success btn-sm" onclick="editarRegDesarrollo(<?= $key->id_desarrollo ?>);"><i class="fa fa-edit"></i></button>
-                  <button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegDesarrollo(<?= $key->id_desarrollo ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
+                  <button type="button" class="btn btn-success btn-sm" onclick="editarRegObra(<?= $key->id_obras ?>);"><i class="fa fa-edit"></i></button>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegObra(<?= $key->id_obras ?>,'<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
                 </td>
               </tr>
+              <?php } ?>
             </tbody>
             <tfoot>
             <tr>
@@ -38,6 +46,9 @@
             </tr>
             </tfoot>
           </table>
+        <?php }else{ ?>
+          <center><h4>¡No existen registros!</h4></center>
+        <?php } ?>
         </div>
         <!-- /.box-body -->
       </div>
