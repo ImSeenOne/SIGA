@@ -163,7 +163,7 @@ case 2:
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
-
+	//AGREGA UNA NUEVA ANTIGUEDAD
 	case 5:
 		$name = $funciones->limpia($_POST['txtNombre']);
 
@@ -199,6 +199,7 @@ case 2:
 		echo json_encode($jsondata);
 	break;
 
+	//EDITA UNA ANTIGUEDAD
 	case 6:
 		$name = $funciones->limpia($_POST['txtNombre']);
 		$id = $funciones->limpia($_POST['idAntiguedad']);
@@ -233,6 +234,64 @@ case 2:
 
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
+	break;
+	//AGREGA UN NUEVO EMPLEADO
+	case 7:
+	$fechaadmi = explode("-", $funciones->limpia($_POST['admissionDate']));
+
+	$nombre = $funciones->limpia($_POST['txtName']);
+	$apellido_paterno = $funciones->limpia($_POST['txtLastName']);
+	$apellido_materno = $funciones->limpia($_POST['txtMLastName']);
+	$direccion = $funciones->limpia($_POST['txtAddress']);
+	$imss = $funciones->limpia($_POST['txtIMSS']);
+	$rfc = $funciones->limpia($_POST['txtRFCi']);
+	$curp = $funciones->limpia($_POST['txtCURP']);
+	$fecha_admision = $fechaadmi[2]."-".$fechaadmi[1]."-".$fechaadmi[0];
+	$estado_civil = $funciones->limpia($_POST['txtCivilSts']);
+	$genero = $funciones->limpia($_POST['txtGender']);
+	$categoria = $funciones->limpia($_POST['txtCategory']);
+	$departamento = $funciones->limpia($_POST['txtDepartment']);
+	$area = $funciones->limpia($_POST['txtArea']);
+	$tipo = $funciones->limpia($_POST['txtType']);
+
+		if($conexion->consulta($querys->addEmpleado($nombre,$apellido_paterno,
+		$apellido_materno,$direccion,$rfc,$imss,$curp,$fecha_admision,$tipo,
+		$estado_civil,$genero,$categoria,$departamento,$area,
+		$datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		}else{
+			$jsondata['resp'] = 1;
+		}
+	break;
+
+	//EDITA UN EMPLEADO
+	case 8:
+
+	$fechaadmi = explode("-", $funciones->limpia($_POST['admissionDate']));
+
+	$id = $funciones->limpia($_POST['id_employee']);
+	$nombre = $funciones->limpia($_POST['txtName']);
+	$apellido_paterno = $funciones->limpia($_POST['txtLastName']);
+	$apellido_materno = $funciones->limpia($_POST['txtMLastName']);
+	$direccion = $funciones->limpia($_POST['txtAddress']);
+	$imss = $funciones->limpia($_POST['txtIMSS']);
+	$rfc = $funciones->limpia($_POST['txtRFCi']);
+	$curp = $funciones->limpia($_POST['txtCURP']);
+	$fecha_admision = $fechaadmi[2]."-".$fechaadmi[1]."-".$fechaadmi[0];
+	$estado_civil = $funciones->limpia($_POST['txtCivilSts']);
+	$genero = $funciones->limpia($_POST['txtGender']);
+	$categoria = $funciones->limpia($_POST['txtCategory']);
+	$departamento = $funciones->limpia($_POST['txtDepartment']);
+	$area = $funciones->limpia($_POST['txtArea']);
+	$tipo = $funciones->limpia($_POST['txtType']);
+
+		if($conexion->consulta($querys->updateEmpleado($id, $nombre, $apellido_paterno, $apellido_materno, $direccion, $rfc, $imss, $curp, $fecha_admision, $tipo, $estado_civil, $genero, $categoria, $departamento, $area)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		}else{
+			$jsondata['resp'] = 1;
+		}
 	break;
 
 }

@@ -478,7 +478,6 @@ $('#btnCancelEstTrack').click(function(){
 
 function estimation_list(){
   urlPag = 'pg/seguimiento_listado.php';
-
   $.ajax({
         beforeSend: function(){
             $("#cntnListPagos").html(cargando);
@@ -785,6 +784,213 @@ function eliminarRegAntiguedad(id, nombre, icono){
       });
 }
 
+//FUNCIÓN PARA LISTAR TODOS LOS EMPLEADOS
+//*********************************************************************
+//*********************************************************************
+
+function employees_list(){
+  urlPag = 'pg/empleados_listado.php';
+
+	let formData = new FormData(document.getElementById("frmSearchEmployee"));
+
+  $.ajax({
+        beforeSend: function(){
+            $("#cntnListEmployees").html(cargando);
+        },
+        type:    "post",
+        url:     urlPag,
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+        dataType: 'html',
+        success: function(data){
+            $('#cntnListEmployees').html(data);
+            loadDataTable('employees_list', false);
+        }
+  });
+}
+
+$('#btnNewEmployee').click(function(){
+  $('#frmAddEmployee').slideToggle();
+  $('#btnNewEmployee').slideToggle();
+	$('#btnSearchEmployee').slideToggle();
+  $('#txtName').focus();
+});
+
+$('#btnSearchEmployee').click(function(){
+	$('#frmSearchEmployee').slideToggle();
+	$('#btnNewEmployee').slideToggle();
+	$('#btnSearchEmployee').slideToggle();
+
+	$('#txtEmployee').focus();
+});
+
+
+$('#btnCancelSearch').click(function(){
+  $('#frmSearchEmployee').slideToggle();
+  $('#btnNewEmployee').slideToggle();
+	$('#btnSearchEmployee').slideToggle();
+  resetForm('frmAddEmployee');
+});
+
+$('#btnCancelEmployee').click(function(){
+  $('#frmAddEmployee').slideToggle();
+  $('#btnNewEmployee').slideToggle();
+	$('#btnSearchEmployee').slideToggle();
+	$('#opcion').val(7);
+  resetForm('frmAddEmployee');
+});
+
+
+
+$('#btnAddEmployee').click(function(){
+
+	    if($('#txtName').val().length < 1){
+	      $('#txtName').focus();
+	      $('#reqTxtName').html('Este campo es requerido');
+	      return false;
+	    }else{
+	      $('#reqTxtNombre').empty();
+	    }
+
+			if($('#txtLastName').val().length < 1){
+				$('#txtLastName').focus();
+				$('#reqTxtLastName').html('Este campo es requerido');
+				return false;
+			}else{
+				$('#reqTxtLastName').empty();
+			}
+
+			if($('#txtMLastName').val().length < 1){
+				$('#txtMLastName').focus();
+				$('#reqTxtMLastName').html('Este campo es requerido');
+				return false;
+			}else{
+				$('#reqTxtMLastName').empty();
+			}
+
+			if($('#txtAddress').val().length < 1){
+				$('#txtAddress').focus();
+				$('#reqTxtAddress').html('Este campo es requerido');
+				return false;
+			}else{
+				$('#reqTxtAddress').empty();
+			}
+
+			if($('#txtCURP').val().length < 1){
+				$('#txtCURP').focus();
+				$('#reqTxtCURP').html('Este campo es requerido');
+				return false;
+			}else{
+				$('#reqTxtCURP').empty();
+			}
+
+			if($('#admissionDate').val().length < 1){
+				$('#admissionDate').focus();
+				$('#reqAdmissionDate').html('Este campo es requerido');
+				return false;
+			}else{
+				$('#reqAdmissionDate').empty();
+			}
+
+	    let formData = new FormData(document.getElementById("frmAddEmployee"));
+
+	    $.ajax({
+	      beforeSend: function(){
+	        $("#respServer").html(guardando);
+	      },
+	      url: urlSubir,
+	      type: "post",
+	      dataType: "json", //<---- REGRESAR A JSON
+	      data: formData,
+	      cache: false,
+	      contentType: false,
+	      processData: false,
+	      success: function(resp){
+					console.log(resp);
+	          $("#respServer").empty();
+	          if(resp.resp == 1 ){
+	            employees_list();
+	            $('#opcion').val(7);
+	            resetForm('frmAddEmployee');
+	          }else{
+	            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+	          }
+	      }
+	    });
+});
+
+function editEmployee(id) {
+	let params = {'id':id, 'opt':5}
+  $.ajax({
+        beforeSend: function(){
+            $("#respServer").html(cargando);
+        },
+        type:    "post",
+        url:     urlConsultas,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+						employees_list();
+            console.log(resp);
+						$('#txtName').val(resp.nombre);
+						$('#txtLastName').val(resp.apellido_paterno);
+						$('#txtMLastName').val(resp.apellido_materno);
+						$('#txtAddress').val(resp.direccion);
+						$('#txtIMSS').val(resp.imss);
+						$('#txtRFCi').val(resp.rfc);
+						$('#txtCURP').val(resp.curp);
+						$('#admissionDate').val(resp.fecha_admision);
+						$('#txtCivilSts').val(resp.estado_civil);
+						$('#txtGender').val(resp.genero);
+						$('#txtCategory').val(resp.categoria);
+						$('#txtDepartment').val(resp.departamento);
+						$('#txtArea').val(resp.area);
+						$('#txtType').val(resp.tipo);
+						$('#id_employee').val(resp.id_empleado);
+						$('#opcion').val("8");
+            $('#respServer').empty('');
+        }
+  });
+	$('#frmAddEmployee').slideToggle();
+	$('#btnNewEmployee').slideToggle();
+	$('#btnSearchEmployee').slideToggle();
+	$('#txtName').focus();
+}
+
+function deleteEmployee(id, name){
+
+
+	  swal({
+	        html: true,
+	        title: "¿Está seguro?",
+	        text: "eliminar el empleado <strong>" + name + "</strong>",
+	        type: "warning",
+	        showCancelButton: true,
+	        cancelButtonClass: "btn-primary",
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "Aceptar",
+	        cancelButtonText: "Cancelar",
+	        closeOnConfirm: true
+	      },
+	      function(){
+	          let params = {'id':id, 'opt':5};
+	          $.ajax({
+	              type:    "post",
+	              url:     urlEliminar,
+	              data:    params,
+	              dataType: 'html',
+	              success: function(resp){
+										console.log(resp);
+	                    if(resp.resp == 1){
+	                        employees_list();
+	                    }
+	              }
+	          });
+	      });
+}
+
 /**
 FORMAT CURRENCY FUNCTIONS
 **/
@@ -870,4 +1076,16 @@ function formatCurrency(input, blur) {
   var updated_len = input_val.length;
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+function isNumberKey(evt) {
+var charCode = (evt.which) ? evt.which : evt.keyCode;
+// Added to allow decimal, period, or delete
+if (charCode == 110 || charCode == 190 || charCode == 46)
+	return true;
+
+if (charCode > 31 && (charCode < 48 || charCode > 57))
+		return false;
+
+	return true;
 }

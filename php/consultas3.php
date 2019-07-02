@@ -57,6 +57,29 @@ switch($_POST['opt']){
 		$jsondata['nombre'] = $resp['nombre'];
 		$jsondata['icono'] = $resp['icono'];
 	break;
+
+	case 5:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getEmpleadosById($id));
+
+		$fechaadmi = explode("-",$resp['fecha_admision']);
+
+		$jsondata['id_empleado'] = $resp['id_empleado'];
+		$jsondata['nombre'] = $resp['nombre'];
+		$jsondata['apellido_paterno'] = $resp['apellido_paterno'];
+		$jsondata['apellido_materno'] = $resp['apellido_materno'];
+		$jsondata['direccion'] = $resp['direccion'];
+		$jsondata['rfc'] = $resp['rfc'];
+		$jsondata['imss'] = $resp['imss'];
+		$jsondata['curp'] = $resp['curp'];
+		$jsondata['fecha_admision'] = $fechaadmi[2]."-".$fechaadmi[1]."-".$fechaadmi[0];
+		$jsondata['tipo'] = $resp['tipo'];
+		$jsondata['estado_civil'] = $resp['estado_civil'];
+		$jsondata['genero'] = $resp['genero'];
+		$jsondata['categoria'] = $resp['categoria'];
+		$jsondata['departamento'] = $resp['departamento'];
+		$jsondata['area'] = $resp['area'];
+	break;
 }
 
 echo json_encode($jsondata);

@@ -157,5 +157,66 @@ class Querys3 {
 		return $strQuery;
 	}
 
+	//QUERY PARA OBTENER EMPLEADOS POR ID
+	public function getEmpleadosById($id = ''){
+		$cond = ' ';
+
+		if($id != '') {
+			$cond = ' AND id_empleado = '.$id.' ';
+		}
+
+		$strQuery = 'SELECT id_empleado, nombre, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
+		$strQuery.= 'FROM tbl_empleados ';
+		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_empleado DESC';
+
+		return $strQuery;
+	}
+	//QUERY PARA LISTAR EMPLEADOS
+	public function getListadoEmpleados($nombre = '', $rfc = '', $imss = ''){
+		$cond = ' ';
+
+		if($nombre != '') {
+			$cond = ' AND nombre LIKE "%'.$nombre.'%" ';
+		}
+
+		if($rfc != '') {
+			$cond = ' AND rfc LIKE "%'.$rfc.'%" ';
+		}
+
+		if($imss != '') {
+			$cond = ' AND imss LIKE "%'.$imss.'%" ';
+		}
+		$strQuery = 'SELECT id_empleado, nombre, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
+		$strQuery.= 'FROM tbl_empleados ';
+		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_empleado DESC';
+
+		return $strQuery;
+	}
+	//QUERY AGREGAR EMPLEADOS
+	public function addEmpleado($nombre,$apellido_paterno,$apellido_materno, $direccion, $rfc, $imss, $curp, $fecha_admision, $tipo, $estado_civil, $genero, $categoria, $departamento, $area, $fecha_registro){
+		$strQuery = 'INSERT INTO tbl_empleados ';
+		$strQuery.= '(nombre, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$apellido_paterno.'", "'.$apellido_materno.'", "'.$direccion.'", "'.$rfc.'", "'.$imss.'", "'.$curp.'", "'.$fecha_admision.'", "'.$tipo.'", "'.$estado_civil.'", "'.$genero.'", "'.$categoria.'", "'.$departamento.'","'.$area.'", "'.$fecha_registro.'")';
+
+		return $strQuery;
+	}
+
+	public function updateEmpleado($id_empleado, $nombre, $apellido_paterno, $apellido_materno, $direccion, $rfc, $imss, $curp, $fecha_admision, $tipo, $estado_civil, $genero, $categoria, $departamento, $area){
+		$strQuery = 'UPDATE tbl_empleados ';
+		$strQuery.= 'SET nombre = "'.$nombre.'", apellido_paterno = "'.$apellido_paterno.'", apellido_materno = "'.$apellido_materno.'", direccion = "'.$direccion.'", rfc = "'.$rfc.'", imss = "'.$imss.'", curp = "'.$curp.'", fecha_admision = "'.$fecha_admision.'", tipo = "'.$tipo.'", estado_civil = "'.$estado_civil.'", genero = "'.$genero.'", categoria = "'.$categoria.'", departamento = "'.$departamento.'", area = "'.$area.'" ';
+		$strQuery.= 'WHERE id_empleado = '.$id_empleado;
+
+		return $strQuery;
+	}
+
+	public function deleteEmpleado($id, $fecha) {
+		$strQuery = 'UPDATE tbl_empleados ';
+		$strQuery.= 'SET fecha_eliminacion = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_empleado = '.$id;
+
+		return $strQuery;
+	}
 }
 ?>
