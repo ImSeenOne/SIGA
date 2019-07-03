@@ -31,7 +31,7 @@
         </div>
       </div>
       <form class="container" id="frmEstTrack" class="mt-1em" style="display:none;">
-      <div class="row col-lg-12">
+      <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputTrackEst">Obra</label>
           <input type="email" class="form-control" id="inputTrackEst" name="inputTrackEst" placeholder="Nombre de la obra">
@@ -49,9 +49,9 @@
           <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="inputAmount" id="inputAmount" placeholder="Monto" >
           <div id="reqInputAmount" class="text-danger"></div>
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6 col-sm-6">
           <label for="period">Período</label>
-          <div class="input-group">
+          <div class="form-group">
             <div name="period" class="input-group-prepend">
               <span class="input-group-text"></span>
             </div>
@@ -85,7 +85,7 @@
         </div>
       </div>
       <div id="respServer"></div>
-      <div class="form-group pull-right">
+      <div class="form-group pull-right col-md-6 col-md-6">
         <input type="hidden" id="idEstTrack" name="idEstTrack">
         <input type="hidden" id="opcion" name="opcion" value="4">
         <button id="btnCancelEstTrack" class="btn btn-secondary btn-sm mt-2em" type="button" name="button">Cancelar</button>

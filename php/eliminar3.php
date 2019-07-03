@@ -36,7 +36,7 @@ switch($_POST['opt']){
 
 	break;
 
-	case 2://ELIMINA UN REGISTRO DE OBRAS Y SU RESPECTIVA IMAGEN DE LA GALERÍA DE DESARROLLO
+	case 2://ELIMINA UN REGISTRO DE OBRAS
 		$id = $funciones->limpia($_POST['id']);
 
 		if($conexion->consulta($querys->eliminarRegObra($id, $datos['fecha_actual'])) == 0){

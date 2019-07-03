@@ -307,27 +307,12 @@ $('#btnSaveWork').click(function(){
       $('#reqInputAmount').empty();
     }
 
-		if(isEmpty($('#date1'))){
+		if(isEmpty($('#date1')) || $('#date1').val() == '00-00-0000'|| $('#date1').val() == '0000-00-00'){
       $('#date1').focus();
       $('#reqDateStart').html('Este campo es requerido');
       return false;
     }else{
       $('#reqDateStart').empty();
-    }
-
-		if(isEmpty($('#date2'))){
-      $('#date2').focus();
-      $('#reqDateFinish').html('Este campo es requerido');
-      return false;
-    }else{
-      $('#reqDateFinish').empty();
-    }
-		if(isEmpty($('#date2'))){
-      $('#date2').focus();
-      $('#reqDateFinish').html('Este campo es requerido');
-      return false;
-    }else{
-      $('#reqDateFinish').empty();
     }
 
 		if(isEmpty($('#txtFolderVol'))){
@@ -355,15 +340,13 @@ $('#btnSaveWork').click(function(){
     }
 
 		if(!checkDate($('#date1').val(), $('#date2').val())){
-			$('#reqDateStart').html('Este fecha no debe ser mayor a la fecha de finalización')
-			$('#reqDateFinish').html('Este fecha no debe ser menor a la fecha de inicio')
+			$('#reqDateStart').html('Este fecha no debe ser mayor a la fecha de finalización');
+			$('#reqDateFinish').html('Este fecha no debe ser menor a la fecha de inicio');
 			return false;
+		} else {
+			$('#reqDateStart').empty();
+			$('#reqDateFinish').empty();
 		}
-
-		var date1 = $('#date1').val().split('-');
-		$('#date1').val(date1[2] + "-" + date1[1] + "-" + date1[0]);
-		var date2 = $('#date2').val().split('-');
-		$('#date2').val(date2[2] + "-" + date2[1] + "-" + date2[0]);
 
     let formData = new FormData(document.getElementById("frmWork"));
 
@@ -447,6 +430,8 @@ function editarRegObra(id){
 						$('#addedType').val(resp.tipo_agregado);
 						$('#txtConcreteVol').val(resp.volumen_concreto);
 						$('#txtWorkArea').val(resp.area_obra);
+						$('#idWork').val(resp.id_obra);
+						$('#opcion').val("9");
         }
   });
 	$('#frmWork').slideToggle();
@@ -574,8 +559,6 @@ $('#saveTrackEst').click(function(){
 			}
 		}
 
-
-
     let formData = new FormData(document.getElementById("frmEstTrack"));
 
     $.ajax({
@@ -618,6 +601,7 @@ function editarRegSegEst(id){
         dataType: 'json',
         success: function(resp){
             console.log(resp);
+						$('#idEstTrack').val(resp.id_seg_est);
             $('#respServer').empty('');
             $('#inputTrackEst').val(resp.nombre_obra);
 						$('#inputEstimateNum').val(resp.numero_estimacion);
@@ -627,6 +611,7 @@ function editarRegSegEst(id){
 						$('#inputPhysicAdv').val(resp.avance_fisico);
 						$('#inputStatus').val(resp.status);
 						$('#hdFlsImg').val(resp.imagen);
+						$('#opcion').val("10");
         }
   });
 	$('#frmEstTrack').slideToggle();

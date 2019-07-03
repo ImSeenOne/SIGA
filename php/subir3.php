@@ -294,5 +294,82 @@ case 2:
 		}
 	break;
 
+	//EDITA UNA OBRA
+	case 9:
+		$id = $funciones->limpia($_POST['idWork']);
+		$name = $funciones->limpia($_POST['txtName']);
+		$type = $funciones->limpia($_POST['inputType']);
+		$dependency = $funciones->limpia($_POST['txtDependency']);
+		$amount = $funciones->limpia($_POST['inputAmount']);
+		$dateStartT = $funciones->limpia($_POST['date1']);
+		$dateFinishT = $funciones->limpia($_POST['date2']);
+		$folderVol = $funciones->limpia($_POST['txtFolderVol']);
+		$addedType = $funciones->limpia($_POST['addedType']);
+		$concreteVol = $funciones->limpia($_POST['txtConcreteVol']);
+		$workArea = $funciones->limpia($_POST['txtWorkArea']);
+
+		$amount = str_replace(",","",$amount);
+
+		$dateStart = explode("-", $dateStartT);
+		$dateFinish = explode("-", $dateFinishT);
+
+//		exit($id.$name.$type.$dependency.$amount. $dateStart[2]."-".$dateStart[1]."-".$dateStart[0]. $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0]. $folderVol. $addedType. $concreteVol. $workArea);
+
+		if($conexion->consulta($querys->updateObra($id, $name, $type, $dependency, $amount, $dateStart[2]."-".$dateStart[1]."-".$dateStart[0], $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0], $folderVol, $addedType, $concreteVol, $workArea)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		}else{
+			$jsondata['resp'] = 1;
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+
+	//EDITA UN SEGUIMIENTO DE OBRA
+
+	case 10:
+		$id = $funciones->limpia($_POST['idEstTrack']);
+		$name = $funciones->limpia($_POST['inputTrackEst']);
+		$est_number = $funciones->limpia($_POST['inputEstimateNum']);
+		$amountmp = $funciones->limpia($_POST['inputAmount']);
+		$amount = str_replace(",", "", $amountmp);
+		$dateStart = $funciones->limpia($_POST['date1']);
+		$dateFinish = $funciones->limpia($_POST['date2']);
+		$physic_adv = $funciones->limpia($_POST['inputPhysicAdv']);
+		$status = $funciones->limpia($_POST['inputStatus']);
+
+		if(isset($_FILES["flsImg"]["tmp_name"]) and $_FILES["flsImg"]["tmp_name"] != ""){
+				if($upload->load("flsImg") === false){
+					echo '<script languaje="javascript">
+							parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
+							</script>';
+					exit(0);
+				}
+				$archivo = "archivos/estimaciones/".$upload->nombre_final;
+				$upload->setisimage(false);
+				if($upload->save('../'.$archivo) === false){
+					echo '<script languaje="javascript">
+							parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
+							</script>';
+					exit(0);
+				}
+				$datos['flsImg'] = $archivo;
+		}else{
+				$datos['flsImg'] = null;
+		}
+
+
+		if($conexion->consulta($querys->updateSegEst($id,$name,$est_number,$amount,$dateStart,$dateFinish,$physic_adv,$status,$datos['flsImg'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		}else{
+			$jsondata['resp'] = 1;
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+
 }
 ?>

@@ -59,7 +59,7 @@
             <div class="col-lg-3">
               <div class="form-group">
                 <label for="inputAmount">Monto</label>
-                <input type="text" id="inputAmount" name="inputAmount" class="form-control"/>
+                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" type="text" id="inputAmount" name="inputAmount" class="form-control"/>
                 <div id="reqInputAmount" class="text-danger"></div>
               </div>
             </div>
@@ -68,14 +68,14 @@
             <div class="col-lg-3">
               <div class="form-group">
                 <label for="">Fecha inicio</label>
-                <input id = "date1" name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
+                <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
                 <div id="reqDateStart" class="text-danger"></div>
               </div>
             </div>
             <div class="col-lg-3">
               <div class="form-group">
                 <label for="date2">Fecha finalización</label>
-                <input id = "date2" name="date2" type="text" aria-label="Fecha de finalización" class="form-control">
+                <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date2" name="date2" type="text" aria-label="Fecha de finalización" class="form-control">
                 <div id="reqDateFinish" class="text-danger"></div>
               </div>
             </div>
@@ -88,8 +88,8 @@
             </div>
             <div class="col-lg-3">
               <div class="form-group">
-                <label for="addedType">Tipo agregado</label><br><br>
-                <select class="custom-select" name="addedType" id="addedType">
+                <label for="addedType">Tipo agregado</label>
+                <select class="custom-select form-control" name="addedType" id="addedType">
                   <option value="1">1</option>
                   <option value="2">2</option>
                 </select>
@@ -116,7 +116,6 @@
               <div class="form-group text-right text-bottom">
                 <input type="hidden" id="idWork" name="idWork">
                 <input type="hidden" id="opcion" name="opcion" value="3">
-                <!-- change opcion to corresponding case value on subir3.php -->
                 <div id="respServer"></div>
                 <br>
                 <button id="btnSaveWork" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;

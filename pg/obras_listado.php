@@ -27,8 +27,8 @@
               <tr>
                 <td><?= $key->nombre ?>  </td>
                 <td><?= $key->dependencia ?></td>
-                <td><?= $key->monto ?></td>
-                <td><?= $key->fecha_inicio ?> a <?= $key->fecha_finalizacion ?></td>
+                <td>$<?= number_format($key->monto,2) ?></td>
+                <td><?= $key->fecha_inicio ?> a <?php if($key->fecha_finalizacion == '0000-00-00' || $key->fecha_finalizacion == '00-00-0000') echo 'la fecha'; else echo $key->fecha_finalizacion; ?></td>
                 <td class="text-center">
                   <button type="button" class="btn btn-success btn-sm" onclick="editarRegObra(<?= $key->id_obras ?>);"><i class="fa fa-edit"></i></button>
                   <button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegObra(<?= $key->id_obras ?>,'<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>

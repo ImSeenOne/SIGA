@@ -71,11 +71,29 @@ class Querys3 {
 		return $strQuery;
 	}
 
-	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATALOGO DESARROLLO
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE UNA OBRA
 	public function eliminarRegObra($id, $fecha){
 		$strQuery = 'UPDATE tbl_obras ';
 		$strQuery.= 'SET fecha_eliminacion = "'.$fecha.'" ';
 		$strQuery.= 'WHERE id_obras = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA EDITAR UNA OBRA
+	public function updateObra($id, $name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea) {
+
+		$strQuery = 'UPDATE tbl_obras SET nombre = "'.$name.'"';
+	  $strQuery .= ',tipo = "'.$type.'"';
+	  $strQuery .= ',dependencia = "'.$dependency.'"';
+	  $strQuery .= ',monto = "'.$amount.'",';
+	  $strQuery .= 'fecha_inicio = "'.$dateStart.'",';
+	  $strQuery .= 'fecha_finalizacion = "'.$dateFinish.'",';
+	  $strQuery .= 'volumenes_carpeta = "'.$folderVol.'",';
+	  $strQuery .= 'tipo_agregado = "'.$addedType.'",';
+	  $strQuery .= 'volumen_concreto = "'.$concreteVol.'",';
+	  $strQuery .= 'area_obra = "'.$workArea.'" ';
+	  $strQuery .= 'WHERE id_obras = "'.$id.'";';
 
 		return $strQuery;
 	}
@@ -111,6 +129,22 @@ class Querys3 {
 		$strQuery.= 'WHERE id_seg_est = '.$id;
 
 		return $strQuery;
+	}
+
+	//QUERY PARA EDITAR UN SEGUIMIENTO DE ESTIMACIONES
+	public function updateSegEst($id,$name,$est_number,$amount,$dateStart,$dateFinish,$physic_adv,$status,$archivo){
+
+		return $strQuery='UPDATE tbl_seguimiento_estimaciones
+											SET nombre_obra = "'.$name.'",
+											monto = "'.$amount.'",
+											avance_fisico = "'.$physic_adv.'",
+											numero_estimacion = "'.$est_number.'",
+											fecha_inicio = "'.$dateStart.'",
+											fecha_finalizacion = "'.$dateFinish.'",
+											status = "'.$status.'",
+											imagen = "'.$archivo.'"
+											WHERE id_seg_est = "'.$id.'"
+											';
 	}
 
 	//COMIENZAN QUERYS PARA MODULO ANTIGUEDAD
