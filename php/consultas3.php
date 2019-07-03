@@ -83,6 +83,15 @@ switch($_POST['opt']){
 		$jsondata['departamento'] = $resp['departamento'];
 		$jsondata['area'] = $resp['area'];
 	break;
+
+	case 6:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getListadoAntiguedad($id));
+
+		$jsondata['id_antiguedad'] = $resp['id_antiguedad'];
+		$jsondata['nombre'] = $resp['nombre'];
+		$jsondata['icono'] = $resp['icono'];
+	break;
 }
 
 echo json_encode($jsondata);

@@ -714,7 +714,7 @@ $('#btnGuardarAnt').click(function(){
 
 //FUNCION APRA EDITAR UN REGISTRO DE ANTIGUEDAD
 function editarRegAntiguedad(id){
-  let params = {'id':id, 'opt':4}
+  let params = {'id':id, 'opt':6}
   $.ajax({
         beforeSend: function(){
             $("#respServer").html(cargando);
