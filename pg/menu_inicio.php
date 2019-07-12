@@ -80,16 +80,24 @@
         </a>
         <ul class="treeview-menu">
             <li><a href="empleados"><i class="fa fa-user"></i>Empleados</a></li>
-            <li><a href="#"><i class="fa fa-user"></i>Raya</a></li>
+            <li><a href="raya"><i class="fa fa-user"></i>Raya</a></li>
             <li><a href="#"><i class="fa fa-user"></i>Nomina Administrativa</a></li>
         </ul>
 
       </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Requisiciones</span>
-          </a>
-        </li>
+      <li class="treeview">
+      <a href="#">
+        <i class="fa fa-credit-card"></i> <span>Compras</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+          <li><a href="ordenes_compra"><i class="fa fa-shopping-cart"></i>Ordenes de Compras</a></li>
+          <li><a href="#"><i class="fa fa-users"></i>Proveedores</a></li>
+      </ul>
+
+    </li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-files-o"></i>

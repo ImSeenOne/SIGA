@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-header('Content-type: application/json; charset=utf-8');
 require 'inicializandoDatosExterno.php';
 
 $datos = array(); $jsondata = array();
@@ -14,6 +11,7 @@ switch($_POST['opt']){
 		$jsondata['id_desarrollo'] = $resp['id_desarrollo'];
 		$jsondata['nombre'] = $resp['nombre'];
 		$jsondata['alias'] = $resp['alias'];
+		$jsondata['numero_etapa_oferta'] = $resp['numero_etapa_oferta'];
 		$jsondata['codigo_postal'] = $resp['codigo_postal'];
 		$jsondata['icono']  = $resp['icono'];
 	break;
@@ -92,7 +90,19 @@ switch($_POST['opt']){
 		$jsondata['nombre'] = $resp['nombre'];
 		$jsondata['icono'] = $resp['icono'];
 	break;
+
+	case 20:
+	$category = $funciones->limpia($_POST['category']);
+	$strQuery = 'SELECT nombre, dias, sueldo FROM tblc_categorias WHERE id_categoria = '.$category.' AND fecha_eliminacion IS NULL';
+	$resp = @$conexion->fetch_array($strQuery);
+
+	$jsondata['name'] = $resp['nombre'];
+	$jsondata['days'] = $resp['dias'];
+	$jsondata['pay'] = $resp['sueldo'];
+	break;
 }
 
+
+header('Content-type: application/json; charset=utf-8');
 echo json_encode($jsondata);
 ?>

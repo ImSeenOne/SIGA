@@ -24,7 +24,7 @@
         <td class="text-center"><?= $key->fecha_registro ?></td>
         <td class="text-center">
          	<button type="button" class="btn btn-success btn-sm" onclick="editarRegAntiguedad(<?= $key->id_antiguedad ?>)"><i class="fa fa-edit"></i></button>
-         	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash" onclick="eliminarRegAntiguedad(<?= $key->id_antiguedad ?>, '<?= $key->nombre ?>', '<?= $key->icono ?>')"></i></button>
+         	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash" onclick="eliminarRegAntiguedad(<?= $key->id_antiguedad ?>, '<?= $key->nombre ?>')"></i></button>
         </td>
       </tr>
     <?php } ?>

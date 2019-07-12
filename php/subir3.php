@@ -1,4 +1,6 @@
-<?Php
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 @session_start();
 
 require_once("clase_variables.php");
@@ -26,6 +28,7 @@ switch($_POST['opcion']){
 	case 1:
 		$nombre = $funciones->limpia($_POST['txtNombre']);
 		$alias = $funciones->limpia($_POST['txtAlias']);
+		$numero_etapa_oferta = $funciones->limpia($_POST['txtNumeroOferta']);
 		$cp = $funciones->limpia($_POST['txtCp']);
 
 		if(isset($_FILES["flIcono"]["tmp_name"]) and $_FILES["flIcono"]["tmp_name"] != ""){
@@ -48,7 +51,7 @@ switch($_POST['opcion']){
 				$datos['flIcono'] = null;
 		}
 
-		if($conexion->consulta($querys->addCatDesarrollo($nombre,$alias, $cp, $datos['flIcono'], $datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addCatDesarrollo($nombre,$alias, $numero_etapa_oferta, $cp, $datos['flIcono'], $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{
@@ -62,6 +65,7 @@ break;
 case 2:
 	$id     = $funciones->limpia($_POST['idDesarrollo']);
 	$nombre = $funciones->limpia($_POST['txtNombre']);
+	$numero_etapa_oferta = $funciones->limpia($_POST['txtNumeroOferta']);
 	$alias = $funciones->limpia($_POST['txtAlias']);
 	$cp = $funciones->limpia($_POST['txtCp']);
 
@@ -85,7 +89,7 @@ case 2:
 					$datos['flIcono'] = $_POST['hdFlIcono'];
 			}
 
-			if($conexion->consulta($querys->updateCatDesarrollo($id, $nombre, $alias, $cp, $datos['flIcono'])) == 0){
+			if($conexion->consulta($querys->updateCatDesarrollo($id, $nombre, $alias, $numero_etapa_oferta, $cp, $datos['flIcono'])) == 0){
 				$jsondata['resp'] = 0;
 			}else{
 				$jsondata['resp'] = 1;
@@ -101,12 +105,15 @@ case 2:
 		$type = $funciones->limpia($_POST['inputType']);
 		$dependency = $funciones->limpia($_POST['txtDependency']);
 		$amount = $funciones->limpia($_POST['inputAmount']);
-		$dateStart = $funciones->limpia($_POST['date1']);
-		$dateFinish = $funciones->limpia($_POST['date2']);
+		$dateStartTmp = $funciones->limpia($_POST['date1']);
+		$dateFinishTmp = $funciones->limpia($_POST['date2']);
 		$folderVol = $funciones->limpia($_POST['txtFolderVol']);
 		$addedType = $funciones->limpia($_POST['addedType']);
 		$concreteVol = $funciones->limpia($_POST['txtConcreteVol']);
 		$workArea = $funciones->limpia($_POST['txtWorkArea']);
+
+		$dateStart = explode("-",$dateStartTmp);
+		$dateFinish = explode("-",$dateFinishTmp);
 
 		$amount = str_replace(",","",$amount);
 
@@ -116,6 +123,7 @@ case 2:
 		}else{
 			$jsondata['resp'] = 1;
 		}
+
 
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
@@ -254,15 +262,18 @@ case 2:
 	$area = $funciones->limpia($_POST['txtArea']);
 	$tipo = $funciones->limpia($_POST['txtType']);
 
-		if($conexion->consulta($querys->addEmpleado($nombre,$apellido_paterno,
+		if(@$conexion->consulta($querys->addEmpleado($nombre,$apellido_paterno,
 		$apellido_materno,$direccion,$rfc,$imss,$curp,$fecha_admision,$tipo,
 		$estado_civil,$genero,$categoria,$departamento,$area,
 		$datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
+
 		}else{
 			$jsondata['resp'] = 1;
 		}
+        header('Content-type: application/json; charset=utf-8');
+        echo json_encode($jsondata);
 	break;
 
 	//EDITA UN EMPLEADO
@@ -369,6 +380,36 @@ case 2:
 
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
+	break;
+	//AGREGA UNA NUEVA RAYA (PAGO DE NÓMINA)
+	case 11:
+
+		$dateStart = $funciones->limpia($_POST['dateStart']);
+		$dateFinish = $funciones->limpia($_POST['dateFinish']);
+		$addedActivities = $funciones->limpia($_POST['addedActivities']);
+		$employeeSelected = $funciones->limpia($_POST['employeeSelected']);
+		$workSelected = $funciones->limpia($_POST['workSelected']);
+		$paymentStatus = $funciones->limpia($_POST['paymentStatus']);
+		$observations = $funciones->limpia($_POST['remarks']);
+
+		$totalAmountTmp = $funciones->limpia($_POST['totalAmount']);//
+		$totalAmount = str_replace(",", "", $totalAmountTmp);
+		$addedActAmountTmp = $funciones->limpia($_POST['addedActAmount']);//
+		$addedActAmount = str_replace(",", "", $addedActAmountTmp);
+		$paymentTmp = $funciones->limpia($_POST['paymentAmount']);//
+		$payment = str_replace(",", "", $paymentTmp);
+		$foodTotalAmountTmp = $funciones->limpia($_POST['foodTotalAmount']);//
+		$foodTotalAmount = str_replace(",", "", $foodTotalAmountTmp);
+		//$ = $funciones->limpia($_POST['']);
+
+		if($conexion->consulta($querys->addPayment($dateStart, $dateFinish, $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		}else{
+			$jsondata['resp'] = 1;
+		}
+		// header('Content-type: application/json; charset=utf-8');
+		// echo json_encode($jsondata);
 	break;
 
 }

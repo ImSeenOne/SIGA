@@ -1,9 +1,8 @@
 // let urlPag;
-urlConsultas = 'php/consultas3.php';
-urlSubir     = 'php/subir3.php';
-urlEliminar  = 'php/eliminar3.php';
-// let dataTable;
-// let currentPage;
+urlConsultas3 = 'php/consultas3.php';
+urlSubir3     = 'php/subir3.php';
+urlEliminar3  = 'php/eliminar3.php';
+var employees = [];
 
 
 function selectFrm(clase){
@@ -19,7 +18,7 @@ function activaDatePicker(elemento){
       today: "Today",
       clear: "Clear",
       format: "dd-mm-yyyy"
-    })
+    });
 }
 
 $.fn.datepicker.dates['es'] = {
@@ -27,23 +26,18 @@ $.fn.datepicker.dates['es'] = {
         daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
         daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
         months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Deciembre"],
-        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-        //titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 };
-//
-// $('#btnNvoPago, #btnCancelaPago').click(function(){
-// 	$('#frmPago').slideToggle();
-// 	$('#btnNvoPago').slideToggle();
-// });
-//
-// $('#btnNvoGasto, #btnCancelaGasto').click(function(){
-// 	$('#frmGasto').slideToggle();
-// 	$('#btnNvoGasto').slideToggle();
-// });
-//
-// $('#btnBusquedaGastos').click(function(){
-// 	$('#frmBusquedaGasto').slideToggle();
-// });
+
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+*************************FUNCIONES PARA SEGUIMIENTOS****************************
+********************************************************************************
+********************************************************************************
+***********
+**/
 
 //CATÁLOGO DESARROLLOS
 $('#btnNvoDesarrollo, #btnCancelarDesarrollo').click(function(){
@@ -87,7 +81,7 @@ $('#btnGuardaDesarrollo').click(function(){
       beforeSend: function(){
         $("#respServer").html(guardando);
       },
-      url: urlSubir,
+      url: urlSubir3,
       type: "post",
       dataType: "json", //<---- REGRESAR A JSON
       data: formData,
@@ -119,7 +113,7 @@ function editarRegDesarrollo(id){
             $("#respServer").html(cargando);
         },
         type:    "post",
-        url:     urlConsultas,
+        url:     urlConsultas3,
         data:    params,
         dataType: 'json',
         success: function(resp){
@@ -127,6 +121,7 @@ function editarRegDesarrollo(id){
             $('#respServer').empty('');
             $('#txtNombre').val(resp.nombre);
 						$('#txtAlias').val(resp.alias);
+						$('#txtNumeroOferta').val(resp.numero_etapa_oferta);
 						$('#txtCp').val(resp.codigo_postal);
             $('#hdFlIcono').val(resp.icono);
             $('#idDesarrollo').val(resp.id_desarrollo);
@@ -156,7 +151,7 @@ function eliminarRegDesarrollo(id, icono, nombre){
           let params = {'id':id, 'icono':icono, 'opt':1};
           $.ajax({
               type:    "post",
-              url:     urlEliminar,
+              url:     urlEliminar3,
               data:    params,
               dataType: 'json',
               success: function(resp){
@@ -167,11 +162,15 @@ function eliminarRegDesarrollo(id, icono, nombre){
           });
       });
 }
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+*****************************FUNCIONES PARA OBRAS*******************************
+********************************************************************************
+********************************************************************************
+***********
+**/
 
 
 $('#btnNewWork').click(function(){
@@ -204,81 +203,6 @@ function work_list(){
             loadDataTable('listWorks', true);
         }
   });
-}
-
-//ESTA FUNCIÓN CHECA SI LA FECHA DE INICIO(date1) ES MENOR O MAYOR, RETORNA FALSO
-//SI LA FECHA DE INICIO ES MAYOR
-function checkDate(date1, date2) {
-	var date1 = date1.split('-');
-	var date2 = date2.split('-');
-	var dateS = new Date(date1[2],date1[1],date1[0]);
-	var dateF = new Date(date2[2],date2[1],date2[0]);
-	var dateOpt = dates.compare(dateF, dateS);
-	if(dateOpt == 1 || dateOpt == 0){
-      return true;
-  }else return false;
-}
-
-var dates = {
-    convert:function(d) {
-        // Converts the date in d to a date-object. The input can be:
-        //   a date object: returned without modification
-        //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
-        //   a number     : Interpreted as number of milliseconds
-        //                  since 1 Jan 1970 (a timestamp)
-        //   a string     : Any format supported by the javascript engine, like
-        //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
-        //  an object     : Interpreted as an object with year, month and date
-        //                  attributes.  **NOTE** month is 0-11.
-        return (
-            d.constructor === Date ? d :
-            d.constructor === Array ? new Date(d[0],d[1],d[2]) :
-            d.constructor === Number ? new Date(d) :
-            d.constructor === String ? new Date(d) :
-            typeof d === "object" ? new Date(d.year,d.month,d.date) :
-            NaN
-        );
-    },
-    compare:function(a,b) {
-        // Compare two dates (could be of any type supported by the convert
-        // function above) and returns:
-        //  -1 : if a < b
-        //   0 : if a = b
-        //   1 : if a > b
-        // NaN : if a or b is an illegal date
-        // NOTE: The code inside isFinite does an assignment (=).
-        return (
-            isFinite(a=this.convert(a).valueOf()) &&
-            isFinite(b=this.convert(b).valueOf()) ?
-            (a>b)-(a<b) :
-            NaN
-        );
-    },
-    inRange:function(d,start,end) {
-        // Checks if date in d is between dates in start and end.
-        // Returns a boolean or NaN:
-        //    true  : if d is between start and end (inclusive)
-        //    false : if d is before start or after end
-        //    NaN   : if one or more of the dates is illegal.
-        // NOTE: The code inside isFinite does an assignment (=).
-       return (
-            isFinite(d=this.convert(d).valueOf()) &&
-            isFinite(start=this.convert(start).valueOf()) &&
-            isFinite(end=this.convert(end).valueOf()) ?
-            start <= d && d <= end :
-            NaN
-        );
-    }
-};
-
-//ESTA FUNCIÓN CHECA SI EL OBJETO HTML QUE RECIBE ESTÁ VACÍO
-function isEmpty(obj){
-	if(obj.val().length < 1) {
-		opt = true;
-	} else {
-		opt = false;
-	}
-	return opt;
 }
 
 //ESTA FUNCIÓN AGREGA UNA NUEVA OBRA
@@ -354,7 +278,7 @@ $('#btnSaveWork').click(function(){
       beforeSend: function(){
         $("#respServer").html(guardando);
       },
-      url: urlSubir,
+      url: urlSubir3,
       type: "post",
       dataType: "json", //<---- REGRESAR A JSON
       data: formData,
@@ -362,7 +286,6 @@ $('#btnSaveWork').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1){
 						$('#frmWork').slideToggle();
@@ -394,7 +317,7 @@ function eliminarRegObra(id, nombre){
           let params = {'id':id, 'opt':2};
           $.ajax({
               type:    "post",
-              url:     urlEliminar,
+              url:     urlEliminar3,
               data:    params,
               dataType: 'json',
               success: function(resp){
@@ -414,7 +337,7 @@ function editarRegObra(id){
             $("#respServer").html(cargando);
         },
         type:    "post",
-        url:     urlConsultas,
+        url:     urlConsultas3,
         data:    params,
         dataType: 'json',
         success: function(resp){
@@ -438,13 +361,15 @@ function editarRegObra(id){
   $('#btnNewWork').slideToggle();
 	$('#txtName').focus();
 }
-/*********************************************************************************/
-/*********************************************************************************/
-/*********************************************************************************/
-/*****************************FUNCIONES ESTIMACIONES******************************/
-/*********************************************************************************/
-/*********************************************************************************/
-/*********************************************************************************/
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+*************************FUNCIONES PARA SEGUIMIENTOS****************************
+********************************************************************************
+********************************************************************************
+***********
+**/
 
 
 $('#btnNewEstTrack').click(function(){
@@ -565,7 +490,7 @@ $('#saveTrackEst').click(function(){
       beforeSend: function(){
         $("#respServer").html(guardando);
       },
-      url: urlSubir,
+      url: urlSubir3,
       type: "post",
       dataType: "json", //<---- REGRESAR A JSON
       data: formData,
@@ -596,7 +521,7 @@ function editarRegSegEst(id){
             $("#respServer").html(cargando);
         },
         type:    "post",
-        url:     urlConsultas,
+        url:     urlConsultas3,
         data:    params,
         dataType: 'json',
         success: function(resp){
@@ -624,7 +549,7 @@ function eliminarRegSegEst(id, nombre){
   swal({
         html: true,
         title: "¿Está seguro?",
-        text: "eliminar el registro <strong>" + nombre + "</strong>",
+        text: "eliminar el registro " + nombre,
         type: "warning",
         showCancelButton: true,
         cancelButtonClass: "btn-primary",
@@ -637,7 +562,7 @@ function eliminarRegSegEst(id, nombre){
           let params = {'id':id, 'opt':3};
           $.ajax({
               type:    "post",
-              url:     urlEliminar,
+              url:     urlEliminar3,
               data:    params,
               dataType: 'json',
               success: function(resp){
@@ -649,6 +574,16 @@ function eliminarRegSegEst(id, nombre){
           });
       });
 }
+
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+**************************FUNCIONES PARA ANTIGUEDAD*****************************
+********************************************************************************
+********************************************************************************
+***********
+**/
 
 //LISTADO ANTIGUEDAD
 
@@ -690,7 +625,7 @@ $('#btnGuardarAnt').click(function(){
       beforeSend: function(){
         $("#respServer").html(guardando);
       },
-      url: urlSubir,
+      url: urlSubir3,
       type: "post",
       dataType: "json", //<---- REGRESAR A JSON
       data: formData,
@@ -720,7 +655,7 @@ function editarRegAntiguedad(id){
             $("#respServer").html(cargando);
         },
         type:    "post",
-        url:     urlConsultas,
+        url:     urlConsultas3,
         data:    params,
         dataType: 'json',
         success: function(resp){
@@ -739,7 +674,7 @@ function editarRegAntiguedad(id){
 }
 
 //FUNCIÓN PARA ELIMINAR UN REGISTRO DE ANTIGUEDAD
-function eliminarRegAntiguedad(id, nombre, icono){
+function eliminarRegAntiguedad(id, nombre){
   swal({
         html: true,
         title: "¿Está seguro?",
@@ -756,7 +691,7 @@ function eliminarRegAntiguedad(id, nombre, icono){
           let params = {'id':id, 'opt':4};
           $.ajax({
               type:    "post",
-              url:     urlEliminar,
+              url:     urlEliminar3,
               data:    params,
               dataType: 'json',
               success: function(resp){
@@ -769,10 +704,15 @@ function eliminarRegAntiguedad(id, nombre, icono){
       });
 }
 
-//FUNCIÓN PARA LISTAR TODOS LOS EMPLEADOS
-//*********************************************************************
-//*********************************************************************
-
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+***************************FUNCIONES PARA EMPLEADOS*****************************
+********************************************************************************
+********************************************************************************
+***********
+**/
 function employees_list(){
   urlPag = 'pg/empleados_listado.php';
 
@@ -795,14 +735,14 @@ function employees_list(){
         }
   });
 }
-
+//
 $('#btnNewEmployee').click(function(){
   $('#frmAddEmployee').slideToggle();
   $('#btnNewEmployee').slideToggle();
 	$('#btnSearchEmployee').slideToggle();
   $('#txtName').focus();
 });
-
+//
 $('#btnSearchEmployee').click(function(){
 	$('#frmSearchEmployee').slideToggle();
 	$('#btnNewEmployee').slideToggle();
@@ -816,7 +756,7 @@ $('#btnCancelSearch').click(function(){
   $('#frmSearchEmployee').slideToggle();
   $('#btnNewEmployee').slideToggle();
 	$('#btnSearchEmployee').slideToggle();
-  resetForm('frmAddEmployee');
+  resetForm('frmSearchEmployee');
 });
 
 $('#btnCancelEmployee').click(function(){
@@ -885,7 +825,7 @@ $('#btnAddEmployee').click(function(){
 	      beforeSend: function(){
 	        $("#respServer").html(guardando);
 	      },
-	      url: urlSubir,
+	      url: urlSubir3,
 	      type: "post",
 	      dataType: "json", //<---- REGRESAR A JSON
 	      data: formData,
@@ -893,14 +833,17 @@ $('#btnAddEmployee').click(function(){
 	      contentType: false,
 	      processData: false,
 	      success: function(resp){
-					console.log(resp);
+              console.log(resp);
 	          $("#respServer").empty();
 	          if(resp.resp == 1 ){
 	            employees_list();
 	            $('#opcion').val(7);
 	            resetForm('frmAddEmployee');
+							$('#frmAddEmployee').slideToggle();
+							$('#btnNewEmployee').slideToggle();
+							$('#btnSearchEmployee').slideToggle();
 	          }else{
-	            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+							$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
 	          }
 	      }
 	    });
@@ -913,7 +856,7 @@ function editEmployee(id) {
             $("#respServer").html(cargando);
         },
         type:    "post",
-        url:     urlConsultas,
+        url:     urlConsultas3,
         data:    params,
         dataType: 'json',
         success: function(resp){
@@ -963,7 +906,7 @@ function deleteEmployee(id, name){
 	          let params = {'id':id, 'opt':5};
 	          $.ajax({
 	              type:    "post",
-	              url:     urlEliminar,
+	              url:     urlEliminar3,
 	              data:    params,
 	              dataType: 'html',
 	              success: function(resp){
@@ -975,6 +918,64 @@ function deleteEmployee(id, name){
 	          });
 	      });
 }
+
+/**
+********************************************************************************
+********************************************************************************
+********************************************************************************
+******************************FUNCIONES PARA RAYA*******************************
+********************************************************************************
+********************************************************************************
+********************************************************************************
+**/
+
+
+$('#btnNewPayment').click(function(){
+  $('#frmPayment').slideToggle();
+  $('#btnNewPayment').slideToggle();
+  resetForm('frmPayment');
+});
+
+$('#cancelPaymentBtn').click(function(){
+	$('#frmPayment').slideToggle();
+	$('#btnNewPayment').slideToggle();
+	resetForm('frmPayment');
+});
+
+$('#savePaymentBtn').click(function(){
+	swal({
+				html: true,
+				title: "¿Está seguro?",
+				text: "Una vez agregado un pago, no se puede modificar ni eliminar",
+				type: "warning",
+				showCancelButton: true,
+				cancelButtonClass: "btn-primary",
+				confirmButtonColor: "#7BED81",
+				confirmButtonText: "Aceptar",
+				cancelButtonText: "Prefiero revisar los datos",
+				closeOnConfirm: true
+			},
+			function(){
+					let formData = new FormData(document.getElementById("frmPayment"));
+					$.ajax({
+							type:    "post",
+							url:     urlSubir3,
+							data:    formData,
+							dataType: 'json',
+							cache: false,
+							contentType: false,
+							processData: false,
+							success: function(resp){
+									console.log(resp);
+										if(resp.resp == 1){
+											console.log(resp.resp);
+												//LISTAR RAYAS
+										}
+							}
+					});
+			});
+});
+
 
 /**
 FORMAT CURRENCY FUNCTIONS
@@ -1073,4 +1074,81 @@ if (charCode > 31 && (charCode < 48 || charCode > 57))
 		return false;
 
 	return true;
+}
+
+
+/*
+*This function checks if the date1 is greater than date2
+*/
+function checkDate(date1, date2) {
+	var date1 = date1.split('-');
+	var date2 = date2.split('-');
+	var dateS = new Date(date1[2],date1[1],date1[0]);
+	var dateF = new Date(date2[2],date2[1],date2[0]);
+	var dateOpt = dates.compare(dateF, dateS);
+	if(dateOpt == 1 || dateOpt == 0){
+      return true;
+  }else return false;
+}
+
+var dates = {
+    convert:function(d) {
+        // Converts the date in d to a date-object. The input can be:
+        //   a date object: returned without modification
+        //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
+        //   a number     : Interpreted as number of milliseconds
+        //                  since 1 Jan 1970 (a timestamp)
+        //   a string     : Any format supported by the javascript engine, like
+        //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
+        //  an object     : Interpreted as an object with year, month and date
+        //                  attributes.  **NOTE** month is 0-11.
+        return (
+            d.constructor === Date ? d :
+            d.constructor === Array ? new Date(d[0],d[1],d[2]) :
+            d.constructor === Number ? new Date(d) :
+            d.constructor === String ? new Date(d) :
+            typeof d === "object" ? new Date(d.year,d.month,d.date) :
+            NaN
+        );
+    },
+    compare:function(a,b) {
+        // Compare two dates (could be of any type supported by the convert
+        // function above) and returns:
+        //  -1 : if a < b
+        //   0 : if a = b
+        //   1 : if a > b
+        // NaN : if a or b is an illegal date
+        // NOTE: The code inside isFinite does an assignment (=).
+        return (
+            isFinite(a=this.convert(a).valueOf()) &&
+            isFinite(b=this.convert(b).valueOf()) ?
+            (a>b)-(a<b) :
+            NaN
+        );
+    },
+    inRange:function(d,start,end) {
+        // Checks if date in d is between dates in start and end.
+        // Returns a boolean or NaN:
+        //    true  : if d is between start and end (inclusive)
+        //    false : if d is before start or after end
+        //    NaN   : if one or more of the dates is illegal.
+        // NOTE: The code inside isFinite does an assignment (=).
+       return (
+            isFinite(d=this.convert(d).valueOf()) &&
+            isFinite(start=this.convert(start).valueOf()) &&
+            isFinite(end=this.convert(end).valueOf()) ?
+            start <= d && d <= end :
+            NaN
+        );
+    }
+};
+
+//checks if html object is empty
+function isEmpty(obj){
+	if(obj.val().length < 1) {
+		opt = true;
+	} else {
+		opt = false;
+	}
+	return opt;
 }

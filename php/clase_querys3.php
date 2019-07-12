@@ -11,7 +11,7 @@ class Querys3 {
 			$cond = ' AND id_desarrollo = '.$id.' ';
 		}
 
-		$strQuery = 'SELECT id_desarrollo, nombre, alias, codigo_postal, icono, fecha_registro ';
+		$strQuery = 'SELECT id_desarrollo, nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro ';
 		$strQuery.= 'FROM tblc_desarrollo ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_desarrollo DESC';
@@ -20,18 +20,18 @@ class Querys3 {
 	}
 
 	//QUERY PARA AGREGAR UN REGISTRO AL CATÁLOGO DE DESARROLLO
-	public function addCatDesarrollo($nombre, $alias, $codigo_postal, $icono, $fechaRegistro){
+	public function addCatDesarrollo($nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono, $fechaRegistro){
 		$strQuery = 'INSERT INTO tblc_desarrollo ';
-		$strQuery.= '(nombre, alias, codigo_postal, icono, fecha_registro) ';
-		$strQuery.= 'VALUES("'.$nombre.'", "'.$alias.'", "'.$codigo_postal.'", "'.$icono.'", "'.$fechaRegistro.'")';
+		$strQuery.= '(nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$alias.'", "'.$numero_etapa_oferta.'", "'.$codigo_postal.'", "'.$icono.'", "'.$fechaRegistro.'")';
 
 		return $strQuery;
 	}
 
 	//QUERY PARA EDITAR UN REGISTRO DEL CATÁLOGO DESARROLLO
-	public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $codigo_postal, $icono){
+	public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono){
 		$strQuery = 'UPDATE tblc_desarrollo ';
-		$strQuery.= 'SET nombre = "'.$nombre.'", alias = "'.$alias.'", codigo_postal = "'.$codigo_postal.'", icono = "'.$icono.'" ';
+		$strQuery.= 'SET nombre = "'.$nombre.'", alias = "'.$alias.'", numero_etapa_oferta = "'.$numero_etapa_oferta.'", codigo_postal = "'.$codigo_postal.'", icono = "'.$icono.'" ';
 		$strQuery.= 'WHERE id_desarrollo = '.$idDesarrollo;
 
 		return $strQuery;
@@ -63,7 +63,7 @@ class Querys3 {
 			$cond = ' AND id_obras = '.$id.' ';
 		}
 
-		$strQuery = 'SELECT id_obras, nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro ';
+		$strQuery = 'SELECT id_obras, id_obras AS id, nombre, nombre AS valor, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro ';
 		$strQuery.= 'FROM tbl_obras ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_obras	 DESC';
@@ -221,7 +221,8 @@ class Querys3 {
 		if($imss != '') {
 			$cond = ' AND imss LIKE "%'.$imss.'%" ';
 		}
-		$strQuery = 'SELECT id_empleado, nombre, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
+		//DON'T DELETE DUPLICATED ALIASES; THOSE ARE USED IN RAYAS MODULE
+		$strQuery = 'SELECT id_empleado, id_empleado AS id,  nombre, CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) AS valor, categoria AS category, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
 		$strQuery.= 'FROM tbl_empleados ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_empleado DESC';
@@ -232,7 +233,7 @@ class Querys3 {
 	public function addEmpleado($nombre,$apellido_paterno,$apellido_materno, $direccion, $rfc, $imss, $curp, $fecha_admision, $tipo, $estado_civil, $genero, $categoria, $departamento, $area, $fecha_registro){
 		$strQuery = 'INSERT INTO tbl_empleados ';
 		$strQuery.= '(nombre, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro) ';
-		$strQuery.= 'VALUES("'.$nombre.'", "'.$apellido_paterno.'", "'.$apellido_materno.'", "'.$direccion.'", "'.$rfc.'", "'.$imss.'", "'.$curp.'", "'.$fecha_admision.'", "'.$tipo.'", "'.$estado_civil.'", "'.$genero.'", "'.$categoria.'", "'.$departamento.'","'.$area.'", "'.$fecha_registro.'")';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$apellido_paterno.'", "'.$apellido_materno.'", "'.$direccion.'", "'.$rfc.'", "'.$imss.'", "'.$curp.'", "'.$fecha_admision.'", "'.$tipo.'", "'.$estado_civil.'", "'.$genero.'", "'.$categoria.'", "'.$departamento.'", "'.$area.'", "'.$fecha_registro.'")';
 
 		return $strQuery;
 	}
@@ -251,6 +252,19 @@ class Querys3 {
 		$strQuery.= 'WHERE id_empleado = '.$id;
 
 		return $strQuery;
+	}
+
+	//QUERY FOR ADDING RAYAS
+	public function addPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
+	$addedActivities, $addedActAmount, $totalAmount, $status, $observations, $employeeSelected,
+	$workSelected, $currentDate){
+	$strQuery = 'INSERT INTO tbl_rayas ';
+	$strQuery.=	'(fecha_inicio, fecha_finalizacion, sueldo, alimentos, ot_act,
+		ot_act_monto, total_raya, status, observaciones, id_empleado, id_obra, fecha_registro) VALUES ';
+
+	$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$addedActivities.','.$addedActAmount.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.','.$workSelected.',"'.$currentDate.'")';
+
+	return $strQuery;
 	}
 }
 ?>

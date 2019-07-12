@@ -34,7 +34,7 @@
         </div>
         <form id="frmSearchEmployee" name="frmSearchEmployee" class="mt-1em" style="display:none;">
           <div class="col-lg-12">
-            <div class="col-lg-3">
+            <div class="col-lg-3 ">
               <div class="form-group">
                 <label for="txtEmployee">Nombre</label>
                 <input onkeyup="employees_list()" class="form-control" type="text" name="txtEmployee" id="txtEmployee">
@@ -63,7 +63,7 @@
         <form id="frmAddEmployee" name="frmAddEmployee" class="mt-1em" style="display:none;">
           <div class="col-lg-12">
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtName">Nombre</label>
                 <input class="form-control" type="text" name="txtName" id="txtName" placeholder="Nombre">
@@ -71,7 +71,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtLastName">Apellido paterno</label>
                 <input class="form-control" type="text" name="txtLastName" id="txtLastName" placeholder="Apellido paterno">
@@ -80,7 +80,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtMLastName">Apellido materno</label>
                 <input class="form-control" type="text" name="txtMLastName" id="txtMLastName" placeholder="Apellido materno">
@@ -88,7 +88,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtAddress">Dirección</label>
                 <input class="form-control" type="text" name="txtAddress" id="txtAddress" placeholder="Dirección">
@@ -96,21 +96,21 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtIMSS">IMSS</label>
                 <input class="form-control" type="text" name="txtIMSS" id="txtIMSS" placeholder="Número de seguro social">
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtRFCi">RFC</label>
                 <input class="form-control" type="text" name="txtRFCi" id="txtRFCi" placeholder="Registro federal de contribuyentes">
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtCURP">CURP</label>
                 <input type="text" class="form-control" id="txtCURP" name="txtCURP" placeholder="Clave Unica de Registro Poblacional">
@@ -118,7 +118,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="admissionDate">Fecha de admisión</label>
                 <input type="text" class="form-control" class="admissionDate" name="admissionDate" id="admissionDate" placeholder="Fecha de admisión">
@@ -126,7 +126,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtCivilSts">Estado Civil</label>
                 <select class="custom-select form-control" name="txtCivilSts" id="txtCivilSts">
@@ -137,7 +137,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtGender">Género</label>
                 <select class="custom-select form-control" name="txtGender" id="txtGender">
@@ -148,7 +148,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtCategory">Categoría</label>
                 <select class="custom-select form-control" name="txtCategory" id="txtCategory">
@@ -167,7 +167,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtDepartment">Depto</label>
                 <select class="custom-select form-control" name="txtDepartment" id="txtDepartment">
@@ -186,7 +186,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtArea">Area</label>
                 <select class="custom-select form-control" name="txtArea" id="txtArea">
@@ -205,7 +205,7 @@
               </div>
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtType">Tipo</label>
                 <select class="custom-select form-control" name="txtType" id="txtType">
@@ -216,10 +216,14 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <button class="btn btn-success pull-right mt-2em btn-sm" type="button" id="btnAddEmployee" name="btnAddEmployee">Agregar empleado</button>
-              &nbsp;
-              <button class="btn btn-danger pull-right mt-2em btn-sm" type="button" id="btnCancelEmployee" name="btnCancelEmployee">Cancelar</button>
+            <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em">
+              <div class="col-sm-12 col-lg-6 col-md-6">
+                <button class="btn btn-primary btn-block" type="button" id="btnAddEmployee" name="btnAddEmployee">Agregar</button>
+                &nbsp;
+              </div>
+              <div class="col-sm-12 col-lg-6 col-md-6">
+                <button class="btn btn-secondary btn-block" type="button" id="btnCancelEmployee" name="btnCancelEmployee">Cancelar</button>
+              </div>
             </div>
 
             <div id="respServer">

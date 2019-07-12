@@ -31,6 +31,9 @@
       <!-- style -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
 
+      <!--autocomplete-->
+      <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
+
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
       <!--[if lt IE 9]>
@@ -43,7 +46,7 @@
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
-        <div class="wrapper">
+        <div class="wrapper" id="cuerpo">
             <?php include_once('pg/menu_cabeza.php'); ?>
             <?php include_once('pg/menu_inicio.php'); ?>
             <!-- Content Wrapper. Contains page content -->
@@ -61,11 +64,13 @@
                 <div class="pull-right hidden-xs">
                     <b>Version</b> 1.0.0
                 </div>
-                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Reservados.
+                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Recervados.
             </footer>
         </div>
+        <!-- Google Maps -->
+         <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAhwvP2m1CQmeYARAKBXVLrB0LjA5b2s1o&libraries=drawing,visualization,geometry"></script>
         <!-- jQuery 3 -->
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery-3.4.1.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -74,7 +79,6 @@
         </script>
         <!-- Bootstrap 3.3.7 -->
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
         <!-- DataTables -->
         <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
         <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -113,6 +117,7 @@
         <script src="js/funciones.js" charset="UTF-8"></script>
         <script src="js/funciones2.js" charset="UTF-8"></script>
         <script src="js/funciones3.js" charset="UTF-8"></script>
+        <script src="js/autocomplete.js"></script>
 
 
         <!-- AdminLTE App -->

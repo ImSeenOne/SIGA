@@ -31,8 +31,8 @@
       </div>
 
       <form id="frmDesarrollo" class="row cntntFrm mt-1em" style="display:none;">
-        <div class="col-lg-12">
-          <div class="col-lg-3">
+        <div class="col-lg-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="form-group">
               <label for="txtNombre">Nombre</label>
               <input type="text" id="txtNombre" name="txtNombre" class="form-control" placeholder="Nombre">
@@ -40,23 +40,31 @@
             </div>
           </div>
 
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="form-group">
               <label for="txtAlias">Alias</label>
-              <input type="text" id="txtAlias" name="txtAlias" class="form-control" placeholder="Alias">
-              <div id="reqTxtAlias"></div>
+              <input type="text" id="txtAlias" name="txtAlias" class="form-control" placeholder="Alias" maxlength="2">
+              <div id="reqTxtAlias" style="color: red;"></div>
             </div>
           </div>
 
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="form-group">
+              <label for="txtNumeroOferta">Número etapa/oferta</label>
+              <input type="text" id="txtNumeroOferta" name="txtNumeroOferta" class="form-control" placeholder="Número" maxlength="50">
+              <div id="reqTxtAlias" style="color: red;"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="form-group">
               <label for="txtCp">C.P.</label>
               <input type="text" id="txtCp" onkeypress="isNumberKey(event)" name="txtCp" class="form-control" placeholder="Código postal" maxlength="5">
-              <div id="reqTxtCp"></div>
+              <div id="reqTxtCp" style="color: red;"></div>
             </div>
           </div>
 
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-4 col-sm-12">
             <div class="form-group">
               <label for="flIcono">Icono</label>
               <input type="file" id="flIcono" name="flIcono" class="form-control"/>
@@ -66,11 +74,15 @@
           </div>
 
           <div id="respServer"></div>
-          <div class="form-group">
+          <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em">
             <input type="hidden" id="idDesarrollo" name="idDesarrollo">
             <input type="hidden" id="opcion" name="opcion" value="1">
-            <button id="btnGuardaDesarrollo" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
-            <button id="btnCancelarDesarrollo" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <button id="btnGuardaDesarrollo" type="button" class="btn btn-primary btn-block">Guardar</button>&nbsp;
+            </div>
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <button id="btnCancelarDesarrollo" type="button" class="btn btn-secondary btn-block">Cancelar</button>
+            </div>
           </div>
         </div>
       </form>
@@ -92,10 +104,6 @@
   window.onload = function() {
     desarrollo_listado();
   }
-
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  });
 
 function isNumberKey(evt) {
   var charCode = (evt.which) ? evt.which : evt.keyCode;

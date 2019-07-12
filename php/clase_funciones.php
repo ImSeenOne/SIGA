@@ -3,65 +3,72 @@ class Funciones{
 	public function rutaAbsoluta(){
 		return 'http://demosistemas.com/siga';
 	}
-	
+
 	public function llenarcombo($resultados) {
 		foreach($resultados as $resultado){
 			echo '
 			<option value="'.$resultado->id.'" name="'.$resultado->valor.'">'.$this->cdetectUtf8($resultado->valor).'</option>';
 			}
 		}
-	
+
+		public function llenarComboEmpleadoCat($resultados){
+			foreach($resultados as $resultado){
+				echo '
+				<option value="'.$resultado->id.'" name="'.$resultado->valor.'" data-cat="'.$resultado->category.'">'.$this->cdetectUtf8($resultado->valor).'</option>';
+				}
+		}
+
 	public function llenarcombomodifica($resultados,$id) {
 		// mostrarmos los registros
-		foreach($resultados as $resultado){			
+		foreach($resultados as $resultado){
 			if($id == $resultado->id) echo '<option value="'.$resultado->id.'" selected="selected">'.$this->cdetectUtf8($resultado->valor).'</option>';
-			else echo '<option value="'.$resultado->id.'">'.$this->cdetectUtf8($resultado->valor).'</option>';		
+			else echo '<option value="'.$resultado->id.'">'.$this->cdetectUtf8($resultado->valor).'</option>';
 		}
 	}
 
 	public function llenarcombomodifica2($resultados,$id) {
 		// mostrarmos los registros
-		foreach($resultados as $resultado){	
+		foreach($resultados as $resultado){
 			if($id != $rows[0]) echo '<option value="'.$resultado->id.'">'.$this->cdetectUtf8($resultado->valor).'</option>';
 		}
 	}
-	
+
 	public function llenarcombomodificaarreglo2($resultados,$arregloid) {
 		// mostrarmos los registros
-		foreach($resultados as $resultado){	
-			if(!in_array($resultado->id, $arregloid)) echo '<option value="'.$resultado->id.'">'.$resultado->valor.'</option>';		
+		foreach($resultados as $resultado){
+			if(!in_array($resultado->id, $arregloid)) echo '<option value="'.$resultado->id.'">'.$resultado->valor.'</option>';
 		}
-	}	
-	
+	}
+
 	public function llenarcombomodificaarreglo($resultados,$arregloid) {
 		// mostrarmos los registros
-		foreach($resultados as $resultado){	
+		foreach($resultados as $resultado){
 			if(in_array($resultado->id, $arregloid)) echo '<option value="'.$resultado->id.'" selected="selected">'.$resultado->valor.'</option>';
-			else echo '<option value="'.$resultado->id.'">'.$resultado->valor.'</option>';		
+			else echo '<option value="'.$resultado->id.'">'.$resultado->valor.'</option>';
 		}
 	}
 
 	/* Muestra opciones con input tipo radio */
-	
+
 	public function llenaradio($resultados,$nombre) {
 		$x = 1;
 		// mostrarmos los registros
-		foreach($resultados as $resultado){	
+		foreach($resultados as $resultado){
 			if($x == 1){
 				echo '<input type="radio" name="'.$nombre.'" id="'.$nombre.$resultado->id.'" value="'.$nombre.$resultado->id.'" checked="checked" />'.$resultado->valor.'&nbsp;&nbsp;';
 				$x++;
 			}
 			else
 				echo '<input type="radio" name="'.$nombre.'" id="'.$nombre.$resultado->id.'" value="'.$nombre.$resultado->id.'" />'.$resultado->valor.'&nbsp;&nbsp;';
-				
+
 		}
 	}
-	
+
 	public function llenaradiomodifica($resultados,$id,$nombre) {
 		// mostrarmos los registros
-		foreach($resultados as $resultado){			
+		foreach($resultados as $resultado){
 			if($id == $resultado->id) echo '<input type="radio" name="'.$nombre.'" id="'.$nombre.$resultado->id.'" value="'.$nombre.$resultado->id.'" checked="checked" />'.$resultado->valor.'&nbsp;&nbsp;';
-			else echo '<input type="radio" name="'.$nombre.'" id="'.$nombre.$resultado->id.'" value="'.$nombre.$resultado->id.'" />'.$resultado->valor.'&nbsp;&nbsp;';		
+			else echo '<input type="radio" name="'.$nombre.'" id="'.$nombre.$resultado->id.'" value="'.$nombre.$resultado->id.'" />'.$resultado->valor.'&nbsp;&nbsp;';
 		}
 	}
 
@@ -103,7 +110,7 @@ class Funciones{
 		else{
 			list($anio,$mes,$dia)=explode("/",$fecha);
 		}
-    	return $dia."<strong>.</strong>".$mes."<strong>.</strong>".$anio; 
+    	return $dia."<strong>.</strong>".$mes."<strong>.</strong>".$anio;
 	}
 	//convierte la fecha a formato año - mes - dia
 	public function cambiarFormatoFechabase($fecha){
@@ -113,7 +120,7 @@ class Funciones{
 		else{
 			list($dia,$mes,$anio)=explode("/",$fecha);
 		}
-    	return $anio."-".$mes."-".$dia; 
+    	return $anio."-".$mes."-".$dia;
 	}
 
 	//convierte la fecha a formato dia / mes / año
@@ -124,7 +131,7 @@ class Funciones{
 		else{
 			list($anio,$mes,$dia)=explode("/",$fecha);
 		}
-    	return $dia."/".$mes."/".$anio; 
+    	return $dia."/".$mes."/".$anio;
 	}
 
 	//convierte color exadecimal a RGB
@@ -145,52 +152,52 @@ class Funciones{
 		while($i<=$o){
 			$var = str_replace($malo[$i],"",$var);
 			$i++;
-		}	
-		
+		}
+
 		return $var;
 	}
-	
+
 	public function sanear_string($string)
 	{
-	
+
 		$string = trim($string);
-	
+
 		$string = str_replace(
 			array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
 			array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
 			$string
 		);
-	
+
 		$string = str_replace(
 			array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
 			array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
 			$string
 		);
-	
+
 		$string = str_replace(
 			array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
 			array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
 			$string
 		);
-	
+
 		$string = str_replace(
 			array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
 			array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
 			$string
 		);
-	
+
 		$string = str_replace(
 			array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
 			array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
 			$string
 		);
-	
+
 		$string = str_replace(
 			array('ñ', 'Ñ', 'ç', 'Ç'),
 			array('n', 'N', 'c', 'C',),
 			$string
 		);
-	
+
 		//Esta parte se encarga de eliminar cualquier caracter extraño
 		$string = str_replace(
 			array("\\", "¨", "º", "~",
@@ -204,35 +211,35 @@ class Funciones{
 			'',
 			$string
 		);
-	
-	
+
+
 		return $string;
 	}
 
 	public function comillas_formulario($string)
 	{
-	
+
 		$string = trim($string);
-	
+
 		$string = str_replace(
 			array('"', "'"),
 			array(htmlentities('"'), htmlentities("'")),
 			$string
 		);
-	
+
 		return $string;
 	}
 
 	public function mes_nombre($mes){
-		
+
 		 switch($mes)
-              {         
+              {
                case 1:
                   $mes='Enero';
-                  break;     
+                  break;
                case 2:
                   $mes='Febrero';
-                  break;     
+                  break;
                case 3:
                   $mes='Marzo';
                   break;
@@ -273,13 +280,13 @@ class Funciones{
 		$mes = $fecha["mon"];
 
            switch($mes)
-              {         
+              {
                case 1:
                   $mes='Enero';
-                  break;     
+                  break;
                case 2:
                   $mes='Febrero';
-                  break;     
+                  break;
                case 3:
                   $mes='Marzo';
                   break;
@@ -311,13 +318,13 @@ class Funciones{
                   $mes='Diciembre';
                   break;
               }
-           
+
 		$año = $fecha["year"];
-		echo "$dia de $mes del $año";		
+		echo "$dia de $mes del $año";
 		}
 
 	public function mes($mes){
-		
+
 		/*if(strstr($fecha,"-")){
 			list($anio,$mes,$dia)=explode("-",$fecha);
 		}
@@ -326,13 +333,13 @@ class Funciones{
 		}*/
 
            switch($mes)
-              {         
+              {
                case 1:
                   $mes='Enero';
-                  break;     
+                  break;
                case 2:
                   $mes='Febrero';
-                  break;     
+                  break;
                case 3:
                   $mes='Marzo';
                   break;
@@ -364,13 +371,13 @@ class Funciones{
                   $mes='Diciembre';
                   break;
               }
-           
-		return $mes;		
+
+		return $mes;
 		}
 
 
 	public function fecha2($fecha){
-		
+
 		if(strstr($fecha,"-")){
 			list($anio,$mes,$dia)=explode("-",$fecha);
 		}
@@ -379,13 +386,13 @@ class Funciones{
 		}
 
            switch($mes)
-              {         
+              {
                case 1:
                   $mes='Enero';
-                  break;     
+                  break;
                case 2:
                   $mes='Febrero';
-                  break;     
+                  break;
                case 3:
                   $mes='Marzo';
                   break;
@@ -417,12 +424,12 @@ class Funciones{
                   $mes='Diciembre';
                   break;
               }
-           
-		return "$dia de $mes $anio";		
+
+		return "$dia de $mes $anio";
 		}
-	
+
 	public function fecha3($fecha){
-		
+
 		if(strstr($fecha,"-")){
 			list($anio,$mes,$dia)=explode("-",$fecha);
 		}
@@ -432,13 +439,13 @@ class Funciones{
 		$i = strtotime($fecha);
 		$dia1 = date("w",mktime(0, 0, 0, $mes, $dia, $anio));
            switch($mes)
-              {         
+              {
                case 1:
                   $mes='Enero';
-                  break;     
+                  break;
                case 2:
                   $mes='Febrero';
-                  break;     
+                  break;
                case 3:
                   $mes='Marzo';
                   break;
@@ -470,18 +477,18 @@ class Funciones{
                   $mes='Diciembre';
                   break;
               }
-			  
+
            switch($dia1)
               {
 				  case 0:
                   $dia1='Domingo';
-                  break;        
+                  break;
                case 1:
                   $dia1='Lunes';
-                  break;     
+                  break;
                case 2:
                   $dia1='Martes';
-                  break;     
+                  break;
                case 3:
                   $dia1='Miércoles';
                   break;
@@ -495,8 +502,8 @@ class Funciones{
                   $dia1='Sabado';
                   break;
               }
-           
-		return "$dia1, $dia de $mes $anio";		
+
+		return "$dia1, $dia de $mes $anio";
 		}
 
 	public function tipo_redsocial($id){
@@ -520,29 +527,29 @@ class Funciones{
 	}
 
 	public function fecha4($fecha){
-		
+
 		if(strstr($fecha,"-")){
 			list($anio,$mes,$dia)=explode("-",$fecha);
 		}
 		else{
 			list($anio,$mes,$dia)=explode("/",$fecha);
 		}
-           
-		return "$dia/$mes/$anio";		
+
+		return "$dia/$mes/$anio";
 	}
 
 	public function fecha5($fecha){
-		
+
 		if(strstr($fecha,"-")){
 			list($anio,$mes,$dia)=explode("-",$fecha);
 		}
 		else{
 			list($anio,$mes,$dia)=explode("/",$fecha);
 		}
-           
-		return "$dia-$mes-$anio";		
+
+		return "$dia-$mes-$anio";
 	}
-		
+
 	public function activo($id = 2){
 		switch($id){
 			case 1: $publicado = "SI"; break;
@@ -551,7 +558,7 @@ class Funciones{
 			}
 		return $publicado;
 	}
-	
+
 	public function tipo_sexo($id){
 		switch($id){
 			case 1: $publicado = "Hombre"; break;
@@ -598,7 +605,7 @@ class Funciones{
 		}
 		return $cadena;
 	}
-	
+
 	public function getComboVisible($value = 2)
 	{
 		$array_visible=array(1=>"SI", 2=>"NO");
@@ -619,31 +626,31 @@ class Funciones{
 		}
 	}
 
-	public function getMonthDays($Month, $Year){ 
-	   //Si la extensión que mencioné está instalada, usamos esa. 
-	   if( is_callable("cal_days_in_month")) 
-	   { 
-		  return cal_days_in_month(CAL_GREGORIAN, $Month, $Year); 
-	   } 
-	   else 
-	   { 
-		  //Lo hacemos a mi manera. 
-		  return date("t",mktime(0,0,0,$Month,1,$Year)); 
-	   } 
+	public function getMonthDays($Month, $Year){
+	   //Si la extensión que mencioné está instalada, usamos esa.
+	   if( is_callable("cal_days_in_month"))
+	   {
+		  return cal_days_in_month(CAL_GREGORIAN, $Month, $Year);
+	   }
+	   else
+	   {
+		  //Lo hacemos a mi manera.
+		  return date("t",mktime(0,0,0,$Month,1,$Year));
+	   }
 	}
 
 	/*function create_password($password){
-		
+
 		$salt = '123%45678"$9%%9&/((&87654321';
 		$password_array = str_split($password, 4);
 		$hash = sha1($password_array[0].$password_array[3].$salt.$password_array[2].$password_array[1]);
 		$md5 = md5($hash);
-		
+
 		return $md5;
 	}*/
-	
+
 	function create_password($password){
-		
+
 		$password = '((&876%!"·¿?!"·$'.$password.'12$&¿?3%%9&/';
 		$base = base64_encode($password);
 		$md5 = md5($base);
@@ -653,7 +660,7 @@ class Funciones{
 	}
 
 	function verify_password($password, $hash){
-		
+
 		$password = '((&876%!"·¿?!"·$'.$password.'12$&¿?3%%9&/';
 		$base = base64_encode($password);
 		$md5 = md5($base);
@@ -666,19 +673,19 @@ class Funciones{
 	}
 
 	function queBrowserIE() {
-	
-		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';  
-		
-		if (strpos($user_agent, 'MSIE') !== false) {  
-		   $browser = true; 
-		} else {  
-		   $browser = false;  
+
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+		if (strpos($user_agent, 'MSIE') !== false) {
+		   $browser = true;
+		} else {
+		   $browser = false;
 		}
-		
+
 		return $browser;
 
 	}
-	
+
 	function html2txt($document){
 		$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
 					   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
@@ -688,7 +695,7 @@ class Funciones{
 		$text = preg_replace($search, '', $document);
 		return $text;
 		}
-	
+
 	function getRealIP() {
 		if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip=$this->limpia($_SERVER['HTTP_CLIENT_IP']);
@@ -699,7 +706,7 @@ class Funciones{
 		else {
 			$ip=$this->limpia($_SERVER['REMOTE_ADDR']);
 		}
-		
+
 		return $ip;
 	}
 
@@ -806,9 +813,9 @@ class Funciones{
 		$contenido = implode(' ', $contenido);
 		return $contenido;
 	}
-	
-	function getBrowser() { 
-		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; 
+
+	function getBrowser() {
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$navegadores = array(
 			'Opera' => 'Opera',
 			'Mozilla Firefox'=> '(Firebird)|(Firefox)',
@@ -838,13 +845,13 @@ class Funciones{
 		    'amaya'             => 'Amaya',
 		    'IBrowse'           => 'IBrowse'
 			);
-			
+
 		foreach($navegadores as $navegador=>$pattern){
 			if(strpos($user_agent, $pattern) !== false) return $this->limpia($navegador);
 			}
-			
+
 		}
-	
+
 	function getOs() {
 		$user_agent= strtolower($_SERVER['HTTP_USER_AGENT']);
 
@@ -873,13 +880,13 @@ class Funciones{
 			'/blackberry/i'         =>  'BlackBerry',
 			'/webos/i'              =>  'Mobile WebOS'
 	   );
-	
-		foreach ($plataformas as $regex => $plataforma) { 
+
+		foreach ($plataformas as $regex => $plataforma) {
 
 		    if (preg_match($regex, $user_agent)) {
 		        return $this->limpia($plataforma);
 		    }
-		}   
+		}
 
 	   return 'Sistema Operativo Desconocido';
 	}
@@ -954,16 +961,16 @@ class Funciones{
 	   }
 	   return $result ;
 	}
-	
-	function cdetectUtf8($str){ 
-		if( mb_detect_encoding($str,"UTF-8, ISO-8859-1")!="UTF-8" ){ 
-		
-			return  utf8_encode($str); 
-			} 
-		else{ 
-			return $str; 
-			} 
-	
+
+	function cdetectUtf8($str){
+		if( mb_detect_encoding($str,"UTF-8, ISO-8859-1")!="UTF-8" ){
+
+			return  utf8_encode($str);
+			}
+		else{
+			return $str;
+			}
+
 		}
 
 	function getporcentaje($numero,$total){
@@ -1026,7 +1033,7 @@ class Funciones{
 		$headers .= "Content-type: text/html; charset=utf-8\r\n";
 		$headers .= "From: atc@demosistemas.com\r\n";
 		// asunto del email
-		$subject = "Notificación - Atención Ciudadana";					   
+		$subject = "Notificación - Atención Ciudadana";
 		// Cuerpo del mensaje
 
 		$mensaje = '
@@ -1049,7 +1056,7 @@ class Funciones{
 							Nombre del solicitante: <strong>'.$nombreDestinatario.'</strong><br>
 							Categoría: <strong>'.$categoria.'</strong><br>
 							Reporte: <strong>'.$descServ.'</strong>
-							
+
 						</div>
 						<p>Con tu folio podrás consultar el seguimiento de tu solicitud en la Aplicación Móvil de Inteligencia Urbana Ciudad 2.0</p>
 						<p><strong>IMPORTANTE:</strong> Este correo ha sido generado automaticamente por el sistema y es de carácter informativo, favor de no responder.</p>
@@ -1058,7 +1065,7 @@ class Funciones{
 				</body>
 			</html>
 		';
-					
+
 		$bool = mail($correoDestinatario, $subject, $mensaje, $headers);
 		if(!$bool){
 		    return false;
