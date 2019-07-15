@@ -26,9 +26,14 @@
             <button id="btnNewPayment" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
               Agregar un nuevo pago
             </button>
+            &nbsp;
+            <!-- <button id="btnSearchPayment" type="button" class="btn btn-secondary btn-sm pull-right mt-2em">
+              Buscar un pago
+            </button> -->
             <p id="noEmployees" class="text-danger">
             </p>
           </div>
+
           <form id="frmPayment" name="frmPayment" style="display:none;">
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="dateStart">Fecha de inicio</label>
@@ -133,9 +138,35 @@
               </div>
           </form>
 
+          <form id="searchPaymentFrm" style="display: none;" method="post">
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
+              <label for="">Empleado</label>
+              <input type="text" name="employeeSearch" class="form-control" id="employeeSearch" onkeyup="listPayments()">
+            </div>
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
+              <label for="workSearch">Obra</label>
+              <input class="form-control" type="text" name="workSearch" id="workSearch" onkeyup="listPayments()">
+            </div>
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
+              <label for="rfcSearch">RFC</label>
+              <input class="form-control" type="text" name="rfcSearch" id="rfcSearch" onkeyup="listPayments()">
+            </div>
+            <div class="form-group col-lg-3 col-md-12 col-sm-6">
+              <button class="btn btn-secondary mt-2em btn-block" id="cancelSearchPayment" type="button">Cancelar</button>
+            </div>
+          </form>
+
           <div id="respServer">
           </div>
+
+
         </div>
+
+        <div class="row">
+          <div id="cntnListPayments" class="col-lg-12 col-md-12 col-sm-12">
+          </div>
+        </div>
+
       </div>
   </section>
 </div>
@@ -144,7 +175,7 @@
   window.onload = function() {
     activaDatePicker('dateStart');
     activaDatePicker('dateFinish');
-    //LISTAR LAS RAYAS
+    listPayments();
     $('#employee').select2();
     $('#work').select2();
     $('#foodDays').val("1");

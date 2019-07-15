@@ -266,5 +266,11 @@ class Querys3 {
 
 	return $strQuery;
 	}
+
+	//QUERY FOR SEARCHING RAYAS
+	public function searchPayments(){
+
+		return 'SELECT * FROM tbl_rayas';
+	}
 }
 ?>

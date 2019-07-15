@@ -115,9 +115,11 @@ case 2:
 		$dateStart = explode("-",$dateStartTmp);
 		$dateFinish = explode("-",$dateFinishTmp);
 
+
+
 		$amount = str_replace(",","",$amount);
 
-		if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, $dateStart[2]."-".$dateStart[1]."-".$dateStart[0], $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0], $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{

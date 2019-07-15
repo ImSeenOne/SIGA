@@ -169,7 +169,7 @@ function eliminarRegDesarrollo(id, icono, nombre){
 *****************************FUNCIONES PARA OBRAS*******************************
 ********************************************************************************
 ********************************************************************************
-***********
+********************************************************************************
 **/
 
 
@@ -735,6 +735,7 @@ function employees_list(){
         }
   });
 }
+
 //
 $('#btnNewEmployee').click(function(){
   $('#frmAddEmployee').slideToggle();
@@ -929,17 +930,50 @@ function deleteEmployee(id, name){
 ********************************************************************************
 **/
 
+function listPayments(){
+	urlPag = 'pg/raya_listado.php';
+
+	$.ajax({
+				beforeSend: function(){
+						$("#cntnListPayments").html(cargando);
+				},
+				type:    "post",
+				url:     urlPag,
+				dataType: 'html',
+				success: function(data){
+						$('#cntnListPayments').html(data);
+						loadDataTable('listPayments', true);
+				}
+	});
+}
+
+$('#btnSearchPayment').click(function(){
+	$('#searchPaymentFrm').slideToggle();
+	$('#btnNewPayment').slideToggle();
+	$('#btnSearchPayment').slideToggle();
+	resetForm('frmPayment');
+});
 
 $('#btnNewPayment').click(function(){
   $('#frmPayment').slideToggle();
+	$('#btnSearchPayment').slideToggle();
   $('#btnNewPayment').slideToggle();
   resetForm('frmPayment');
 });
 
+$('#cancelSearchPayment').click(function(){
+	$('#btnSearchPayment').slideToggle();
+	$('#btnNewPayment').slideToggle();
+	$('#searchPaymentFrm').slideToggle();
+	resetForm('searchPaymentFrm');
+});
+
 $('#cancelPaymentBtn').click(function(){
 	$('#frmPayment').slideToggle();
+	$('#btnSearchPayment').slideToggle();
 	$('#btnNewPayment').slideToggle();
 	resetForm('frmPayment');
+	$('#opcion').val("11");
 });
 
 $('#savePaymentBtn').click(function(){
