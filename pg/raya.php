@@ -23,15 +23,20 @@
         </div>
         <div class="box-body">
           <div class="col-lg-12 alignMiddle">
-            <button id="btnNewPayment" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
-              Agregar un nuevo pago
-            </button>
-            &nbsp;
-            <!-- <button id="btnSearchPayment" type="button" class="btn btn-secondary btn-sm pull-right mt-2em">
-              Buscar un pago
-            </button> -->
-            <p id="noEmployees" class="text-danger">
-            </p>
+
+            <?php
+              $listado = @$conexion->obtenerlista($querys3->getEmpleadosById());
+              $totRegs = $conexion->numregistros();
+              if($totRegs > 0){
+             ?>
+             <button id="btnNewPayment" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
+               Agregar un nuevo pago
+             </button>
+           <?php } else {?>
+             <p id="noEmployees" class="text-danger">
+               No se pueden generar pagos si no hay empleados registrados
+             </p>
+           <?php } ?>
           </div>
 
           <form id="frmPayment" name="frmPayment" style="display:none;">

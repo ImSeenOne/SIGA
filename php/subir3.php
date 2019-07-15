@@ -386,8 +386,12 @@ case 2:
 	//AGREGA UNA NUEVA RAYA (PAGO DE NÓMINA)
 	case 11:
 
-		$dateStart = $funciones->limpia($_POST['dateStart']);
-		$dateFinish = $funciones->limpia($_POST['dateFinish']);
+		$dateStartTmp = $funciones->limpia($_POST['dateStart']);
+		$dateFinishTmp = $funciones->limpia($_POST['dateFinish']);
+
+		$dateStart = explode("-", $dateStartTmp);
+		$dateFinish = explode("-", $dateFinishTmp)
+
 		$addedActivities = $funciones->limpia($_POST['addedActivities']);
 		$employeeSelected = $funciones->limpia($_POST['employeeSelected']);
 		$workSelected = $funciones->limpia($_POST['workSelected']);
@@ -404,7 +408,7 @@ case 2:
 		$foodTotalAmount = str_replace(",", "", $foodTotalAmountTmp);
 		//$ = $funciones->limpia($_POST['']);
 
-		if($conexion->consulta($querys->addPayment($dateStart, $dateFinish, $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{
