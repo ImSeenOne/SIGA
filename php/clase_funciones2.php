@@ -167,7 +167,122 @@ class FuncionesB{
               }
 			return $mes;
 		}
+	
+	function formatoFecha($fecha){
+		$arrayF = explode("/",$fecha);
+		$nuevaFecha = "";
+		//print_r($arrayF);		
+		if(is_array($arrayF)) $nuevaFecha = $arrayF[2] . "-" . $arrayF[1] . "-" . $arrayF[0];
 
+		return $nuevaFecha;
+	}
+    
+    // FUNCION PARA GENERAR CONTRASEÑAS
+    
+    function create_password($pwd){
+        $opciones = [
+            'cost' => 12,
+        ];
+        $pwd = 'sisSiga' . $pwd;
+        return password_hash($pwd, PASSWORD_BCRYPT, $opciones);
+    }
+    
+    function verifica_password($pwd,$hash){
+        $pwd = 'sisSiga' . $pwd;
+        return password_verify($pwd,$hash);
+    }
+    
+    //Obtiene la ip real
+    function getRealIP() {
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip=$this->limpia($_SERVER['HTTP_CLIENT_IP']);
+			}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip=$this->limpia($_SERVER['HTTP_X_FORWARDED_FOR']);
+			}
+		else {
+			$ip=$this->limpia($_SERVER['REMOTE_ADDR']);
+		}
+		
+		return $ip;
+	}
+    
+    function getBrowser() { 
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''; 
+		$navegadores = array(
+			'Opera' => 'Opera',
+			'Mozilla Firefox'=> '(Firebird)|(Firefox)',
+			'Google Chrome'=>'Chrome',
+			'Galeon' => 'Galeon',
+			'Mozilla'=>'Gecko',
+			'MyIE'=>'MyIE',
+			'Lynx' => 'Lynx',
+			'Google Chrome'=>'Chrome',
+			'Konqueror'=>'Konqueror',
+			'Internet Explorer 7' => '(MSIE 7\.[0-9]+)',
+			'Internet Explorer 6' => '(MSIE 6\.[0-9]+)',
+			'Internet Explorer 5' => '(MSIE 5\.[0-9]+)',
+			'Internet Explorer 4' => '(MSIE 4\.[0-9]+)',
+			'Internet Explorer' => 'MSIE',
+			'Flock'             => 'Flock',
+		    'Shiira'            => 'Shiira',
+		    'Chimera'           => 'Chimera',
+		    'Phoenix'           => 'Phoenix',
+		    'Camino'            => 'Camino',
+		    'Netscape'          => 'Netscape',
+		    'OmniWeb'           => 'OmniWeb',
+		    'Safari'            => 'Safari',
+		    'icab'              => 'iCab',
+		    'Links'             => 'Links',
+		    'hotjava'           => 'HotJava',
+		    'amaya'             => 'Amaya',
+		    'IBrowse'           => 'IBrowse'
+			);
+			
+		foreach($navegadores as $navegador=>$pattern){
+			if(strpos($user_agent, $pattern) !== false) return $this->limpia($navegador);
+			}
+			
+		}
+	
+	function getOs() {
+		$user_agent= strtolower($_SERVER['HTTP_USER_AGENT']);
+
+		$plataformas = array(
+		  	'/windows nt 6.3/i'     =>  'Windows 8.1',
+			'/windows nt 6.2/i'     =>  'Windows 8',
+			'/windows nt 6.1/i'     =>  'Windows 7',
+			'/windows nt 6.0/i'     =>  'Windows Vista',
+			'/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+			'/windows nt 5.1/i'     =>  'Windows XP',
+			'/windows xp/i'         =>  'Windows XP',
+			'/windows nt 5.0/i'     =>  'Windows 2000',
+			'/windows nt 6.3/i'     =>  'Windows 8.1',
+			'/windows me/i'         =>  'Windows ME',
+			'/win98/i'              =>  'Windows 98',
+			'/win95/i'              =>  'Windows 95',
+			'/win16/i'              =>  'Windows 3.11',
+			'/macintosh|mac os x/i' =>  'Mac OS X',
+			'/mac_powerpc/i'        =>  'Mac OS 9',
+			'/linux/i'              =>  'Linux',
+			'/ubuntu/i'             =>  'Ubuntu',
+			'/iphone/i'             =>  'iPhone',
+			'/ipod/i'               =>  'iPod',
+			'/ipad/i'               =>  'iPad',
+			'/android/i'            =>  'Android',
+			'/blackberry/i'         =>  'BlackBerry',
+			'/webos/i'              =>  'Mobile WebOS'
+	   );
+	
+		foreach ($plataformas as $regex => $plataforma) { 
+
+		    if (preg_match($regex, $user_agent)) {
+		        return $this->limpia($plataforma);
+		    }
+		}   
+
+	   return 'Sistema Operativo Desconocido';
+	}
 
 
 } //fin de la Clse Funciones

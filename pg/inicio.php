@@ -11,7 +11,7 @@
                     <span style="font-weight: 200; font-size: 55px !important; ">BIENVENIDO</span><br>
                     <img src="img/linea.png">
                     <div class="caption">
-                        <div><font size="6"><b>Usuario del Sistema</b></font></div>
+                        <div><font size="6"><b><?=$nombreC;?></b></font></div>
                     </div>
                     <font size="5">Sistema Integral Grupo Aguilera</font>
                 </center>

@@ -34,15 +34,16 @@
         <div class="form-group">
           <label for="flIcono">Icono</label>
           <input type="file" id="flIcono" name="flIcono" class="form-control" />
-          <input type="hidden" id="hdFlIcono" name="hdFlIcono" class="form-control" />
+          <input type="hidden" id="txtIcono" name="txtIcono" class="form-control" />
           <div id="reqFlIcono"></div>
         </div>
         <div id="respServer"></div>
         <div class="form-group">
-          <input type="hidden" id="idEstacionamiento" name="idEstacionamiento">
-          <input type="hidden" id="opcion" name="opcion" value="201">
-          <button id="btnGuadaEstacionamiento" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
-          <button id="btnCancelar" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
+          <input type="hidden" id="txtId" name="txtId" form="frmEstacionamiento" value="0">
+          <input type="hidden" id="opcion" name="opcion" form="frmEstacionamiento" value="3">
+          <input type="hidden" id="txtFecha" name="txtFecha" form="frmEstacionamiento" value="0">
+          <button id="btnGuadarEstacionamiento" type="button" form="frmEstacionamiento" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+          <button id="btnCancelar" type="button" form="frmEstacionamiento" class="btn btn-secondary btn-sm">Cancelar</button>
         </div>
       </form>
       </div>

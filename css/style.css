@@ -10,4 +10,6 @@
 .cite{color:#3c8dbc!important;}
 
 .iconSize{height:auto;width:20px;}
-margin-left: 1em;    
+margin-left: 1em;
+
+.msgError{color:#ff0000!important;font-size:9.5pt!important;font-style:italic!important;}

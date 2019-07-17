@@ -1,5 +1,6 @@
 <style type="text/css">
-  .classFrmRegClient{border-bottom:1px dotted #e8e8e8;margin:1em!important;width:97%;}
+  .classFrmRegClient{border-bottom:1px dotted #e8e8e8;margin:1em!important;padding:0.8em!important;width:97%;}
+  .mt-1-9em{margin-top:1.9em!important;}
   .mr_04em{margin-right:0.4em!important;}
   .estilo-cntn-frm{border:1px dotted #e9e9e9;box-shadow: 0 0 px 1px #CFCFCF;margin:0.5em 1.5em!important;padding:1em!important;width:96%;}
 </style>
@@ -24,9 +25,45 @@
 
         <div class="box-tools pull-right" style="width:30%;">
           <button id="btnNvoRegCliente" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i> Nuevo cliente</button>
-          <button id="btnNvoRegCliente" class="btn btn-success btn-sm pull-right mr_04em"><i class="fa fa-search"></i> Búsqueda</button>
+          <button id="btnBusquedaCliente" class="btn btn-success btn-sm pull-right mr_04em"><i class="fa fa-search"></i> Búsqueda</button>
         </div>
       </div>
+
+      <div id="cntnBusquedaCte" class="col-lg-12 col-md-12 col-sm-12 classFrmRegClient" style="display:none;">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+                <label for="txtNombreBusqueda">NOMBRE</label>
+                <input type="text" id="txtNombreBusqueda" name="txtNombreBusqueda" class="form-control" />
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+                <label for="txtRfcBusqueda">RFC</label>
+                <input type="text" id="txtRfcBusqueda" name="txtRfcBusqueda" class="form-control" />
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3 col-sm-12">
+              <div class="form-group">
+                <label for="cboTipoClienteBusq">Tipo de cliente</label>
+                <select id="cboTipoClienteBusq" name="cboTipoClienteBusq" class="form-control">
+                  <option value="0"> Todos </option>
+                  <option value="1"> Arrendatario </option>
+                  <option value="2"> Comprador </option>
+                </select>                
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3 col-sm-12 text-center">
+            <!--<button id="btnBuscarCte" class="btn btn-primary btn-sm mt-1-9em"><i class="fa fa-search"></i> Buscar</button>-->
+            <button id="btnResetBusqCte" class="btn btn-secondary btn-sm mt-1-9em"><i class="fa fa-eraser"></i> Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+
 
       <div id="cntnFrmNvoClient" class="col-lg-12 col-md-12 col-sm-12 classFrmRegClient" style="display:none;">
         <h3 id="txtTitleFrmClient" class="box-title"></h3>
@@ -34,17 +71,16 @@
         <form id="frmNvoCliente">
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="form-group">
-              <label for="cboTipoCliente">Tipo de cliente</label>
-              <select id="cboTipoCliente" name="cboTipoCliente" class="form-control">
-                <option value="0"> Seleccionar --</option>
-                <option value="1"> Arrendatario </option>
-                <option value="2"> Comprador </option>
-              </select>
-              <div id="reqCboTipoCliente" class="msgError"></div>
+              <div class="form-group">
+                <label for="cboTipoCliente">Tipo de cliente</label>
+                <select id="cboTipoCliente" name="cboTipoCliente" class="form-control">
+                  <option value="0"> Seleccionar --</option>
+                  <option value="1"> Arrendatario </option>
+                  <option value="2"> Comprador </option>
+                </select>
+                <div id="reqCboTipoCliente" class="msgError"></div>
+              </div>
             </div>
-          </div>
-
           
             <div class="col-lg-6 col-md-6 col-sm-12">
               <div class="form-group">

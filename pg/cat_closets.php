@@ -24,6 +24,7 @@
       </div>
           <!-- /.box-header -->
       <div class="box-body">
+      <form id="frmClosets">
         <div class="form-group">
           <label for="txtNombre">Nombre</label>
           <input type="text" id="txtNombre" name="txtNombre" class="form-control" placeholder="Nombre...">
@@ -33,13 +34,17 @@
         <div class="form-group">
           <label for="exampleInputFile">Icono</label>
           <input type="file" id="flIcono" name="flIcono" class="form-control" />
+          <input type="hidden" id="hdFlIcono" name="hdFlIcono" class="form-control" />
           <div id="reqFlIcono"></div>
         </div>
 
         <div class="form-group">
-          <button class="btn btn-primary btn-sm">Guardar</button>&nbsp;
-          <button class="btn btn-secondary btn-sm">Cancelar</button>
+          <input type="hidden" id="idCloset" name="idCloset">
+          <input type="hidden" id="opcion" name="opcion" value="201">
+          <button type="button" id="btnGuardarCloset" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+          <button type="button" id="btnCancelarCloset" class="btn btn-secondary btn-sm">Cancelar</button>
         </div>
+      </form>
       </div>
       <div class="box-footer">
        </div>

@@ -3,7 +3,7 @@ let guardando = "<center><img src='img/cargaa.gif' width='25px' /><br>Guardando 
 let eliminando= "<center><img src='img/cargaa.gif' width='25px' /><br>Eliminando ...</center>";
 let urlPag;
 let urlConsultas1 = 'php/consultas.php';
-let urlSave     = 'php/subir.php';
+let urlSave       = 'php/subir.php';
 let urlEliminar1  = 'php/eliminar.php';
 let dataTable1;
 let currentPage;
@@ -996,7 +996,7 @@ function dispFrmInteresCte(){
   $('#cntnFrmInteresCte').slideToggle();
   $('#btnNvoInteresCte').slideToggle();
   loadCboPropiedad(); loadCboEstatusInteres();
-  $('#cboPropiedad').focus();
+  $('#txtAgente').focus();
 }
 
 $('#btnCancelaInteresCte').click(function(){
@@ -1009,6 +1009,14 @@ function cancelarFrmInteresCte(){
 }
 
 $('#btnGuardaInteresCte').click(function(){
+    if($('#txtAgente').val().length < 1){
+      $('#txtAgente').focus();
+      $('#reqTxtAgente').html('* Campo requerido');
+      return false;
+    }else{
+      $('#reqTxtAgente').empty();
+    }
+
     if($('#cboPropiedad').val() == 0){
       $('#cboPropiedad').focus();
       $('#reqCboPropiedad').html('* Campo requerido');
@@ -1039,6 +1047,7 @@ $('#btnGuardaInteresCte').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
+          console.log(resp);
           $("#respServer3").empty();
           if(resp.resp == 1){
             cliente_interes_listado($('#idClienteInt').val(), $('#titleModInteresClient').text()); dispFrmInteresCte();
@@ -1066,6 +1075,7 @@ function editarInteresCte(idCliente, idInteres){
         success: function(resp){            
             $('#respServer3').empty('');
             $('#idInteres').val(resp.id_interes);            
+            $('#txtAgente').val(resp.agente);
             setTimeout(function(){
               loadCboPropiedad(resp.id_propiedad); loadCboEstatusInteres(resp.estatus);
             },200);
@@ -1119,10 +1129,40 @@ function dispFrmOrdenComp(){
   $('#txtFolio').focus(); $('#cboObra, #cboEmpresa').select2();
 }
 
+$('#btnBusqOrdenCompra').click(function(){
+  $('#cntnBusqOrdenCompra').slideToggle();
+  $('#cboObraBusq, #cboEmpresaBusq').select2();
+});
+
+$('#btnBusqOrdComp').click(function(){
+  ordenes_compra_listado(1);
+});
+
+$("#txtFolioBusq").keypress(function(e) {
+  if(e.which == 13) {
+    ordenes_compra_listado(1);
+  }
+});
+
+$('#cboObraBusq, #cboEmpresaBusq, #cboEstatusBusq, #cboTipoCompraBusq').change(function(){
+  ordenes_compra_listado(1);
+});
+
+$('#btnResetBusqOrdComp').click(function(){
+  $('#txtFolioBusq').val();
+  $('#cboObraBusq').val(0);
+  $('#cboEmpresaBusq').val(0);
+  $('#cboEstatusBusq').val(-1);
+  $('#cboTipoCompraBusq').val(0);
+  $('#txtFechaDesde').val('');
+  $('#txtFechaHasta').val('');
+  ordenes_compra_listado(1);
+});
+
 //ORDENES DE COMPRA
 function ordenes_compra_listado(pagina){
   urlPag1 = 'pg/ordenes_compra_listado.php';
-  let params = {'pagina':pagina};
+  let params = {'folio':$('#txtFolioBusq').val(), 'obra':$('#cboObraBusq').val(), 'empresa':$('#cboEmpresaBusq').val(), 'estatus':$('#cboEstatusBusq').val(), 'tipoCompra':$('#cboTipoCompraBusq').val(), 'fechaDesde':$('#txtFechaDesde').val(), 'fechaHasta':$('#txtFechaHasta').val(), 'pagina':pagina};
 
   $.ajax({
         beforeSend: function(){
@@ -1132,8 +1172,7 @@ function ordenes_compra_listado(pagina){
         url:     urlPag1,
         data:    params,
         dataType: 'html',
-        success: function(data){
-            //console.log(data);
+        success: function(data){            
             $('#cntnListOrdenesCompra').html(data);            
         }
   });
@@ -1228,7 +1267,7 @@ function editarOrdenC(idOrden){
         data:    params,
         dataType: 'json',
         success: function(resp){
-            //console.log(resp);                      
+            console.log(resp);                      
             $('#respServer').empty('');
             $('#txtFolio').val(resp.folio);
             $('#cboObra').val(resp.id_obra);
@@ -1445,15 +1484,13 @@ function ordenes_compra_cotizaciones_listado(idOrdenComp, folio){
 
 
 $('#btnNvoCotizOrdComp, #btnCancelaCotizOrdComp').click(function(){
-  dispFrmCotizOrdComp();
+  dispFrmCotizOrdComp(); $('#cboProveedor').select2();
 });
 
 function dispFrmCotizOrdComp(){
   $('#cntnFrmCotizOrdComp').slideToggle();
   $('#btnNvoCotizOrdComp').slideToggle();
-
   resetForm('frmCotizOrdComp');
-  $('#cboProveedor').select2();
   //getCurrentPage();
 }
 
@@ -1496,13 +1533,16 @@ $('#btnGuardaCotizOrdComp').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-          console.log(resp);          
           $("#respServer3").empty();
           if(resp.resp == 1){
-            ordenes_compra_cotizaciones_listado($('#idOrdCompCot').val(), $('#titleModOrdCompCotizaion').text()); dispFrmArtOrdComp();
+            ordenes_compra_cotizaciones_listado($('#idOrdCompCot').val(), $('#titleModOrdCompCotizaion').text());
+            dispFrmCotizOrdComp();
             if($('#opcionCotiz').val() == 220){
               $('#opcionCotiz').val(219);
             }
+          }else if(resp.resp == 2){
+              $("#respServer3").html('Es necesario cargar el archivo de la cotización');
+              return false;
           }else{
             $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
           }
@@ -1519,22 +1559,156 @@ function editarCotizacion(idOrdenComp, idCotizacion){
         data:    params,
         dataType: 'json',
         success: function(resp){
-            $('#respServer2').empty('');
-            $('#txtArticulo').val(resp.articulo);
-            $('#txtUnidad').val(resp.unidad);
-            $('#txtCantidad').val(resp.cantidad);
-            $('#txtCosto').val(resp.monto);
-            $('#idArticulo').val(resp.id_articulo_compra);
-            $('#opcionAC').val(218); $('#txtArticulo').select();
+            console.log(resp);
+            $('#respServer3').empty('');
+            $('#cboProveedor').val(resp.id_proveedor);
+            $('#txtCuenta').val(resp.num_cuenta);
+            $('#txtMonto').val(resp.monto);            
+            $('#hdFlImagen').val(resp.archivo);
+            $('#txtObservaciones').val(resp.observaciones);
+            $('#idCotizacion').val(resp.id_cotizacion);
+            $('#opcionCotiz').val(220); $('#cboProveedor').focus(); $('#cboProveedor').select2();
         }
+  });
+}
+
+function eliminarCotizacion(id, nombre){
+  swal({
+        html: true,
+        title: "¿Está seguro?",
+        text: "eliminar la cotización del proveedor: <strong>" + nombre + "</strong>",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonClass: "btn-primary",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'opt':210};
+          $.ajax({
+              type:    "post",
+              url:     urlEliminar1,
+              data:    params,
+              dataType: 'json',
+              success: function(resp){                    
+                    if(resp.resp == 1){
+                        ordenes_compra_cotizaciones_listado($('#idOrdCompCot').val(), $('#titleModOrdCompCotizaion').text());
+                    }
+              }
+          });
+      });
+}
+
+function autorizaCotizacion(idCotizacion){
+  let params = {'idCotizacion':idCotizacion, 'opcion':221};
+  $.ajax({
+    type:    "post",
+    url:     urlSave,
+    data:    params,
+    dataType: 'json',
+    success: function(resp){
+        if(resp.resp == 1){
+            ordenes_compra_cotizaciones_listado($('#idOrdCompCot').val(), $('#titleModOrdCompCotizaion').text());
+        }
+    }
   });
 }
 
 
 
+//SERVICIO POSVENTA
+function servicioPosVentaDown(idInteres){
+  $('#cntnMtto' + idInteres).slideDown();  
+    servicio_posventa_listado(idInteres);
+}
+
+function servicioPosVentaUp(idInteres){
+  $('#cntnMtto' + idInteres).slideUp();
+}
+
+function servicio_posventa_listado(idInteres){
+  urlPag1 = 'pg/servicio_posventa_listado.php';
+  let params = {'idInteres':idInteres};
+
+  $.ajax({
+        beforeSend: function(){
+            $("#cntnListServPV"+idInteres).html(cargando);
+        },
+        type:    "post",
+        url:     urlPag1,
+        data:    params,
+        dataType: 'html',
+        success: function(data){            
+            $('#cntnListServPV'+idInteres).html(data);
+            loadDataTable('listadoServPV'+idInteres, true);
+        }
+  });
+}
 
 
+function dispFrmServPV(idInteres){
+  $('#cntFrmServPV' + idInteres ).slideToggle();
+  $('#btnNvoServPV' + idInteres).slideToggle();
+  resetForm('frnServPv'+idInteres);
+  $('#txtFolioPV' + idInteres).focus();
+}
 
+
+function guardaServPV(idInteres){
+    if($('#txtFolioPV' + idInteres).val().length < 1){
+      $('#txtFolioPV' + idInteres).focus();
+      $('#reqTxtFolioPV' + idInteres).html('* Campo requerido');
+      return false;
+    }else{
+      $('#reqTxtFolioPV' + idInteres).empty();
+    }
+
+    if($('#txtFechaPV' + idInteres).val().length < 1){
+      $('#txtFechaPV' + idInteres).focus();
+      $('#reqTxtFechaPV' + idInteres).html('* Campo requerido');
+      return false;
+    }else{
+      $('#reqTxtFechaPV' + idInteres).empty();
+    }
+
+    if($('#cboMotivoPV' + idInteres).val() == 0){
+      $('#cboMotivoPV' + idInteres).focus();
+      $('#reqCboMotivoPV' + idInteres).html('* Campo requerido');
+      return false;
+    }else{
+      $('#reqCboMotivoPV' + idInteres).empty();
+    }
+
+    let formData = new FormData(document.getElementById("frnServPv" + idInteres));
+
+    $.ajax({
+      beforeSend: function(){
+        $("#respServ" + idInteres).html(guardando);
+      },
+      url: urlSave,
+      type: "post",
+      dataType: "json",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(resp){
+          console.log(resp);
+          $("#respServ" + idInteres).empty();
+          if(resp.resp == 1){
+            servicio_posventa_listado(idInteres);
+            dispFrmServPV(idInteres);
+            if($('#opcionServPV' + idInteres).val() == 223){
+              $('#opcionServPV' + idInteres).val(222);
+            }
+          }else{
+            $("#respServ" + idInteres).html('Ocurrió un error al intentar guardar en la base de datos');
+          }
+      }
+    });
+};
 
 
 

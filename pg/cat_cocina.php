@@ -24,6 +24,7 @@
       </div>
           <!-- /.box-header -->
       <div class="box-body">
+        <form id="frmCocina" name="bntCancelCocina">
         <div class="form-group">
           <label for="txtNombre">Nombre</label>
           <input type="text" id="txtNombre" name="txtNombre" class="form-control" placeholder="Nombre...">
@@ -33,15 +34,20 @@
         <div class="form-group">
           <label for="exampleInputFile">Icono</label>
           <input type="file" id="flIcono" name="flIcono" class="form-control" />
+          <input type="hidden" name="txtIcono" id="txtIcono"/>
           <div id="reqFlIcono"></div>
         </div>
-
-        <div class="form-group">
-          <button class="btn btn-primary btn-sm">Guardar</button>&nbsp;
-          <button class="btn btn-secondary btn-sm">Cancelar</button>
-        </div>
+        <div id="respServer"></div>
+      </form>
       </div>
       <div class="box-footer">
+        <div class="form-group">
+          <input type="hidden" id="opcion" form="frmCocina" name="opcion" value="2"/>
+          <input type="hidden" id="txtFecha" form="frmCocina" name="txtFecha" value="0"/>
+          <input type="hidden" id="txtId" form="frmCocina" name="txtId" value="0"/>
+          <button type="button" id="bntAddCocina" name="btnAddCocina" form="frmCocina" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+          <button type="button" id="bntCancelCocina" name="bntCancelCocina" form="frmCocina" class="btn btn-secondary btn-sm">Cancelar</button>
+        </div>
        </div>
     </div>
   </div>
@@ -57,7 +63,7 @@
       </div>
           <!-- /.box-header -->
       <div id="cntnListCocina" class="box-body">
-        
+
       </div>
 
       <div class="box-footer">

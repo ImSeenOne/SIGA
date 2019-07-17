@@ -1,3 +1,11 @@
+<?php  
+  require '../php/inicializandoDatosExterno.php';
+  
+  $listado = @$conexion->obtenerlista($querys->getClosetListado());
+  $totRegs = $conexion->numregistros();
+
+  if($totRegs > 0){
+?>
 <table id="listCloset" class="table table-bordered table-striped">
   <thead>
     <tr>
@@ -9,46 +17,18 @@
     </tr>
   </thead>
   <tbody>
+  <?php foreach ($listado as $key) { ?>
     <tr>
-      <td class="text-center">4</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/closets/closetIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
+      <td class="text-center"><?= $key->id_closet ?></td>
+      <td class="text-left"><?= $key->nombre ?></td>
+      <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize" /></td>
+      <td class="text-center"><?= $funciones->ordenaFechaHora($key->fecha_registro); ?></td>
       <td class="text-center">
-       	<button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-       	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+        <button type="button" class="btn btn-success btn-sm" onclick="editarCloset(<?= $key->id_closet ?>);"><i class="fa fa-edit"></i></button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarCloset(<?= $key->id_closet ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
       </td>
     </tr>
-    <tr>
-      <td class="text-center">3</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/closets/closetIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-center">2</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/closets/closetIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-center">1</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/closets/closetIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
+  <?php } ?>
   </tbody>
   <tfoot>
     <tr>
@@ -60,3 +40,6 @@
     </tr>
   </tfoot>
 </table>
+<?php }else{ ?>
+  <center><h4>¡No existen registros!</h4></center>
+<?php } ?>

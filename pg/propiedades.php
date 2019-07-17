@@ -1,5 +1,3 @@
-<?Php
-?>
 <section class="content-header">
     <h1>
         Inmuebles
@@ -7,7 +5,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="inicio"><i class="fa fa-home"></i> Inicio</a></li>
-        <li class="active"><i class="fa fa-users"></i>Inmuebles</li>        
+        <li class="active"><i class="fa fa-users"></i>Inmuebles</li>
     </ol>
 </section>
 <div class="box box-warning collapsed-box">
@@ -50,17 +48,22 @@
                 </div>
 
             </div><!--.row-->
-            <div class="text-left">      
-                <input type="button" class="btn btn-success btn-sm" value=" Buscar " onclick="" />
-                <input type="button" class="btn btn-danger btn-sm" value=" Cancelar " onclick="location.href='clientes'"/>
-            </div> 
+            <div class="text-left">
+                <input type="button" class="btn btn-success btn-sm" value=" Buscar " onclick="javascript: parent.propiedades_listado();" />
+                <input type="button" class="btn btn-danger btn-sm" value=" Cancelar " onclick="location.href='propiedades'"/>
+            </div>
          </form>
     </div>
     <!-- /.box-body -->
 </div>
 <!-- /.box -->
-<div class="row">                          
+<div class="row" id="contenedor">
     <div class="col-xl-12" id="listado" >
-        <?php require('pg/propiedades_lista.php');?>
+
     </div><!--.col-->
 </div><!--.row-->
+<script type="text/javascript">
+  window.onload = function() {
+    propiedades_listado();
+  }
+</script>

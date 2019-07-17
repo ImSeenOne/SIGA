@@ -1,3 +1,10 @@
+<?Php
+    require '../php/inicializandoDatosExterno2.php';
+
+    $listado = @$conexionB->obtenerlista($querysB->getListadoCalidadAcabado());
+    $totRegs = $conexionB->numregistros();
+    if($totRegs > 0){
+?>
 <table id="listCalidadAcabado" class="table table-bordered table-striped">
   <thead>
     <tr>
@@ -9,54 +16,29 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td class="text-center">4</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/acabados/qualityIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-       	<button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-       	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-center">3</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/acabados/qualityIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-center">2</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/acabados/qualityIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-center">1</td>
-      <td class="text-left">Nombre</td>
-      <td class="text-center"><img src="archivos/acabados/qualityIcon.png" class="iconSize" /></td>
-      <td class="text-center">18/06/2019 11:32:33</td>
-      <td class="text-center">
-        <button type="button" class="btn btn-success btn-sm"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-      </td>
-    </tr>
+      <?Php foreach($listado as $list){ ?>
+        <tr>
+          <td class="text-center"><?Php echo $list->numero ?></td>
+          <td class="text-left"><?Php echo $list->nombre ?></td>
+          <td class="text-center"><img src="<?Php echo $list->icono ?>" class="iconSize" /></td>
+          <td class="text-center"><?Php echo $list->fecha_registro ?></td>
+          <td class="text-center">
+            <button type="button" class="btn btn-success btn-sm" onclick="ModRegCalidadAcabado(<?= $list->id_calidad_acabado ?>,'<?= $list->nombre ?>','<?= $list->icono ?>');"><i class="fa fa-edit"></i></button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="ModRegCalidadAcabado(<?= $list->id_calidad_acabado ?>,'<?= $list->nombre ?>','<?= $list->icono ?>',1);"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      <?Php } ?>
   </tbody>
   <tfoot>
     <tr>
       <th class="text-center">Id</th>
-      <th class="text-center">Nombre</th>      
+      <th class="text-center">Nombre</th>
       <th class="text-center">Icono</th>
       <th class="text-center">Fecha registro</th>
       <th class="text-center">Acciones</th>
     </tr>
   </tfoot>
 </table>
+<?Php } else { ?>
+    <center><h4>¡No existen registros!</h4></center>
+<?Php }?>

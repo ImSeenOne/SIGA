@@ -1,10 +1,58 @@
 <?php
-class Querys {
+class QuerysB {
 	//***************************************************************************************
 	//*********************INICIA QUERYS PARA INICIO DE SESIÓN ******************************
     //Consultas Marco Molina
+    
+    //Obtiene los datos del usuario del sistema
+    function existeUsuario($usuario){
+        $strQuery = "SELECT u.*,d.nombre nDepartamento,a.nombre nArea ";
+        $strQuery .= "FROM demosystem_siga.tblc_usuario u left join tblc_departamentos d ";
+        $strQuery .= "on u.id_departamento = d.id_departamento AND d.fecha_eliminado IS NULL ";
+        $strQuery .= "left join tblc_areas a on d.id_departamento = a.id_departamento ";
+        $strQuery .= "AND u.id_area = a.id_area AND a.fecha_eliminado IS NULL ";
+        $strQuery .= "WHERE u.fecha_eliminado IS NULL AND u.usuario = '" . $usuario . "'";
+        return $strQuery;
+    }
+    
+    //Obtiene permiso de los usuarios por módulo
+    function obtenerPermisoModulo($idUsuario, $modulo){
+        $strQuery = "SELECT COUNT(up.id_permiso) AS PERMISO ";
+        $strQuery.= "FROM tblc_usuario_permiso up ";
+        $strQuery.= "JOIN tblc_permiso p ";
+        $strQuery.= "ON(up.id_permiso = p.id_permiso) ";
+        $strQuery.= "WHERE up.id_usuario = ".$idUsuario." AND p.archivo LIKE '".$modulo."'";
 
+        return $strQuery;
+    }
+    
+    //---------------------------TABLA PERMISO-----------------------------
+	function permisosmenuusuario($id_usuario_sis){
+		$strQuery = "SELECT DISTINCT up.id_permiso as id, p.* FROM tblc_permiso AS p";
+		$strQuery .= " INNER JOIN tblc_usuario_permiso AS up ON p.id_permiso = up.id_permiso";
+		$strQuery .= "  WHERE up.id_usuario =".$id_usuario_sis." AND p.id_padre = 0 AND p.estatus = 1 ORDER BY p.ordenamiento";
 
+		return $strQuery;
+	}
+    
+    // Obtiene los hijos del menu
+    function permisosubmenuusuario($id_usuario_sis, $idpadre){
+		$strQuery = "SELECT DISTINCT up.id_permiso as id, p.* FROM tblc_permiso AS p";
+		$strQuery .= " INNER JOIN tblc_usuario_permiso AS up ON p.id_permiso = up.id_permiso";
+		$strQuery .= " WHERE up.id_usuario =".$id_usuario_sis." AND p.id_padre = ".$idpadre." AND p.estatus = 1 ORDER BY p.ordenamiento";
+
+		return $strQuery;
+	}
+    
+    // Cuenta los hijos del menu
+    function Conteopermisosubmenuusuariomodulo($id_usuario_sis, $idpadre){
+		$strQuery = "SELECT COUNT(up.id_permiso) FROM tblc_permiso AS p";
+		$strQuery .= " INNER JOIN tblc_usuario_permiso AS up ON p.id_permiso = up.id_permiso";
+		$strQuery .= " WHERE up.id_usuario =".$id_usuario_sis." AND p.id_padre = ".$idpadre." AND p.estatus = 1;";
+
+		return $strQuery;
+	}
+    
     //Obtiene todos los datos de las PROPIEDADES
     function getPropiedadades($id = 0){
       $sentencia = ($id != 0)? ' WHERE id_propiedad = ' . $id:'';
@@ -93,7 +141,7 @@ class Querys {
     }
 
     public function getListCombo($tabla,$campos,$where=''){
-      $strQuery = "SELECT 0 AS id,'Seleccionar..' AS valor,'0;0' AS dataId ";
+      $strQuery = "SELECT -1 AS id,'Seleccionar..' AS valor,'0;0' AS dataId ";
       $strQuery .= " UNION ALL ";
       $strQuery .= "SELECT " . $campos . " FROM " . $tabla;
       $strQuery .= ($where != '')? ' WHERE ' . $where : $where;
@@ -107,6 +155,22 @@ class Querys {
       $strQuery .= "(SELECT COUNT(id_imagen) FROM tbl_propiedad_imagen i2 where i2.id_propiedad = i.id_propiedad AND ";
       $strQuery .= "i2.tipo = 1) principal FROM tbl_propiedad_imagen i WHERE i.id_propiedad = " . $id . " ";
       $strQuery .= "AND i.fecha_eliminado IS NULL ORDER BY i.tipo DESC, i.fecha_registro DESC;";
+      return $strQuery;
+    }
+    
+    function getListDocumentosPropiedades($id){
+      $strQuery = "SELECT d.*,DATE_FORMAT(d.vigencia,'%d/%m/%Y') fVigencia, CASE d.tipo_documento ";
+      $strQuery .= "WHEN 1 THEN 'Avalúo Comercial' ";
+      $strQuery .= "WHEN 2 THEN 'Avalúo Catastral' ";
+      $strQuery .= "WHEN 3 THEN 'Certificado liberación de Gravamen' ";
+      $strQuery .= "WHEN 4 THEN d.descripcion_otros END txtTipo, d.tipo_documento,";
+      $strQuery .= "CASE d.estatus ";
+      $strQuery .= "WHEN 1 THEN 'Solicitado' ";
+      $strQuery .= "WHEN 2 THEN 'Entregado' ";
+      $strQuery .= "WHEN 3 THEN 'No Aplica' END estatus, d.estatus id_estatus,";
+      $strQuery .= "d.monto,d.vigencia,d.tipo_archivo,d.archivo ";
+      $strQuery .= "FROM tbl_propiedades_documentos d WHERE d.id_propiedad = " . $id . " ";
+      $strQuery .= "AND d.fecha_eliminado IS NULL ORDER BY d.id_documento DESC;";
       return $strQuery;
     }
     //Fin consultas Marco Molina

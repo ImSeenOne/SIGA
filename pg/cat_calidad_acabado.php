@@ -23,7 +23,9 @@
         </div>
       </div>
           <!-- /.box-header -->
+
       <div class="box-body">
+          <form id="frmAcabado" name="frmAcabado">
         <div class="form-group">
           <label for="txtNombre">Nombre</label>
           <input type="text" id="txtNombre" name="txtNombre" class="form-control" placeholder="Nombre...">
@@ -33,17 +35,24 @@
         <div class="form-group">
           <label for="exampleInputFile">Icono</label>
           <input type="file" id="flIcono" name="flIcono" class="form-control" />
+          <input type="hidden" id="txtIcono" name="txtIcono" class="form-control" />
           <div id="reqFlIcono"></div>
         </div>
+        </form>
 
-        <div class="form-group">
-          <button class="btn btn-primary btn-sm">Guardar</button>&nbsp;
-          <button class="btn btn-secondary btn-sm">Cancelar</button>
-        </div>
       </div>
       <div class="box-footer">
+          <div class="form-group">
+            <input type="hidden" name="opcion" form="frmAcabado" id="opcion" value="1"/>
+              <input type="hidden" name="txtId" form="frmAcabado" id="txtId" value="0"/>
+              <input type="hidden" name="txtFecha" form="frmAcabado" id="txtFecha" value="0"/>
+            <button type="button" id="btnGuardarAcabado" form="frmAcabado" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
+          <button class="btn btn-secondary btn-sm">Cancelar</button>
+        </div>
        </div>
+
     </div>
+      <div id="respServer"></div>
   </div>
 
   <div class="col-lg-8 col-md-8 col-sm-12">
@@ -57,7 +66,7 @@
       </div>
           <!-- /.box-header -->
       <div id="cntnListCalidadAcabado" class="box-body">
-        
+
       </div>
 
       <div class="box-footer">

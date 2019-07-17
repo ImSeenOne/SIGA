@@ -1,8 +1,8 @@
 <?php
-  require '../php/inicializandoDatosExterno.php';
+  require '../php/inicializandoDatosExterno2.php';
 
-  $listado = @$conexion->obtenerlista($querys->getListadoEstacionamiento());
-  $totRegs = $conexion->numregistros();
+  $listado = @$conexionB->obtenerlista($querysB->getListadoEstacionamiento());
+  $totRegs = $conexionB->numregistros();
 
   if($totRegs > 0){
 ?>
@@ -19,13 +19,13 @@
   <tbody>
   <?php foreach ($listado as $key) { ?>
     <tr>
-      <td class="text-center"><?= $key->id_estacionamiento ?></td>
+      <td class="text-center"><?= $key->numero ?></td>
       <td class="text-left"><?= $key->nombre ?></td>
       <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize" /></td>
-      <td class="text-center"><?= $funciones->ordenaFechaHora($key->fecha_registro); ?></td>
+      <td class="text-center"><?= $key->fecha_registro; ?></td>
       <td class="text-center">
-       	<button type="button" class="btn btn-success btn-sm" onclick="editarRegEstacionamiento(<?= $key->id_estacionamiento ?>);"><i class="fa fa-edit"></i></button>
-       	<button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegEstacionamiento(<?= $key->id_estacionamiento ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
+        <button type="button" class="btn btn-success btn-sm" onclick="ModRegEstacionamiento(<?= $key->id_estacionamiento ?>,'<?= $key->nombre ?>','<?= $key->icono ?>');"><i class="fa fa-edit"></i></button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="ModRegEstacionamiento(<?= $key->id_estacionamiento ?>,'<?= $key->nombre ?>','<?= $key->icono ?>',1);"><i class="fa fa-trash"></i></button>
       </td>
     </tr>
   <?php } ?>

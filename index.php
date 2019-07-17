@@ -40,13 +40,13 @@
 
     <h5 class="login-box-msg">Inicio de sesión</h5>
 
-    <form action="inicio" method="post">
+    <form action="php/inicio_sesion.php" method="post" target="frame_enviar">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Usuario">
+        <input type="text" id="login_name" name="login_name" class="form-control" placeholder="Usuario">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" id="login_pw" name="login_pw" class="form-control" placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -56,6 +56,7 @@
         <!-- /.col -->
       </div>
     </form>
+    <iframe id="frame_enviar" name="frame_enviar" frameborder="0" ></iframe> 
   </div>
   <!-- /.login-box-body -->
 </div>

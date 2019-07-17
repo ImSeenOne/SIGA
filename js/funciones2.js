@@ -1,11 +1,11 @@
 //funciones Marco Molina
-let urlSubir_     = 'php/subir2.php';
-let urlEliminar_  = 'php/eliminar.php';
-let dataTable_;
-let currentPage_;
-let id_;
-let idFecha_ = 0;
-let opcion_;
+var urlSubir_m     = 'php/subir2.php';
+var urlEliminar_m  = 'php/eliminar.php';
+var dataTable_m;
+var currentPage_m;
+var id_m;
+var idFecha_m = 0;
+var opcion_m;
 
 //variables Google maps
 var selectedShape;
@@ -190,7 +190,12 @@ $("#ContenidoGeneral").on("change",'#txtTipoDocumento',function(){
         $("#txtOtro").val("");
         $("#txtOtro").attr('disabled',true);
     }
-        
+    
+});
+
+//Agrega Registro a la tabla PROPIEDADES
+$("#ContenidoGeneral").on('click','#btnGuardarPropiedad',function(){
+    spPropiedades();
 });
 /*********************** FIN BOTONES *****************************/
 
@@ -354,9 +359,9 @@ function btnEditarPropiedadDocumemnto(list,flag){
 
 function btnEliminarPropiedad(id){
   
-  id_ = id;
-  idFecha_ = 1;
-  opcion_ = 6;
+  id_m = id;
+  idFecha_m = 1;
+  opcion_m = 6;
   swal({
     title: "Borrar Registro",
     text: "Se borrara el registro seleccionado. ¿Está seguro?",
@@ -384,23 +389,23 @@ function ModRegEstacionamiento(id,nombre,icono,fecha=0){
     $("#txtId").val(id);
     $("#txtFecha").val(fecha);
     if(fecha != 0){
-			swal({
-				title: "Borrar Registro",
-				text: "Se borra el registro seleccionado. ¿Está seguro?",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonClass: "btn-danger",
-				confirmButtonText: "Aceptar",
-				cancelButtonText: "Cancelar",
-				closeOnConfirm: false,
-				closeOnCancel: true
-				},
-				function(isConfirm) {
-				if (isConfirm) {
-					spEstacionamiento();
-					swal("Borrado!", "El registro ha sido eliminado.", "success");
-				}
-				});
+        swal({
+            title: "Borrar Registro",
+            text: "Se borra el registro seleccionado. ¿Está seguro?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: true
+            },
+            function(isConfirm) {
+            if (isConfirm) {
+                spEstacionamiento();
+                swal("Borrado!", "El registro ha sido eliminado.", "success");
+            }
+            });
         //
     }
 }
@@ -440,23 +445,23 @@ function ModRegEstatusPropiedades(id,nombre,icono,fecha=0){
     $("#txtId").val(id);
     $("#txtFecha").val(fecha);
     if(fecha != 0){
-			swal({
-				title: "Borrar Registro",
-				text: "Se borra el registro seleccionado. ¿Está seguro?",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonClass: "btn-danger",
-				confirmButtonText: "Aceptar",
-				cancelButtonText: "Cancelar",
-				closeOnConfirm: false,
-				closeOnCancel: true
-				},
-				function(isConfirm) {
-				if (isConfirm) {
-					spEstatusPropiedades();
-					swal("Borrado!", "El registro ha sido eliminado.", "success");
-				}
-				});
+        swal({
+            title: "Borrar Registro",
+            text: "Se borra el registro seleccionado. ¿Está seguro?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: true
+            },
+            function(isConfirm) {
+            if (isConfirm) {
+                spEstatusPropiedades();
+                swal("Borrado!", "El registro ha sido eliminado.", "success");
+            }
+            });
         //
     }
 }
@@ -474,7 +479,7 @@ function funAgregaImagenP(id){
       beforeSend: function(){
         $("#mensajeServer").html(cargando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -510,6 +515,7 @@ function propiedades_registro(id=0){
       //formato numerico
       frmNumerico_('txtMonto',1);
       //Google maps
+      Geo('open-popup');
       setTimeout(initMap, 1000);
     }
   });
@@ -521,23 +527,23 @@ function ModRegPropietarioPropiedades(id,nombre,fecha=0){
     $("#txtId").val(id);
     $("#txtFecha").val(fecha);
     if(fecha != 0){
-			swal({
-				title: "Borrar Registro",
-				text: "Se borra el registro seleccionado. ¿Está seguro?",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonClass: "btn-danger",
-				confirmButtonText: "Aceptar",
-				cancelButtonText: "Cancelar",
-				closeOnConfirm: false,
-				closeOnCancel: true
-				},
-				function(isConfirm) {
-				if (isConfirm) {
-					spPropietarioPropiedades();
-					swal("Borrado!", "El registro ha sido eliminado.", "success");
-				}
-				});
+        swal({
+            title: "Borrar Registro",
+            text: "Se borra el registro seleccionado. ¿Está seguro?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: true
+            },
+            function(isConfirm) {
+            if (isConfirm) {
+                spPropietarioPropiedades();
+                swal("Borrado!", "El registro ha sido eliminado.", "success");
+            }
+            });
         //
     }
 }
@@ -550,7 +556,7 @@ function spCalidadAcabado(){
       beforeSend: function(){
         $("#cntnListCalidadAcabado").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -577,7 +583,7 @@ function spEstacionamiento(){
       beforeSend: function(){
         $("#cntnListEstacionamiento").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -604,7 +610,7 @@ function spCocina(){
       beforeSend: function(){
         $("#cntnListCocina").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -631,7 +637,7 @@ function spEstatusPropiedades(){
       beforeSend: function(){
         $("#cntnListEstatus").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -658,7 +664,7 @@ function spPropietarioPropiedades(){
       beforeSend: function(){
         $("#cntnListPropietarios").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -678,6 +684,10 @@ function spPropietarioPropiedades(){
     });
 }
 
+function datosUsuario(arrayUsuario){
+    console.log(arrayUsuario);
+}
+
 function spPropiedades($flag=0){
   if($flag == 0){
     mensaje = "agregó";
@@ -685,20 +695,20 @@ function spPropiedades($flag=0){
   else{
     mensaje = 'modifico';
   }
-  if(idFecha_ == 0){
+  if(idFecha_m == 0){
     formData = new FormData($("#frmPropiedades")[0]);
   }
   else{
     formData = new FormData();
-    formData.append('id',id_);
-    formData.append('idFecha',idFecha_);
-    formData.append('opcion',opcion_);
+    formData.append('id',id_m);
+    formData.append('idFecha',idFecha_m);
+    formData.append('opcion',opcion_m);
   }
   $.ajax({
     beforeSend: function(){
       $("#respServer").html(guardando);
     },
-    url: urlSubir_,
+    url: urlSubir_m,
     type: "post",
     dataType: "json",
     data: formData,
@@ -708,7 +718,7 @@ function spPropiedades($flag=0){
     success: function(resp){
         $("#respServer").empty();
         if(resp.resp == 1){
-          if(idFecha_ == 0){
+          if(idFecha_m == 0){
             swal({
               title: "Inmuebles",
               text: "Se "+ mensaje + " el inmuble con Folio:" + resp.folio
@@ -716,11 +726,11 @@ function spPropiedades($flag=0){
             propiedades_registro(resp.id);
           }
           else{
-            idFecha_ = 0;
+            idFecha_m = 0;
             propiedades_listado();
           }
         }else{
-          idFecha_ = 0;
+          idFecha_m = 0;
           $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
         }
     }
@@ -734,7 +744,7 @@ function spDocumentosPropiedades(){
       beforeSend: function(){
         $("#mensajeServer").html(guardando);
       },
-      url: urlSubir_,
+      url: urlSubir_m,
       type: "post",
       dataType: "json",
       data: formData,
@@ -806,6 +816,35 @@ function fnCambiaTipo(elemento){
   }
 
 }
+function cerrarSession(){
+    swal(
+        {
+            title: "Cerrar Sesión",
+            text: "¿Deséa cerra la sesión al sistema?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "SÍ",
+            cancelButtonText: "NO",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        },
+        function(isConfirm) {
+            if (isConfirm) {
+               $.ajax({
+                    type:    "post",
+                    url:     urlSubir_m,
+                    data:{'opcion':9},
+                    dataType: 'html',
+                    success: function(data){
+                        location.href= data;
+                    }
+              }); 
+            }
+        }
+    );
+    
+}
 /***************** Fin de Funciones de OnChange **************/
 
 
@@ -824,7 +863,7 @@ function initMap(){
   var coordenadas = $("#coordenadas").val();
   var nombre = $("#txtDescripcion").val();
   initialize(latitud, longitud);
-  if($('#id').val() != 0) mostrarCapa(1, $('#id').val(),tipo_coordenada,coordenadas,nombre);
+  if($('#id').val() != 0 && coordenadas != '') mostrarCapa(1, $('#id').val(),tipo_coordenada,coordenadas,nombre);
 }
 
 function initialize(latitud, longitud) {
@@ -908,7 +947,7 @@ function initialize(latitud, longitud) {
 
   //~ initSearch();
   // Create the search box and link it to the UI element.
-   input = /** @type {HTMLInputElement} */( //var
+   input = /* @type {HTMLInputElement} */( //var
       document.getElementById('pac-input'));
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
   //
@@ -1118,5 +1157,18 @@ function dateControl(elemento){
 );
 
 }
+function Geo(elemento){
+  $('#' + elemento).magnificPopup({
+    items: [{
+      src : '#geolocalizacion',
+      type : 'inline'
+    }],
+    disableOn: 700,
+		type: 'iframe',
+		removalDelay: 160,
+		preloader: false,
 
+		fixedContentPos: false
+  })
+}
 // fin funciones Marco Molina

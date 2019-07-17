@@ -21,17 +21,16 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Usuario del Sistema</span>
+              <img src="<?=$dUsuario["foto"];?>" width="18px" class="img-circle" alt="User Image">
+              <span class="hidden-xs"><?= $dUsuario["nombre"]; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
+              <img src="<?=$dUsuario["foto"];?>" width="160px" class="img-circle" alt="User Image">
                 <p>
-                  Usuario del Sistema - Inmobiliaria
-                  <small>Ventas</small>
+                  <?= $nombreC; ?>
+                  <small><?= $dUsuario["nDepartamento"];?></small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -42,10 +41,10 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Datos</a>
+                  <a href='usuarios_registroB' class="btn btn-default btn-flat">Datos</a>
                 </div>
                 <div class="pull-right">
-                  <a href="index.php" class="btn btn-default btn-flat">Salir</a>
+                  <a href="javascript:cerrarSession();" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>

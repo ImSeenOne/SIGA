@@ -6,21 +6,23 @@
   cite{color:#0000FF;}
 </style>
 <?php
-  
   error_reporting(E_ALL);
   ini_set('display_errors', '1');
   require '../php/inicializandoDatosExterno.php';
   $pagina = $funciones->limpia($_POST['pagina']);
+  $nombreBusq = $funciones->limpia($_POST['nombreBusq']);
+  $rfcBusq    = $funciones->limpia($_POST['rfcBusq']);
+  $tipoCte    = $funciones->limpia($_POST['tipoCteBusq']);
 
   $aTipo = array(1 => 'Arrendatario', 2 => 'Comprador');
-
-  @$conexion->obtenerlista($querys->getClientesData());
+  
+  @$conexion->obtenerlista($querys->getClientesData('', $nombreBusq, $rfcBusq, $tipoCte));
   $totRegistros = $conexion->numregistros();
 
   $limite = 10;
   $inicio = ($pagina - 1) * $limite;
   $totalPaginas = ceil($totRegistros / $limite);
-  $listado = @$conexion->obtenerlista($querys->getClientesData()." LIMIT ".$inicio.','.$limite);
+  $listado = @$conexion->obtenerlista($querys->getClientesData('', $nombreBusq, $rfcBusq, $tipoCte)." LIMIT ".$inicio.','.$limite);
 
     //------------------------------------
       $pag = new Paginador();
@@ -65,13 +67,13 @@
             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> <span class="caret"></span></button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a type="button" class="cusor" title="Archivos Personales" data-toggle="modal" data-target="#modal-archivos-cliente" onclick="cliente_archivos_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-file-archive-o"></i>Archivos Personales</a>
+                  <a type="button" class="cusor" title="Archivos Personales" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-archivos-cliente" onclick="cliente_archivos_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-file-archive-o"></i>Archivos Personales</a>
                 </li>
                 <li>
-                  <a type="button" class="cusor" title="Referencias" data-toggle="modal" data-target="#modal-referencias-cliente" onclick="cliente_referencias_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-user"></i>Referencias</a>
+                  <a type="button" class="cusor" title="Referencias" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-referencias-cliente" onclick="cliente_referencias_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-user"></i>Referencias</a>
                 </li>
                 <li>
-                  <a type="button" class="cusor" title="Seguimiento" data-toggle="modal" data-target="#modal-interes-cliente" onclick="cliente_interes_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-building" ></i>Seguimiento</a>
+                  <a type="button" class="cusor" title="Seguimiento" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-interes-cliente" onclick="cliente_interes_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-building" ></i>Seguimiento</a>
                 </li>
               </ul>
         </div>

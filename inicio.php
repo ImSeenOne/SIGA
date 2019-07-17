@@ -17,11 +17,13 @@
       <!-- Ionicons -->
       <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
       <!-- jvectormap -->
-        <!-- DataTables -->
-        <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+      <!-- DataTables -->
+      <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
       <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
       <!-- Select2 -->
       <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
+      <!--Magnific Popu-->
+      <link rel="stylesheet" href="bower_components/magnific-popup/magnific-popup.css">
       <!-- Theme style -->
       <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
       <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -30,9 +32,6 @@
 
       <!-- style -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
-
-      <!--autocomplete-->
-      <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
 
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -46,14 +45,19 @@
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
-        <div class="wrapper" id="cuerpo">
+        <div class="wrapper" id="cuerpo" style="height: 100vh; overflow: hidden;">
             <?php include_once('pg/menu_cabeza.php'); ?>
             <?php include_once('pg/menu_inicio.php'); ?>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" id="ContenidoGeneral">
                 <?php
                 if(file_exists('pg/'.$modulo.'.php')){
-                    require('pg/'.$modulo.'.php');
+                    if ($permiso != 0) {
+                        require('pg/'.$modulo.'.php');
+                    }
+                    else{
+                        require('pg/inicio.php');
+                    }
                 }else{
                     require('pg/error-404.php');
                 }
@@ -108,16 +112,15 @@
         <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
         <!-- Input Mask -->
         <script src="plugins/input-mask/jquery.inputmask.js"></script>
-        <!-- Slimscroll -->
-        <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-        <!-- FastClick -->
-        <script src="bower_components/fastclick/lib/fastclick.js"></script>
+
+        <!-- magnific-popup -->
+        <script src="bower_components/magnific-popup/jquery.magnific-popup.min.js"></script>
+
         <!-- funciones -->
-        <script src="js/sweetalert.min.js" charset="UTF-8"></script>
+        <script src="js/sweetalert.min.js"></script>
         <script src="js/funciones.js" charset="UTF-8"></script>
         <script src="js/funciones2.js" charset="UTF-8"></script>
         <script src="js/funciones3.js" charset="UTF-8"></script>
-        <script src="js/autocomplete.js"></script>
 
 
         <!-- AdminLTE App -->
