@@ -143,7 +143,7 @@ class Querys {
 		$cond.= ($rfc != '')? ' AND rfc LIKE "%'.$rfc.'%" ':' ';
 		$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
 
-		$strQuery = 'SELECT id_cliente, rfc, nombre, apellido_p, apellido_m, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
+		$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
 		$strQuery.= 'FROM tblc_clientes ';
 		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_cliente DESC';
@@ -167,7 +167,7 @@ class Querys {
 	public function actualizaCliente($id, $idTipo, $nombre, $apellidoP, $apellidoM, $rfc, $correo, $domicilio, $telefono, $celular, $estadoCivil, $observaciones){
 		$strQuery = 'UPDATE tblc_clientes ';
 		$strQuery.= 'SET id_tipo = '.$idTipo.', nombre = "'.$nombre.'", apellido_p = "'.$apellidoP.'", apellido_m = "'.$apellidoM.'", rfc = "'.$rfc.'", correo = "'.$correo.'", domicilio = "'.$domicilio.'", telefono = "'.$telefono.'", celular = NULLIF("'.$celular.'",""), estado_civil = '.$estadoCivil.', observaciones = NULLIF("'.$observaciones.'","") ';
-		$strQuery.= 'WHERE id_cliente = '.$id;		
+		$strQuery.= 'WHERE id_cliente = '.$id;
 
 		return $strQuery;
 	}
@@ -381,7 +381,7 @@ class Querys {
 
 	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE ORDEN DE COMPRA
 	public function eliminaOrdenCompra($id, $fecha){
-		$strQuery = 'UPDATE tbl_orden_compra '; 
+		$strQuery = 'UPDATE tbl_orden_compra ';
 		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
 		$strQuery.= 'WHERE id_orden_compra = '.$id;
 
@@ -497,10 +497,12 @@ class Querys {
 
 	//SERVICIO POSVENTA
 	//QUERY PARA OBTENER LOS REGISTROS DE LOS SERVICIOS POSVENTA DE UN CLIENTE
-	public function getDataServPVCte($idInteres){
-		$strQuery = 'SELECT id_servicio_posventa, motivo, descripcion, estatus, fecha_captura, fecha_termino ';
+	public function getDataServPVCte($idInteres, $idServPV = ''){
+		$cond = ($idServPV != '')? ' AND id_servicio_posventa = '.$idServPV.' ':' ';
+
+		$strQuery = 'SELECT id_servicio_posventa, folio, motivo, descripcion, estatus, fecha_captura, fecha_termino ';
 		$strQuery.= 'FROM tbl_servicio_posventa ';
-		$strQuery.= 'WHERE fecha_eliminado IS NULL AND id_interes = '.$idInteres.' ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL AND id_interes = '.$idInteres.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC';
 
 		return $strQuery;
@@ -511,6 +513,24 @@ class Querys {
 		$strQuery = 'INSERT INTO tbl_servicio_posventa ';
 		$strQuery.= '(id_interes, folio, motivo, descripcion, estatus, fecha_captura, fecha_registro) ';
 		$strQuery.= 'VALUES('.$idInteres.', "'.$folio.'", '.$motivo.', NULLIF("'.$descripcion.'",""), '.$estatus.', "'.$fechaCaptura.'", "'.$fechaRegistro.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR LOS DATOS DE UN SERVICIO POSVENTA
+	public function actualizaServPV($idInteres, $idServPV, $folio, $motivo, $descripcion, $estatus, $fechaCaptura, $fechaTermino){
+		$strQuery = 'UPDATE tbl_servicio_posventa ';
+		$strQuery.= 'SET folio = "'.$folio.'", motivo = '.$motivo.', descripcion = "'.$descripcion.'", estatus = '.$estatus.', fecha_captura = "'.$fechaCaptura.'", fecha_termino = NULLIF("'.$fechaTermino.'","") ';
+		$strQuery.= 'WHERE id_interes = '.$idInteres.' AND id_servicio_posventa = '.$idServPV;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE UN SERVICIO POSVENTA
+	public function eliminaServPV($idServPV, $fecha){
+		$strQuery = 'UPDATE tbl_servicio_posventa ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_servicio_posventa = '.$idServPV;
 
 		return $strQuery;
 	}

@@ -50,7 +50,7 @@ switch($_POST['opt']){
 		$jsondata['status'] = $resp['status'];
 		$jsondata['imagen'] = $resp['imagen'];
 	break;
-
+	//obtiene datos de una antiguedad
 	case 4:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getListadoAntiguedad($id));
@@ -59,6 +59,7 @@ switch($_POST['opt']){
 		$jsondata['icono'] = $resp['icono'];
 	break;
 
+	//obtiene datos de un empleado
 	case 5:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getEmpleadosById($id));
@@ -82,6 +83,7 @@ switch($_POST['opt']){
 		$jsondata['area'] = $resp['area'];
 	break;
 
+	//obtiene datos de una antiguedad
 	case 6:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getListadoAntiguedad($id));
@@ -89,6 +91,29 @@ switch($_POST['opt']){
 		$jsondata['id_antiguedad'] = $resp['id_antiguedad'];
 		$jsondata['nombre'] = $resp['nombre'];
 		$jsondata['icono'] = $resp['icono'];
+	break;
+
+	//obtiene datos de un contrato
+	case 7:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getContracts($id));
+
+		$dateContract = explode("-",$resp['fecha_realizacion']);
+		$validity = explode("-",$resp['vigencia']);
+
+		$jsondata['id_contrato'] = $_POST['id'];
+		$jsondata['folio'] = $resp['folio'];
+		$jsondata['id_cliente'] = $resp['id_cliente'];
+		$jsondata['id_propiedad'] = $resp['id_propiedad'];
+		$jsondata['fecha_realizacion'] = $dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0];
+		$jsondata['vigencia'] = $validity[2].'-'.$validity[1].'-'.$validity[0];
+		$jsondata['tipo_contrato'] = $resp['tipo_contrato'];
+		$jsondata['monto'] = $resp['monto'];
+		$jsondata['id_arrendatario'] = $resp['id_arrendatario'];
+		$jsondata['id_propietario'] = $resp['id_propietario'];
+		$jsondata['enganche_deposito'] = $resp['enganche_deposito'];
+		$jsondata['archivo'] = $resp['archivo'];
+		$jsondata['observaciones'] = $resp['observaciones'];
 	break;
 
 	case 20:

@@ -83,7 +83,7 @@ switch($_POST['opt']){
 			}
 		}
 	break;
-
+	//elimina un empleado
 	case 5:
 		$id = $funciones->limpia($_POST['id']);
 
@@ -91,6 +91,23 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 0;
 		} else {
 			$jsondata['resp'] = 1;
+		}
+	break;
+
+	case 6:
+		$id = $funciones->limpia($_POST['id']);
+
+		if(@$conexion->consulta($querys->deleteContract($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			$jsondata['resp'] = 1;
+				//verifica si el campo de icono no está vacío
+				if(isset($_POST['archivo'])) {
+					//verifica que el icono se pudo eliminar
+					if(!@unlink('../'.$_POST['archivo'])) {
+						$jsondata['resp'] = 2;
+					}
+				}
 		}
 	break;
 }

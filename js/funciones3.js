@@ -75,6 +75,12 @@ $('#btnGuardaDesarrollo').click(function(){
       $('#reqTxtNombre').empty();
     }
 
+		if($('#txtAlias').val().length < 1){
+			$('#txtAlias').focus();
+			$('#reqTxtAlias').html('Este campo es requerido');
+			return false;
+		}
+
     let formData = new FormData(document.getElementById("frmDesarrollo"));
 
     $.ajax({
@@ -909,7 +915,7 @@ function deleteEmployee(id, name){
 	              type:    "post",
 	              url:     urlEliminar3,
 	              data:    params,
-	              dataType: 'html',
+	              dataType: 'json',
 	              success: function(resp){
 										console.log(resp);
 	                    if(resp.resp == 1){
@@ -976,7 +982,9 @@ $('#cancelPaymentBtn').click(function(){
 	$('#opcion').val("11");
 });
 
-$('#savePaymentBtn').click(function(){
+$('#savePaymentBtn').submit(function(event){
+
+		event.preventDefault();
 	swal({
 				html: true,
 				title: "¿Está seguro?",
@@ -1010,6 +1018,154 @@ $('#savePaymentBtn').click(function(){
 			});
 });
 
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/**************************FUNCIONES PARA CONTRATOS*****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function listContracts(){
+	urlPag = 'pg/contratos_listado.php';
+
+	$.ajax({
+				beforeSend: function(){
+						$("#cntnListContracts").html(cargando);
+				},
+				type:    "post",
+				url:     urlPag,
+				dataType: 'html',
+				success: function(data){
+						$('#cntnListContracts').html(data);
+						loadDataTable('listContracts', true);
+				}
+	});
+}
+
+$('#btnNewContract').click(function(){
+	$('#sillyTable').attr('style','');
+	$('#frmContract').slideToggle();
+	$('#btnNewContract').slideToggle();
+});
+
+$('#cancelContract').click(function(){
+	$('#sillyTable').attr('style','margin-top: -10%');
+	$('#frmContract').slideToggle();
+	$('#btnNewContract').slideToggle();
+	$('#opcion').val('12');
+});
+
+//GUARDA UN CONTRATO
+$('#frmContract').submit(function(event){
+
+		event.preventDefault();
+		let formData = new FormData($(this)[0]);
+		console.log(formData);
+
+		for (var pair of formData.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]);
+	}
+
+		$.ajax({beforeSend: function(){
+							$("#respServer").html(cargando);
+						},
+						url: urlSubir3,
+						type: "post",
+						dataType: "json", //<---- REGRESAR A JSON
+						data: formData,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function(resp){
+							console.log(resp);
+								if(resp.resp == 1 ){
+									$("#respServer").html('');
+									resetForm('frmContract');
+									$('#sillyTable').attr('style','margin-top: -10%');
+									$('#frmContract').slideToggle();
+									$('#btnNewContract').slideToggle();
+									$('#opcion').val('12');
+									$('#flContract').prop('required',true);
+									listContracts();
+								}else{
+									$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+								}
+						}
+
+		});
+});
+//EDITA UN CONTRATO
+function editContract(id){
+
+		let params = {'id':id, 'opt':7};
+	  $.ajax({
+	        beforeSend: function(){
+	            $("#respServer").html(cargando);
+	        },
+	        type:    "post",
+	        url:     urlConsultas3,
+	        data:    params,
+	        dataType: 'json',
+	        success: function(resp){
+							listContracts();
+	            console.log(resp);
+							console.log(resp.id_contrato);
+							$('#idContract').val(resp.id_contrato);
+							$('#folio').val(resp.folio);
+							$('#dateContract').val(resp.fecha_realizacion);
+							$('#propertySelected').val(resp.id_propiedad);
+							$('#clientSelected').val(resp.id_cliente);
+							$('#contractValidity').val(resp.vigencia);
+							$('#contractType').val(resp.tipo_contrato);
+							$('#contractAmount').val(resp.monto);
+							$('#contractAmount').keyup();
+							$('#contractOwner').val(resp.id_propietario);
+							$('#contractLessee').val(resp.estado_civil);
+							$('#hitch').val(resp.enganche_deposito);
+							$('#hdFlContract').val(resp.archivo);
+							$('#remarks').val(resp.observaciones);
+	            $('#respServer').empty('');
+							$('#sillyTable').attr('style','');
+							$('#frmContract').slideToggle();
+							$('#btnNewContract').slideToggle();
+							changeContractType();
+							$('#flContract').prop('required',false);
+							$('#opcion').val("13");
+	        }
+				});
+}
+
+function deleteContract(id, name, archivo){
+		  swal({
+		        html: true,
+		        title: "¿Está seguro?",
+		        text: "¿Eliminará el registro del contrato con el cliente <strong>" + name + "</strong>?",
+		        type: "warning",
+		        showCancelButton: true,
+		        confirmButtonColor: "#DD6B55",
+		        confirmButtonText: "Eliminar",
+		        cancelButtonText: "Cancelar",
+		        closeOnConfirm: true
+		      },
+		      function(){
+		          let params = {'id':id, 'archivo':archivo, 'opt':6};
+		          $.ajax({
+		              type:    "post",
+		              url:     urlEliminar3,
+		              data:    params,
+		              dataType: 'json',
+		              success: function(resp){
+											console.log(resp);
+		                    if(resp.resp == 1 || resp.resp == 2){
+		                        listContracts();
+		                    }
+		              }
+		          });
+		      });
+}
 
 /**
 FORMAT CURRENCY FUNCTIONS

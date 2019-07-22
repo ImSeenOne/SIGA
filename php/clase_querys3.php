@@ -272,5 +272,113 @@ class Querys3 {
 
 		return 'SELECT * FROM tbl_rayas';
 	}
+
+	//QUERY FOR ADDING NEW CONTRACTS
+	public function addContract($folio, $id_cliente, $id_propiedad,
+	$fecha_realizacion, $vigencia, $tipo_contrato, $monto, $id_arrendatario = '0',
+	$id_propietario = '0', $enganche_deposito, $archivo, $observaciones, $fecha_actual){
+
+		$strQuery = "INSERT INTO tblc_contratos (folio, id_cliente, id_propiedad, fecha_realizacion, vigencia, tipo_contrato, monto, id_arrendatario, id_propietario, enganche_deposito, archivo, observaciones, fecha_registro)
+		VALUES ('".$folio."','".$id_cliente."','".$id_propiedad."','".$fecha_realizacion."','".$vigencia."','".$tipo_contrato."','".$monto."','".$id_arrendatario."','".$id_propietario."','".$enganche_deposito."','".$archivo."','".$observaciones."','".$fecha_actual."')";
+
+		return $strQuery;
+	}
+
+	//QUERY TO FIND EXISTING Folio
+	public function checkExistingFolio($folio){
+		$strQuery = 'SELECT folio FROM tblc_contratos WHERE folio LIKE "'.$folio.'%"';
+		return $strQuery;
+	}
+
+public function getContracts($id = 0){
+
+		$cond='';
+
+		if($id > 0){
+			$cond = ' AND id_contrato = '.$id.' ';
+		}
+
+		$strQuery = 'SELECT * FROM tblc_contratos WHERE fecha_eliminacion IS NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	public function deleteContract($id,$fecha){
+		$strQuery = 'UPDATE tblc_contratos SET archivo="", fecha_eliminacion = "'.$fecha.'" WHERE (id_contrato = '.$id.' );';
+		return $strQuery;
+	}
+
+	public function updateContract($id,$folio, $id_cliente, $id_propiedad,
+	$fecha_realizacion, $vigencia, $tipo_contrato, $monto, $id_arrendatario = '0',
+	$id_propietario = '0', $enganche_deposito, $archivo, $observaciones, $fecha_actual){
+		$strQuery = 'UPDATE tblc_contratos SET folio='.$folio.', id_cliente = '.$id_cliente.', id_propiedad ='.$id_propiedad.', fecha_realizacion = '.$fecha_realizacion.', vigencia = '.$vigencia.', tipo_contrato = '.$tipo_contrato.', monto = '.$monto.', id_arrendatario = '.$id_arrendatario.', id_propietario'.$id_propietario.',
+		 enganche_deposito = '.$enganche_deposito.', archivo = '.$archivo.', observaciones = '.$observaciones.' WHERE (id_contrato = '.$id.' )';
+		 return $strQuery;
+	}
+
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+
+	public function listClientes($id = '',$nombre='', $rfc='', $tipoCte=''){
+		$cond = '';
+
+		$cond = ($id != '')? ' AND id_cliente = '.$id.' ':'';
+		$cond.= ($nombre != '')? ' AND CONCAT(nombre," ",apellido_p," ", apellido_m) LIKE "%'.$nombre.'%" ':' ';
+		$cond.= ($rfc != '')? ' AND rfc LIKE "%'.$rfc.'%" ':' ';
+		$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
+
+		$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
+		$strQuery.= 'FROM tblc_clientes ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_cliente DESC';
+
+		return $strQuery;
+	}
+
+
+	 public function getListadoPropietarios($id = ''){
+	   $sentencia = ($id != '')? ' WHERE id_propietario = ' . $id:'';
+
+	   $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_propietario id, t.nombre valor,";
+	   $strQuery .= "t.nombre, t.fecha_registro ";
+	   $strQuery .= "FROM vw_catPropietarios t , (SELECT @rownum:=0) r " . $sentencia;
+	   $strQuery .= " ORDER BY numero;";
+
+	   return $strQuery;
+	 }
+
+	 function getPropiedades($id = ''){
+		 $sentencia = ($id != '')? ' WHERE id_propiedad = ' . $id:'';
+		 $strQuery = "SELECT @rownum:=@rownum+1 numero, t.*,t.id_propiedad id,t.descripcion valor,t.desarrollo id_desarrollo,t.monto monto ";
+		 $strQuery .= "FROM tblc_propiedades t , (SELECT @rownum:=0) r " . $sentencia;
+		 $strQuery .= " ORDER BY t.id_propiedad DESC;";
+
+		 return $strQuery;
+	 }
+
+	 public function llenarcomboPropiedades($resultados) {
+		 foreach($resultados as $resultado){
+			 echo '
+			 <option value="'.$resultado->id.'" name="'.$resultado->valor.'" data-development="'.$resultado->id_desarrollo.'" data-amount="'.$resultado->monto.'">'.$this->cdetectUtf8($resultado->valor).'</option>
+			 ';
+			 }
+		 }
+
+		 public function cdetectUtf8($str){
+			 if( mb_detect_encoding($str,"UTF-8, ISO-8859-1")!="UTF-8" ){
+
+				 return  utf8_encode($str);
+				 }
+			 else{
+				 return $str;
+				 }
+
+			 }
 }
 ?>

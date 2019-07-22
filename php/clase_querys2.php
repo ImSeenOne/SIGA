@@ -56,7 +56,7 @@ class QuerysB {
     //Obtiene todos los datos de las PROPIEDADES
     function getPropiedadades($id = 0){
       $sentencia = ($id != 0)? ' WHERE id_propiedad = ' . $id:'';
-      $strQuery = "SELECT @rownum:=@rownum+1 numero, t.* ";
+      $strQuery = "SELECT @rownum:=@rownum+1 numero, t.*,t.id_propiedad id,t.descripcion valor ";
       $strQuery .= "FROM tblc_propiedades t , (SELECT @rownum:=0) r " . $sentencia;
       $strQuery .= " ORDER BY t.id_propiedad DESC;";
 

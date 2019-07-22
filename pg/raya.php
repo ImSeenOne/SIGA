@@ -42,15 +42,15 @@
           <form id="frmPayment" name="frmPayment" style="display:none;">
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="dateStart">Fecha de inicio</label>
-                <input class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
+                <input required class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="dateFinish">Fecha de finalización</label>
-                <input class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
+                <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="work"style="display: block;">Obra</label>
-                <select name="work" id="work" class="form-control" style="width: 100%;"onchange="workId()">
+                <select required name="work" id="work" class="form-control" style="width: 100%;"onchange="workId()">
                   <option value="0">Selecciona una opción...</option>
                   <?php
                     $combo = @$conexion->obtenerlista($querys3->getListadoObras());
@@ -60,7 +60,7 @@
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                   <label for="employee" style="display: block;">Empleado</label>
-                  <select name="employee" id="employee" class="form-control" onchange="employeeId()" style="width: 100%;">
+                  <select required name="employee" id="employee" class="form-control" onchange="employeeId()" style="width: 100%;">
                     <option value="0">Selecciona una opción...</option>
                     <?php
                     $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados());
@@ -70,34 +70,34 @@
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="category">Categoría</label>
-                <select class="form-control" type="text" name="category" id="category" disabled>
+                <select required class="form-control" type="text" name="category" id="category" disabled>
                 </select>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="payment">Sueldo<sub>(por día)</sub> </label>
-                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
+                <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
               </div>
 
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="workDays">Días de trabajo</label>
-                <input onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo" readonly>
+                <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="paymentAmount">Monto</label>
-                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="paymentAmount" id="paymentAmount" placeholder="Monto a pagar" readonly>
+                <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="paymentAmount" id="paymentAmount" placeholder="Monto a pagar" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="foodPieceAmount">Alimentos</label>
-                <input maxlength="8" onkeyup="keyUpFoodPieceAmount()" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="foodPieceAmount" id="foodPieceAmount" placeholder="Monto por alimento">
+                <input required maxlength="8" onkeyup="keyUpFoodPieceAmount()" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="foodPieceAmount" id="foodPieceAmount" placeholder="Monto por alimento">
               </div>
 
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="foodDays">Días de alimentos</label>
-                <input maxlength="2" onkeyup="keyUpFoodDays()" onkeypress="return isNumberKey(event)" class="form-control" name="foodDays" id="foodDays" placeholder="Días de alimentos pagados">
+                <input required maxlength="2" onkeyup="keyUpFoodDays()" onkeypress="return isNumberKey(event)" class="form-control" name="foodDays" id="foodDays" placeholder="Días de alimentos pagados">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="foodTotalAmount">Monto</label>
-                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" placeholder="Monto a pagar" name="foodTotalAmount" id="foodTotalAmount" readonly>
+                <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" placeholder="Monto a pagar" name="foodTotalAmount" id="foodTotalAmount" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="addedActivities">Otras actividades</label>
