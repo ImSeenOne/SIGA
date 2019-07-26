@@ -43,8 +43,9 @@
                   <label for="inputType">Tipo</label>
                   <select id="inputType" name="inputType" class="form-control">
                     <!-- <option selected>Escoger un tipo</option> -->
-                    <option>Licitación</option>
-                    <option>Asignación directa</option>
+                    <option value="1">Licitación</option>
+                    <option value="2">Asignación directa</option>
+                    <option value="3">Proyectos</option>
                   </select>
                   <div id="reqSelType"></div>
                 </div>

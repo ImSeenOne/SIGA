@@ -982,7 +982,7 @@ $('#cancelPaymentBtn').click(function(){
 	$('#opcion').val("11");
 });
 
-$('#savePaymentBtn').submit(function(event){
+$('#frmPayment').submit(function(event){
 
 		event.preventDefault();
 	swal({
@@ -1027,6 +1027,7 @@ $('#savePaymentBtn').submit(function(event){
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
+
 
 function listContracts(){
 	urlPag = 'pg/contratos_listado.php';
@@ -1167,9 +1168,101 @@ function deleteContract(id, name, archivo){
 		      });
 }
 
-/**
-FORMAT CURRENCY FUNCTIONS
-**/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/**************************FUNCIONES PARA NOMINA AD*****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function listAdmPayments(){
+	urlPag = 'pg/nom_adm_listado.php';
+
+	$.ajax({
+				beforeSend: function(){
+						$("#cntnListAdmPayments").html(cargando);
+				},
+				type:    "post",
+				url:     urlPag,
+				dataType: 'html',
+				success: function(data){
+						$('#cntnListAdmPayments').html(data);
+						loadDataTable('listAdmPayments', true);
+				}
+	});
+}
+
+$('#btnNewAdmPayment').click(function(){
+  $('#frmAdmPayment').slideToggle();
+  $('#btnNewAdmPayment').slideToggle();
+  resetForm('frmAdmPayment');
+});
+
+$('#cancelSearchPayment').click(function(){
+	$('#btnSearchAdmPayment').slideToggle();
+	$('#btnNewAdmPayment').slideToggle();
+	$('#searchAdmPaymentFrm').slideToggle();
+	resetForm('searchPaymentFrm');
+});
+
+$('#cancelAdmPaymentBtn').click(function(){
+	$('#frmAdmPayment').slideToggle();
+	$('#btnSearchAdmPayment').slideToggle();
+	$('#btnNewAdmPayment').slideToggle();
+	resetForm('frmAdmPayment');
+	$('#opcion').val("14"); //CAMBIAR OPCIÓN
+});
+
+$('#frmAdmPayment').submit(function(event){
+
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+	console.log(formData);
+
+	for (var pair of formData.entries()) {
+	console.log(pair[0]+ ', ' + pair[1]);
+}
+
+	$.ajax({beforeSend: function(){
+						$("#respServer").html(cargando);
+					},
+					url: urlSubir3,
+					type: "post",
+					dataType: "json", //<---- REGRESAR A JSON
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(resp){
+						console.log(resp);
+							if(resp.resp == 1 ){
+								$("#respServer").html('');
+								resetForm('frmAdmPayment');
+								$('#frmAdmPayment').slideToggle();
+								$('#btnNewAdmPayment').slideToggle();
+								$('#opcion').val('');                          //CAMBIAR OPCION
+								listAdmPayments();
+							}else{
+								$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+							}
+					}
+
+	});
+});
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/**************************FORMAT CURRENCY FUNCTIONS*****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
 
 $("input[data-type='currency']").on({
     keyup: function() {

@@ -316,6 +316,23 @@ public function getContracts($id = 0){
 		 return $strQuery;
 	}
 
+	/**Administration Payments**/
+	public function searchAdmPayments(){
+		return 'SELECT * FROM tbl_nomina_adm';
+	}
+
+	public function addAdmPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
+	$addedActivities, $addedActAmount, $totalAmount, $status, $observations,
+	$employeeSelected, $currentDate){
+		$strQuery = 'INSERT INTO tbl_nomina_adm ';
+		$strQuery.=	'(fecha_inicio, fecha_finalizacion, sueldo, alimentos, ot_act,
+			ot_act_monto, total_nomina, status, observaciones, id_empleado, fecha_registro) VALUES ';
+
+		$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$addedActivities.','.$addedActAmount.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.',"'.$currentDate.'")';
+
+		return $strQuery;
+	}
+
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/

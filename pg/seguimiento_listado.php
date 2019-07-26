@@ -22,7 +22,19 @@
       <tr>
         <td><?= $key->id_seg_est ?></td>
         <td><?= $key->nombre_obra  ?></td>
-        <td><?= $key->status ?></td>
+        <td><?php switch ($key->status) {
+          case 1:
+            echo "Elaboración";
+          break;
+
+          case 2:
+            echo "Revisión/Supervisión";
+          break;
+
+          case 3:
+            echo "Terminada";
+          break;
+        } ?></td>
         <td>de <?= $key->fecha_inicio ?> a
           <?php
             if($key->fecha_finalizacion == "0000-00-00"){

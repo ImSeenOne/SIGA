@@ -592,5 +592,37 @@ case 2:
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+
+	case 14:
+	$dateStartTmp = $funciones->limpia($_POST['dateStart']);
+	$dateFinishTmp = $funciones->limpia($_POST['dateFinish']);
+
+	$dateStart = explode("-", $dateStartTmp);
+	$dateFinish = explode("-", $dateFinishTmp);
+
+	$addedActivities = $funciones->limpia($_POST['addedActivities']);
+	$employeeSelected = $funciones->limpia($_POST['employee']);
+	$paymentStatus = $funciones->limpia($_POST['paymentStatus']);
+	$observations = $funciones->limpia($_POST['remarks']);
+
+	$totalAmountTmp = $funciones->limpia($_POST['totalAmount']);//
+	$totalAmount = str_replace(",", "", $totalAmountTmp);
+	$addedActAmountTmp = $funciones->limpia($_POST['addedActAmount']);//
+	$addedActAmount = str_replace(",", "", $addedActAmountTmp);
+	$paymentTmp = $funciones->limpia($_POST['paymentAmount']);//
+	$payment = str_replace(",", "", $paymentTmp);
+	$foodTotalAmountTmp = $funciones->limpia($_POST['foodTotalAmount']);//
+	$foodTotalAmount = str_replace(",", "", $foodTotalAmountTmp);
+	//$ = $funciones->limpia($_POST['']);
+
+	if($conexion->consulta($querys->addAdmPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $datos['fecha_actual'])) == 0){
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 0;
+	}else{
+		$jsondata['resp'] = 1;
+	}
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
+	break;
 }
 ?>
