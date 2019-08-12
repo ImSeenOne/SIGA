@@ -5,15 +5,19 @@ class QuerysB {
     //Consultas Marco Molina
     
     //Obtiene los datos del usuario del sistema
-    function existeUsuario($usuario){
+    function existeUsuario($usuario=''){
+        $sentencia = ($usuario != '')? " AND u.usuario = '" . $usuario . "'":"";
         $strQuery = "SELECT u.*,d.nombre nDepartamento,a.nombre nArea ";
-        $strQuery .= "FROM demosystem_siga.tblc_usuario u left join tblc_departamentos d ";
-        $strQuery .= "on u.id_departamento = d.id_departamento AND d.fecha_eliminado IS NULL ";
-        $strQuery .= "left join tblc_areas a on d.id_departamento = a.id_departamento ";
-        $strQuery .= "AND u.id_area = a.id_area AND a.fecha_eliminado IS NULL ";
-        $strQuery .= "WHERE u.fecha_eliminado IS NULL AND u.usuario = '" . $usuario . "'";
+        $strQuery .= "FROM demosystem_siga.tblc_usuario u ";
+        $strQuery .= "INNER JOIN tblc_areas a on u.id_area = a.id_area ";
+        $strQuery .= "AND a.fecha_eliminado IS NULL ";
+        $strQuery .= "INNER JOIN tblc_departamentos d ON a.id_departamento = d.id_departamento ";
+        $strQuery .= "AND d.fecha_eliminado IS NULL ";
+        $strQuery .= "WHERE u.fecha_eliminado IS NULL".$sentencia;
         return $strQuery;
     }
+    
+    
     
     //Obtiene permiso de los usuarios por módulo
     function obtenerPermisoModulo($idUsuario, $modulo){
@@ -57,6 +61,7 @@ class QuerysB {
     function getPropiedadades($id = 0){
       $sentencia = ($id != 0)? ' WHERE id_propiedad = ' . $id:'';
       $strQuery = "SELECT @rownum:=@rownum+1 numero, t.*,t.id_propiedad id,t.descripcion valor ";
+      $strQuery .= ",DATE_FORMAT(t.DTU,'%d/%m/%Y') DTUF ";
       $strQuery .= "FROM tblc_propiedades t , (SELECT @rownum:=0) r " . $sentencia;
       $strQuery .= " ORDER BY t.id_propiedad DESC;";
 
@@ -77,7 +82,10 @@ class QuerysB {
 
       $strQuery = "SELECT p.*,(SELECT imagen FROM tbl_propiedad_imagen i ";
       $strQuery .= "WHERE i.id_propiedad = p.id_propiedad AND i.tipo = 1 ";
-      $strQuery .= "AND i.fecha_eliminado IS NULL LIMIT 1) imagen ";
+      $strQuery .= "AND i.fecha_eliminado IS NULL LIMIT 1) imagen, ";
+      $strQuery .= "IFNULL((SELECT ep.nombre FROM demosystem_siga.tbl_interes_cliente c ";
+      $strQuery .= "inner join tblc_estatus_propiedades ep on c.estatus = ep.id_estatus ";
+      $strQuery .= "WHERE c.fecha_eliminado IS NULL AND c.id_propiedad = p.id_propiedad),'DISPONIBLE') estatusR ";
       $strQuery .= "FROM tblc_propiedades p ";
       $strQuery .= "WHERE p.fecha_eliminado IS NULL".$sentencia;
       return $strQuery;
@@ -90,6 +98,45 @@ class QuerysB {
         $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_calidad_acabado,";
         $strQuery .= "t.nombre, t.icono, t.fecha_registro ";
         $strQuery .= "FROM vw_catCalidadAcabado t , (SELECT @rownum:=0) r " . $sentencia;
+        $strQuery .= " ORDER BY numero;";
+
+        return $strQuery;
+
+    }
+    
+    //Consulta para optener la lista del catalogo oferta o paquete
+    public function getListadoOfertaPaquete($id = ''){
+        $sentencia = ($id != '')? ' WHERE id_oferta = ' . $id:'';
+
+        $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_oferta,";
+        $strQuery .= "t.nombre, t.fecha_registro ";
+        $strQuery .= "FROM vw_catOfertaPaquete t , (SELECT @rownum:=0) r " . $sentencia;
+        $strQuery .= " ORDER BY numero;";
+
+        return $strQuery;
+
+    }
+    
+    //Consulta para optener la lista del catalogo oferente
+    public function getListadoOferente($id = ''){
+        $sentencia = ($id != '')? ' WHERE id_oferente = ' . $id:'';
+
+        $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_oferente,";
+        $strQuery .= "t.nombre, t.fecha_registro ";
+        $strQuery .= "FROM vw_catOferente t , (SELECT @rownum:=0) r " . $sentencia;
+        $strQuery .= " ORDER BY numero;";
+
+        return $strQuery;
+
+    }
+    
+    //Consulta para optener la lista del catalogo cuentas bancarias
+    public function getListadoCuentasB($id = ''){
+        $sentencia = ($id != '')? ' WHERE id_cuenta = ' . $id:'';
+
+        $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_cuenta,";
+        $strQuery .= "t.nombre,t.banco,t.titular, t.fecha_registro ";
+        $strQuery .= "FROM vw_catCuentasB t , (SELECT @rownum:=0) r " . $sentencia;
         $strQuery .= " ORDER BY numero;";
 
         return $strQuery;
@@ -141,10 +188,12 @@ class QuerysB {
     }
 
     public function getListCombo($tabla,$campos,$where=''){
+      $catalogosC = array('tblc_desarrollo','tblc_antiguedad');
       $strQuery = "SELECT -1 AS id,'Seleccionar..' AS valor,'0;0' AS dataId ";
       $strQuery .= " UNION ALL ";
       $strQuery .= "SELECT " . $campos . " FROM " . $tabla;
-      $strQuery .= ($where != '')? ' WHERE ' . $where : $where;
+      $strQuery .= (in_array($tabla,$catalogosC))?" WHERE fecha_eliminacion IS NULL":" WHERE fecha_eliminado IS NULL";
+      $strQuery .= ($where != '')? ' AND ' . $where : $where;
       return $strQuery;
     }
 

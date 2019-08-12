@@ -10,7 +10,7 @@
       <th class="text-center" style="width:15%;">Id</th>
       <th class="text-left" style="width:30%;">Nombre</th>
       <th class="text-left" style="width:5%;">Alias</th>
-      <th class="text-left" style="width:15%">Número</th>
+      <th hidden class="text-left" style="width:15%">Número</th>
       <th class="text-center" style="width:10%;">C.P.</th>
       <th class="text-center" style="width:10%;">Icono</th>
       <th class="text-center" style="width:20%;">Acciones</th>
@@ -22,7 +22,7 @@
       <td class="text-center"><?= $key->id_desarrollo ?></td>
       <td class="text-left"><?= $key->nombre ?></td>
       <td class="text-left"><?= $key->alias ?></td>
-      <td class="text-left"><?= $key->numero_etapa_oferta ?></td>
+      <td hidden class="text-left"><?= $key->numero_etapa_oferta ?></td>
       <td class="text-center"><?= $key->codigo_postal ?></td>
       <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize"/></td>
       <td class="text-center">

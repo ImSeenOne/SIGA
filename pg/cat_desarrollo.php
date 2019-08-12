@@ -42,13 +42,13 @@
 
           <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="form-group">
-              <label for="txtAlias">Alias</label>
+              <label for="txtAlias">Identificador</label>
               <input type="text" id="txtAlias" name="txtAlias" class="form-control" placeholder="Alias" maxlength="2">
               <div id="reqTxtAlias" style="color: red;"></div>
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-4 col-sm-6">
+          <div hidden class="col-lg-3 col-md-4 col-sm-6">
             <div class="form-group">
               <label for="txtNumeroOferta">Número etapa/oferta</label>
               <input type="text" id="txtNumeroOferta" name="txtNumeroOferta" class="form-control" placeholder="Número" maxlength="50">
@@ -74,7 +74,7 @@
           </div>
 
           <div id="respServer"></div>
-          <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em">
+          <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em pull-right">
             <input type="hidden" id="idDesarrollo" name="idDesarrollo">
             <input type="hidden" id="opcion" name="opcion" value="1">
             <div class="col-sm-12 col-lg-6 col-md-6">
@@ -92,9 +92,6 @@
         </div>
       </div>
     </div>
-
-    <div class="box-footer">
-     </div>
   </div>
 <!-- /.row -->
 </section>

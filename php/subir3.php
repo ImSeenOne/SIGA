@@ -107,19 +107,18 @@ case 2:
 		$amount = $funciones->limpia($_POST['inputAmount']);
 		$dateStartTmp = $funciones->limpia($_POST['date1']);
 		$dateFinishTmp = $funciones->limpia($_POST['date2']);
-		$folderVol = $funciones->limpia($_POST['txtFolderVol']);
+		$folderVol = (isset($_POST['txtFolderVol']))?$funciones->limpia($_POST['txtFolderVol']):0;
 		$addedType = $funciones->limpia($_POST['addedType']);
-		$concreteVol = $funciones->limpia($_POST['txtConcreteVol']);
+		$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
 		$workArea = $funciones->limpia($_POST['txtWorkArea']);
 
-		$dateStart = explode("-",$dateStartTmp);
-		$dateFinish = explode("-",$dateFinishTmp);
-
+		$dateStart = strtotime($dateStartTmp);
+		$dateFinish = strtotime($dateFinishTmp);
 
 
 		$amount = str_replace(",","",$amount);
 
-		if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, $dateStart[2]."-".$dateStart[1]."-".$dateStart[0], $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0], $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, date('Y-m-d',$dateStart), date('Y-m-d',$dateFinish), $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{
@@ -316,28 +315,23 @@ case 2:
 		$amount = $funciones->limpia($_POST['inputAmount']);
 		$dateStartT = $funciones->limpia($_POST['date1']);
 		$dateFinishT = $funciones->limpia($_POST['date2']);
-		$folderVol = $funciones->limpia($_POST['txtFolderVol']);
+		$folderVol = (isset($_POST['txtFolderVol']))?$funciones->limpia($_POST['txtFolderVol']):0;
 		$addedType = $funciones->limpia($_POST['addedType']);
-		$concreteVol = $funciones->limpia($_POST['txtConcreteVol']);
+		$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
 		$workArea = $funciones->limpia($_POST['txtWorkArea']);
-
 		$amount = str_replace(",","",$amount);
-
 		$dateStart = explode("-", $dateStartT);
 		$dateFinish = explode("-", $dateFinishT);
-
-//		exit($id.$name.$type.$dependency.$amount. $dateStart[2]."-".$dateStart[1]."-".$dateStart[0]. $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0]. $folderVol. $addedType. $concreteVol. $workArea);
-
+		// exit($id.$name.$type.$dependency.$amount. $dateStart[2]."-".$dateStart[1]."-".$dateStart[0]. $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0]. $folderVol. $addedType. $concreteVol. $workArea);
 		if($conexion->consulta($querys->updateObra($id, $name, $type, $dependency, $amount, $dateStart[2]."-".$dateStart[1]."-".$dateStart[0], $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0], $folderVol, $addedType, $concreteVol, $workArea)) == 0){
-			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 0;
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 0;
 		}else{
-			$jsondata['resp'] = 1;
-		}
-
-		header('Content-type: application/json; charset=utf-8');
-		echo json_encode($jsondata);
-	break;
+		$jsondata['resp'] = 1;
+	}
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
+break;
 
 	//EDITA UN SEGUIMIENTO DE OBRA
 
@@ -505,6 +499,7 @@ case 2:
 		echo json_encode($jsondata);
 	break;
 
+	//edita un contrato
 	case 13:
 
 		$id = $funciones->limpia($_POST['idContract']);
@@ -593,6 +588,7 @@ case 2:
 		echo json_encode($jsondata);
 	break;
 
+	//AGREGA UN NUEVO PAGO DE NÓMINA ADMINISTRATIVA
 	case 14:
 	$dateStartTmp = $funciones->limpia($_POST['dateStart']);
 	$dateFinishTmp = $funciones->limpia($_POST['dateFinish']);
@@ -623,6 +619,81 @@ case 2:
 	}
 	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($jsondata);
+	break;
+
+	//AGREGA UN NUEVO AVANCE FISICO
+	case 15:
+		$dateStart = date('Y-m-d',strtotime($funciones->limpia($_POST['dateStart'])));
+		$dateFinish = date('Y-m-d',strtotime($funciones->limpia($_POST['dateFinish'])));
+
+		$work = $funciones->limpia($_POST['work']);
+
+		$resident = $funciones->limpia($_POST['resident']);
+
+		$quantities = json_decode($funciones->limpia($_POST['quantities']),true);
+
+		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
+
+		if($conexion->consulta($querys->addNewPhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		} else {
+			$current = $conexion->ultimoid();
+			$folio = 'RA'.str_pad($current, 5, '0', STR_PAD_LEFT);
+			$conexion->consulta($querys->addFolioToNewPhysProg($current, $folio));
+
+			$transactions = true;
+			for ($i=0; $i < sizeof($concepts); $i++) {
+				if($conexion->consulta($querys->addPPConcept($current, $concepts[$i], $quantities[$i])) == 0){
+					$transactions = false;
+				}
+			}
+			$jsondata['resp'] = 1;
+			if(!$transactions){
+				$jsondata['msg'] = 'No se pudo agregar uno o más conceptos, verifique el listado para ver cuáles no se agregaron';
+			}
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN AVANCE FÍSICO
+	case 16:
+		$id = $funciones->limpia($_POST['id']);
+
+		$dateStart = date('Y-m-d',strtotime($funciones->limpia($_POST['dateStart'])));
+		$dateFinish = date('Y-m-d',strtotime($funciones->limpia($_POST['dateFinish'])));
+
+		$work = $funciones->limpia($_POST['work']);
+
+		$resident = $funciones->limpia($_POST['resident']);
+
+		$quantities = json_decode($funciones->limpia($_POST['quantities']),true);
+
+		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
+
+		if($conexion->consulta($querys->updatePhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 0;
+		} else {
+			$transactions = true;
+			for ($i=0; $i < sizeof($concepts); $i++) {
+				$conexion->consulta('SELECT id_concepto FROM tbl_avance_fisico_conceptos WHERE id_concepto = '.$concepts[$i]);
+				if($conexion->numregistros() < 1){
+					if($conexion->consulta($querys->addPPConcept($id, $concepts[$i], $quantities[$i])) == 0){
+					}
+				} else {
+					$conexion->consulta($querys->updatePPConcept($id, $concepts[$i], $quantities[$i]));
+				}
+			}
+			$jsondata['resp'] = 1;
+			if(!$transactions){
+				$jsondata['msg'] = 'No se pudo agregar uno o más conceptos, verifique el listado para ver cuáles no se agregaron';
+			}
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
 	break;
 }
 ?>

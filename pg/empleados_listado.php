@@ -26,8 +26,12 @@
           <td><?= $key->tipo ?></td>
           <td><?= $key->imss ?></td>
           <td>
-            <button type="button" class="btn btn-success btn-sm" name="editEmployee" onclick="editEmployee(<?= $key->id_empleado ?>)"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-danger btn-sm" name="deleteEmployee" onclick="deleteEmployee(<?= $key->id_empleado ?>, '<?= $key->nombre ?>')"><i class="fa fa-trash"></i></button>
+            <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
+              <button type="button" class="btn btn-success btn-sm" name="editEmployee" onclick="editEmployee(<?= $key->id_empleado ?>)"><i class="fa fa-edit"></i></button>
+            <?php } ?>
+            <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
+              <button class="btn btn-danger btn-sm" name="deleteEmployee" onclick="deleteEmployee(<?= $key->id_empleado ?>, '<?= $key->nombre ?>')"><i class="fa fa-trash"></i></button>
+            <?php } ?>
           </td>
         </tr>
       <?php } ?>

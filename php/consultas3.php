@@ -116,6 +116,26 @@ switch($_POST['opt']){
 		$jsondata['observaciones'] = $resp['observaciones'];
 	break;
 
+	case 8:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getPhysProg($id, ''));
+		$jsondata['id'] = $resp['id'];
+		$jsondata['resident'] = $resp['residente'];
+		$jsondata['dateStart'] = $resp['fecha_inicio'];
+		$jsondata['dateFinish'] = $resp['fecha_termino'];
+		$jsondata['work'] = $resp['id_obra'];
+		$jsondata['folio'] = $resp['folio'];
+
+		$physprog = @$conexion->obtenerlista($querys3->getUsedConcept($resp['id']));
+		foreach ($physprog as $key) {
+			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
+			$datos[] = array('id' => $respC['id'], 'cantidad' => $key->cantidad);
+		}
+
+		$jsondata['concepts'] = $datos;
+
+	break;
+
 	case 20:
 	$category = $funciones->limpia($_POST['category']);
 	$strQuery = 'SELECT nombre, dias, sueldo FROM tblc_categorias WHERE id_categoria = '.$category.' AND fecha_eliminacion IS NULL';
@@ -125,8 +145,52 @@ switch($_POST['opt']){
 	$jsondata['days'] = $resp['dias'];
 	$jsondata['pay'] = $resp['sueldo'];
 	break;
-}
 
+	//FUNCIÓN PARA LLENAR EL COMBOBOX (SELECT) DE LOS CONCEPTOS PERTENECIENTES A UNA OBRA EN ESPECÍFICO
+	case 21:
+		$work = $funciones->limpia($_POST['work']);
+		$strQuery = 'SELECT concepto, id_presupuesto_obra as id, codigo, cantidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_obra = '.$work;
+		$resp = @$conexion->obtenerlista($strQuery);
+		$totRegs = $conexion->numregistros();
+
+		foreach ($resp as $key) {
+			$datos[] = array('id' => $key->id, 'concepto' => $key->concepto, 'codigo' => $key->codigo, 'cantidad' => $key->cantidad);
+		}
+
+		$jsondata['conceptos'] = $datos;
+		$jsondata['total']     = $totRegs;
+	break;
+
+	//FUNCIÓN PARA OBTENER LA CANTIDAD USADA DE CIERTO CONCEPTO, POR SU ID
+	case 22:
+		$physprog = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getAddedConcept('',$physprog));
+		if($resp['quantity_used'] != null){
+				$jsondata['used'] = $resp['quantity_used'];
+		} else {
+			$jsondata['used'] = 0;
+		}
+	break;
+	//OBTIENE LOS CONCEPTOS QUE PERTENECEN A UN ID DE AVANCE FÍSICO/REPORTE DE AVANCES
+	case 23:
+		$physprog = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->obtenerlista($querys3->getUsedConcept($physprog));
+		$totRegs = $conexion->numregistros();
+
+		foreach ($resp as $key) {
+			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
+			$datos[] = array('id' => $respC['id'], 'concepto' => $respC['concepto'], 'codigo' => $respC['codigo'], 'cantidad' => $key->cantidad);
+		}
+
+		$resp = @$conexion->fetch_array($querys3->getPhysProg($physprog));
+		$work = @$conexion->fetch_array($querys3->getListadoObras($resp['id_obra']));
+
+		$jsondata['resident'] = $resp['residente'];
+		$jsondata['folio'] = $resp['folio'];
+		$jsondata['work'] = $work['nombre'];
+		$jsondata['concepts'] = $datos;
+	break;
+}
 
 header('Content-type: application/json; charset=utf-8');
 echo json_encode($jsondata);

@@ -245,7 +245,7 @@ $('#btnSaveWork').click(function(){
       $('#reqDateStart').empty();
     }
 
-		if(isEmpty($('#txtFolderVol'))){
+		/*if(isEmpty($('#txtFolderVol'))){
       $('#txtFolderVol').focus();
       $('#reqFolderVol').html('Este campo es requerido');
       return false;
@@ -259,7 +259,7 @@ $('#btnSaveWork').click(function(){
       return false;
     }else{
       $('#reqConcreteVol').empty();
-    }
+    }*/
 
 		if(isEmpty($('#txtWorkArea'))){
       $('#txtWorkArea').focus();
@@ -286,16 +286,22 @@ $('#btnSaveWork').click(function(){
       },
       url: urlSubir3,
       type: "post",
-      dataType: "json", //<---- REGRESAR A JSON
+      dataType: "html", //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
+				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1){
 						$('#frmWork').slideToggle();
 					  $('#btnNewWork').slideToggle();
+						if(!$('#btnNewWork').hasClass('hide')){
+							$('#btnSavePO').addClass('hide');
+							$('#btnSaveEI').addClass('hide');
+							$('#btnSaveMO').addClass('hide');
+						}
             work_list();
             $('#opcion').val(3);
             resetForm('frmWork');
@@ -355,11 +361,16 @@ function editarRegObra(id){
             $('#inputAmount').val(resp.monto);
             $('#date1').val(resp.fecha_inicio);
             $('#date2').val(resp.fecha_finalizacion);
-						$('#txtFolderVol').val(resp.volumenes_carpeta);
+						//$('#txtFolderVol').val(resp.volumenes_carpeta);
 						$('#addedType').val(resp.tipo_agregado);
-						$('#txtConcreteVol').val(resp.volumen_concreto);
+						//$('#txtConcreteVol').val(resp.volumen_concreto);
 						$('#txtWorkArea').val(resp.area_obra);
 						$('#idWork').val(resp.id_obra);
+						if($('#btnSavePO').hasClass('hide')){
+							$('#btnSavePO').removeClass('hide');
+							$('#btnSaveEI').removeClass('hide');
+							$('#btnSaveMO').removeClass('hide');
+						}
 						$('#opcion').val("9");
         }
   });
@@ -1227,32 +1238,333 @@ $('#frmAdmPayment').submit(function(event){
 	console.log(pair[0]+ ', ' + pair[1]);
 }
 
-	$.ajax({beforeSend: function(){
-						$("#respServer").html(cargando);
-					},
-					url: urlSubir3,
-					type: "post",
-					dataType: "json", //<---- REGRESAR A JSON
-					data: formData,
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function(resp){
-						console.log(resp);
-							if(resp.resp == 1 ){
-								$("#respServer").html('');
-								resetForm('frmAdmPayment');
-								$('#frmAdmPayment').slideToggle();
-								$('#btnNewAdmPayment').slideToggle();
-								$('#opcion').val('');                          //CAMBIAR OPCION
-								listAdmPayments();
-							}else{
-								$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
-							}
-					}
+	swal({
+				html: true,
+				title: "¿Está seguro?",
+				text: "Una vez agregado un pago, no se puede modificar ni eliminar",
+				type: "warning",
+				showCancelButton: true,
+				cancelButtonClass: "btn-primary",
+				confirmButtonColor: "#7BED81",
+				confirmButtonText: "Aceptar",
+				cancelButtonText: "Prefiero revisar los datos",
+				closeOnConfirm: true
+			},
+			function(){
+					let formData = new FormData(document.getElementById("frmPayment"));
+					$.ajax({beforeSend: function(){
+										$("#respServer").html(cargando);
+									},
+									url: urlSubir3,
+									type: "post",
+									dataType: "json", //<---- REGRESAR A JSON
+									data: formData,
+									cache: false,
+									contentType: false,
+									processData: false,
+									success: function(resp){
+										console.log(resp);
+											if(resp.resp == 1 ){
+												$("#respServer").html('');
+												resetForm('frmAdmPayment');
+												$('#frmAdmPayment').slideToggle();
+												$('#btnNewAdmPayment').slideToggle();
+												$('#opcion').val('');                          //CAMBIAR OPCION
+												listAdmPayments();
+											}else{
+												$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+											}
+									}
 
-	});
+					});
+			});
 });
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/**************************FUNCIONES PARA AVANCES F*****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+$('#addToTable').click(function(){
+	let id = $('#concept').val();
+	let concept = $('#concept option:selected').text();
+	let code = $('#concept').find(":selected").data("code");
+	let quant = $('#concept').find(":selected").data("quant");
+	let used = '';
+	var tbody = $("#listConcepts tbody");
+
+	if($('#concept').val() != 0){
+		if (tbody.children().length == 0) {
+				$("#listConcepts").slideToggle();
+				$('#saveConcepts').slideToggle();
+		}
+		let params = {'id':id, 'opt':22}
+		$.ajax({
+				type:    "post",
+				url:     urlConsultas3,
+				data:    params,
+				dataType: 'json',
+				success: function(resp){
+					console.log(quant+"\n");
+					console.log(resp.used+"\n");
+					$('#input'+id).attr("max", parseFloat(quant) - parseFloat(resp.used));
+				}
+		});
+
+		if(!$('#'+id).length){
+			$('#listConcepts tbody').append(
+			'<tr id="'+id+'">'+
+			'<td class="text-center">'+id+'</td>'+
+			'<td class="text-center">'+code+'</td>'+
+			'<td class="text-center">'+concept+'</td>'+
+			'<td> <input id="input'+id+'" type="number" required onkeypress="return isNumberKey(event)" class="form-control text-center"style="display: block;" min="1" > </td>'+
+			'<td> <button type="button" name="button" class="btn btn-danger text-center" onclick="deleteTR(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
+			'</tr>');
+		} else {
+			swal({
+			  type: 'warning',
+			  title: 'El concepto que deseas agregar ya se encuentra en la lista, quizá quieras editar la cantidad',
+			  showConfirmButton: false,
+			  timer: 2500
+			});
+		}
+
+	}
+	});
+
+	function deleteTR(code){
+		var tbody = $("#listConcepts tbody");
+		$('#'+code).remove();
+
+		if (tbody.children().length == 0) {
+				$("#listConcepts").slideToggle();
+				$('#saveConcepts').slideToggle();
+		}
+	}
+
+	//AGREGA UN NUEVO AVANCE FÍSICO
+	$('#newPhysProg').submit(function(event){
+		event.preventDefault();
+
+		let formData = new FormData($(this)[0]);
+
+		let idConcept = [];
+		let quantConcept = [];
+
+		$("#listConcepts tbody tr").each(function (index) {
+	    $(this).children("td").each(function (index2) {
+	      switch (index2) {
+	        case 0:
+					idConcept.push($(this).text());
+	        break;
+
+	        case 3:
+					quantConcept.push($(this).children().val());
+					break;
+	      }
+	    });
+  	});
+
+		$('#respServer').html(cargando);
+
+		let id = $('#id').val();
+
+		let resident = $('#resident').val();
+		let work = $('#work').val();
+
+		let dateStart = $('#dateStart').val();
+		let dateFinish = $('#dateFinish').val();
+
+		let opcion = $('#opcion').val();
+
+		let concepts = JSON.stringify(idConcept);
+
+		let quantities = JSON.stringify(quantConcept);
+
+		let params = {
+									'id':id,
+									'resident':resident,
+									'work':work,
+									'dateStart':dateStart,
+									'dateFinish':dateFinish,
+									'opcion':opcion,
+									'concepts':concepts,
+									'quantities':quantities}
+
+		$.ajax({
+				type:    "post",
+				url:     urlSubir3,
+				data:    params,
+				dataType: 'json',
+				success: function(resp){
+					$('#respServer').html("");
+					resetForm('newPhysProg');
+					listPhysProg();
+					$('#newPhysProg').slideToggle();
+					$('#btnNewPhysProg').slideToggle();
+					$("#listConcepts tbody tr").each(function (index) {
+						deleteTR($(this).attr('id'));
+					});
+					$('#opcion').val("15");
+				}
+		});
+	});
+
+	function fillConcepts(){
+		$('#waitingConcepts').html(cargando);
+		$('#concept').hide();
+		var work = $('#work').val();
+		let params = {'work': work, 'opt': 21}
+		let element = '';
+    $.ajax({
+        type:    "post",
+        url:     urlConsultas3,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+					$("#listConcepts tbody tr").each(function (index) {
+						deleteTR($(this).attr('id'));
+					});
+            element+= '<option value="0">Seleccionar...</option>';
+            $.each(resp.conceptos,function(i,y){
+                element+= '<option value="' + y['id'] + '"data-quant="'+y['cantidad']+'" data-code="'+y['codigo']+'">' + y['concepto'] + '</option>';
+            });
+						$("#concept").empty();
+            $('#concept').append(element);
+						$('#concept').show();
+						$('#waitingConcepts').html("");
+        }
+    });
+	}
+
+$('#btnNewPhysProg').click(function(){
+  $('#newPhysProg').slideToggle();
+	$('#btnNewPhysProg').slideToggle();
+});
+
+function listPhysProg(){
+	urlPag = 'pg/avance_fisico_listado.php';
+
+	$.ajax({
+				beforeSend: function(){
+						$("#cntnListProgress").html(cargando);
+				},
+				type:    "post",
+				url:     urlPag,
+				dataType: 'html',
+				success: function(data){
+						$('#cntnListProgress').html(data);
+						loadDataTable('listPhysicalProgress', true);
+				}
+	});
+}
+
+$('#cancelAllConcepts').click(function(){
+	$("#listConcepts tbody tr").each(function (index) {
+		deleteTR($(this).attr('id'));
+	});
+	$('#newPhysProg').slideToggle();
+	$('#btnNewPhysProg').slideToggle();
+});
+
+function lookDetails(id){
+	$("#listConceptsDetail tbody tr").each(function (index) {
+		$(this).remove();
+	});
+	$('#folioModal').html('Cargando...');
+	$('#residentModal').html('Cargando...');
+	$('#workModal').html('Cargando...');
+
+	$.ajax({
+				beforeSend: function(){
+						$("#respServerModalDetail").html(cargando);
+				},
+				type:    'post',
+				url:     urlConsultas3,
+				data: {'id':id, 'opt':23},
+				dataType: 'json',
+				success: function(resp){
+					console.log(resp);
+						$.each(resp.concepts,function(i,y){
+								$('#listConceptsDetail tbody').append(
+								'<tr>'+
+								'<td class="text-center">'+y['id']+'</td>'+
+								'<td class="text-center">'+y['codigo']+'</td>'+
+								'<td class="text-center">'+y['concepto']+'</td>'+
+								'<td class="text-center">'+y['cantidad']+'</td>'+
+								'</tr>');
+						});
+						$('#respServerModalDetail').html("");
+						$('#folioModal').html('Folio: <b>'+resp.folio+'</b>');
+						$('#residentModal').html('Residente: <b>'+resp.resident+'</b>');
+						$('#workModal').html('Obra: <b>'+resp.work+'</b>');
+				}
+	});
+}
+
+function deleteProgress(id){
+	swal({
+				html: true,
+				title: "¿Está seguro?",
+				text: "Ésta acción no se puede revertir",
+				type: "warning",
+				showCancelButton: true,
+				cancelButtonClass: "btn-primary",
+				confirmButtonColor: "#7BED81",
+				confirmButtonText: "Aceptar",
+				cancelButtonText: "Cancelar",
+				closeOnConfirm: true
+			},
+			function(){
+					$.ajax({
+								beforeSend: function(){
+										$("#cntnListProgress").html(cargando);
+								},
+								type:    'post',
+								url:     urlEliminar3,
+								data: {'id':id, 'opt':7},
+								dataType: 'json',
+								success: function(resp){
+									console.log(resp);
+									$("#cntnListProgress").html("");
+									listPhysProg();
+								}
+					});
+			});
+}
+
+function editProgress(id){
+	$.ajax({
+				beforeSend: function(){
+						$("#respServer").html(cargando);
+				},
+				type:    'post',
+				url:     urlConsultas3,
+				data: {'id':id, 'opt':8},
+				dataType: 'json',
+				success: function(resp){
+					$('#resident').val(resp.resident);
+					$('#work').val(resp.work);
+					$('#dateStart').val(resp.dateStart);
+					$('#dateFinish').val(resp.dateFinish);
+					$.each(resp.concepts,function(i,y){
+						$('#concept').val(y['id']);
+						$('#addToTable').trigger("click");
+						$('#input'+y['id']).val(y['id']);
+					});
+					$('#newPhysProg').slideToggle();
+					$('#btnNewPhysProg').slideToggle();
+					$('#opcion').val("16");
+					$('#id').val(resp.id);
+					$("#respServer").html("");
+				}
+	});
+}
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -1364,10 +1676,26 @@ if (charCode > 31 && (charCode < 48 || charCode > 57))
 *This function checks if the date1 is greater than date2
 */
 function checkDate(date1, date2) {
-	var date1 = date1.split('-');
-	var date2 = date2.split('-');
-	var dateS = new Date(date1[2],date1[1],date1[0]);
-	var dateF = new Date(date2[2],date2[1],date2[0]);
+
+	let dateOne=[];
+	let dateTwo=[];
+
+	if(date1.includes('/')){
+		dateOne = date1.split('/');
+	}
+	if(date2.includes('/')){
+		dateTwo = date2.split('/');
+	}
+
+	if(date1.includes('-')){
+		dateOne = date1.split('-');
+	}
+	if(date2.includes('-')){
+		dateTwo = date2.split('-');
+	}
+
+	var dateS = new Date(dateOne[2],dateOne[1],dateOne[0]);
+	var dateF = new Date(dateTwo[2],dateTwo[1],dateTwo[0]);
 	var dateOpt = dates.compare(dateF, dateS);
 	if(dateOpt == 1 || dateOpt == 0){
       return true;

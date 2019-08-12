@@ -23,8 +23,12 @@
         <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize" /></td>
         <td class="text-center"><?= $key->fecha_registro ?></td>
         <td class="text-center">
+          <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
          	<button type="button" class="btn btn-success btn-sm" onclick="editarRegAntiguedad(<?= $key->id_antiguedad ?>)"><i class="fa fa-edit"></i></button>
+          <?php } ?>
+          <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
          	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash" onclick="eliminarRegAntiguedad(<?= $key->id_antiguedad ?>, '<?= $key->nombre ?>')"></i></button>
+          <?php } ?>
         </td>
       </tr>
     <?php } ?>

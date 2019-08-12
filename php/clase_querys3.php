@@ -47,20 +47,22 @@ class Querys3 {
 	}
 
 	//QUERY PARA AGREGAR UNA OBRA
-	public function addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $fechaRegistro){
-		$strQuery = 'INSERT INTO tbl_obras ';
-		$strQuery.= '(nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro) ';
-		$strQuery.= 'VALUES("'.$name.'", "'.$type.'", "'.$dependency.'", "'.$amount.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$folderVol.'", "'.$addedType.'", "'.$concreteVol.'", "'.$workArea.'", "'.$fechaRegistro.'")';
+		public function addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $fechaRegistro){
+			$factorImpregnacion = $workArea * 1.2;
+			$factorLiga = $workArea * 0.8;;
+			$strQuery = 'INSERT INTO tbl_obras ';
+			$strQuery.= '(nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro,factor_impregnacion,factor_liga) ';
+			$strQuery.= 'VALUES("'.$name.'", "'.$type.'", "'.$dependency.'", "'.$amount.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$folderVol.'", "'.$addedType.'", "'.$concreteVol.'", "'.$workArea.'", "'.$fechaRegistro.'",'.$factorImpregnacion.','.$factorLiga.')';
 
-		return $strQuery;
-	}
+			return $strQuery;
+		}
 
 	//QUERY PARA OBTENER LISTADO OBRAS
 	public function getListadoObras($id = ''){
 		$cond = ' ';
 
 		if($id != '') {
-			$cond = ' AND id_obras = '.$id.' ';
+			$cond.= 'AND id_obras = '.$id.' ';
 		}
 
 		$strQuery = 'SELECT id_obras, id_obras AS id, nombre, nombre AS valor, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro ';
@@ -80,23 +82,25 @@ class Querys3 {
 		return $strQuery;
 	}
 
-	//QUERY PARA EDITAR UNA OBRA
 	public function updateObra($id, $name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea) {
+			$factorImpregnacion = $workArea * 1.2;
+			$factorLiga = $workArea * 0.8;
+		  $strQuery = 'UPDATE tbl_obras SET nombre = "'.$name.'"';
+		  $strQuery .= ',tipo = "'.$type.'"';
+		  $strQuery .= ',dependencia = "'.$dependency.'"';
+		  $strQuery .= ',monto = "'.$amount.'",';
+		  $strQuery .= 'fecha_inicio = "'.$dateStart.'",';
+		  $strQuery .= 'fecha_finalizacion = "'.$dateFinish.'",';
+		  $strQuery .= 'volumenes_carpeta = "'.$folderVol.'",';
+		  $strQuery .= 'tipo_agregado = "'.$addedType.'",';
+		  $strQuery .= 'volumen_concreto = "'.$concreteVol.'",';
+		  $strQuery .= 'area_obra = "'.$workArea.'", ';
+		  $strQuery .= 'factor_impregnacion = "'.$factorImpregnacion.'", ';
+		  $strQuery .= 'factor_liga = "'.$factorLiga.'" ';
+		  $strQuery .= 'WHERE id_obras = "'.$id.'";';
 
-		$strQuery = 'UPDATE tbl_obras SET nombre = "'.$name.'"';
-	  $strQuery .= ',tipo = "'.$type.'"';
-	  $strQuery .= ',dependencia = "'.$dependency.'"';
-	  $strQuery .= ',monto = "'.$amount.'",';
-	  $strQuery .= 'fecha_inicio = "'.$dateStart.'",';
-	  $strQuery .= 'fecha_finalizacion = "'.$dateFinish.'",';
-	  $strQuery .= 'volumenes_carpeta = "'.$folderVol.'",';
-	  $strQuery .= 'tipo_agregado = "'.$addedType.'",';
-	  $strQuery .= 'volumen_concreto = "'.$concreteVol.'",';
-	  $strQuery .= 'area_obra = "'.$workArea.'" ';
-	  $strQuery .= 'WHERE id_obras = "'.$id.'";';
-
-		return $strQuery;
-	}
+			return $strQuery;
+		}
 
 	//QUERY PARA OBTENER LISTADO SEGUIMIENTO
 	public function getListadoSeguimiento($id = ''){
@@ -207,19 +211,23 @@ class Querys3 {
 		return $strQuery;
 	}
 	//QUERY PARA LISTAR EMPLEADOS
-	public function getListadoEmpleados($nombre = '', $rfc = '', $imss = ''){
+	public function getListadoEmpleados($tipo='', $nombre = '', $rfc = '', $imss = ''){
 		$cond = ' ';
 
+		if($tipo != ''){
+			$cond.= 'AND tipo = '.$tipo;
+		}
+
 		if($nombre != '') {
-			$cond = ' AND nombre LIKE "%'.$nombre.'%" ';
+			$cond.= 'AND nombre LIKE "%'.$nombre.'%" ';
 		}
 
 		if($rfc != '') {
-			$cond = ' AND rfc LIKE "%'.$rfc.'%" ';
+			$cond.= 'AND rfc LIKE "%'.$rfc.'%" ';
 		}
 
 		if($imss != '') {
-			$cond = ' AND imss LIKE "%'.$imss.'%" ';
+			$cond.= 'AND imss LIKE "%'.$imss.'%" ';
 		}
 		//DON'T DELETE DUPLICATED ALIASES; THOSE ARE USED IN RAYAS MODULE
 		$strQuery = 'SELECT id_empleado, id_empleado AS id,  nombre, CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) AS valor, categoria AS category, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
@@ -320,7 +328,7 @@ public function getContracts($id = 0){
 	public function searchAdmPayments(){
 		return 'SELECT * FROM tbl_nomina_adm';
 	}
-
+	//AGREGA UN NUEVO PAGO
 	public function addAdmPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
 	$addedActivities, $addedActAmount, $totalAmount, $status, $observations,
 	$employeeSelected, $currentDate){
@@ -332,6 +340,99 @@ public function getContracts($id = 0){
 
 		return $strQuery;
 	}
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/************************AVANCE FISICO***************************************/
+	/*****************************o**********************************************/
+	/**********************REPORTE DE AVANCES************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	//AGREGA UN AVANCE FÍSICO SIN FOLIO, YA QUE ÉSTE SE GENERA EN BASE AL ID QUE SE LE ASIGNÓ
+	public function addNewPhysProg($id_work, $resident, $dateStart, $dateFinish, $date){
+		$strQuery = 'INSERT INTO tbl_avance_fisico (id_obra, residente, fecha_inicio, fecha_termino, fecha_registro)';
+		$strQuery.= ' VALUES ('.$id_work.', "'.$resident.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$date.'")';
+		return $strQuery;
+	}
+
+	//AGREGA UN FOLIO A UN AVANCE FÍSICO RECIÉN AGREGADO
+	public function addFolioToNewPhysProg($id, $folio){
+		$strQuery = 'UPDATE tbl_avance_fisico SET folio = "'.$folio.'" WHERE (id_avance_fisico = '.$id.');';
+		return $strQuery;
+	}
+	//AGREGA UN CONCEPTO Y LA CANTIDAD USADA, QUE PERTENECEN A UN AVANCE FÍSICO
+	public function addPPConcept($physprog, $concept, $quantity){
+		$strQuery = 'INSERT INTO tbl_avance_fisico_conceptos (id_avance_fisico, id_concepto, cantidad) ';
+		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", '.$quantity.');';
+		return $strQuery;
+	}
+	//OBTIENE UN AVANCE FÍSICO POR ID, O POR ID DE LA OBRA A LA QUE PERTENECE
+	public function getPhysProg($id = '', $id_obra=''){
+		$cond = ' ';
+		if($id != ''){
+			$cond.='AND id_avance_fisico = '.$id.' ';
+		}
+		if($id_obra != ''){
+			$cond.='AND id_obra = '.$id_obra.' ';
+		}
+
+		$strQuery = 'SELECT id_avance_fisico as id, id_obra, folio, residente, fecha_inicio, fecha_termino FROM tbl_avance_fisico WHERE fecha_eliminacion IS NULL AND verificado = 0'.$cond;
+		return $strQuery;
+	}
+
+	//OBTIENE EL ID DEL CONCEPTO QUE PERTENECE A UN REPORTE DE AVANCE/AVANCE FÍSICO EN ESPECÍFICO
+	public function getUsedConcept($id){
+		$strQuery = 'SELECT id_avance_concepto as id, id_concepto, cantidad FROM tbl_avance_fisico_conceptos WHERE id_avance_fisico = '.$id.';';
+		return $strQuery;
+	}
+
+	//OBTIENE LA SUMA DE UN CONCEPTO AÑADIDO. SI NECESITAS ALGUNO CON UN AVANCE FÍSICO
+	//EN ESPECÍFICO, LLAMA EL MÉTODO ASÍ: getAddedConcept('', $id_avance_fisico)
+	//SI NECESITAS SÓLO UN CONCEPTO EN BASE A SU ID, LLAMA EL MÉTODO ASÍ:
+	//getAddedConcept($id_concepto, '') ó getAddedConcept($id_concepto)
+	public function getAddedConcept($id_concepto = '', $id_avance_fisico = ''){
+		$cond = ' ';
+		if($id_concepto != ''){
+			$cond.= 'AND id_concepto = '.$id_concepto.' ';
+		}
+		if($id_avance_fisico != ''){
+			$cond.= 'AND id_avance_fisico = '.$id_avance_fisico;
+		}
+		$strQuery = 'SELECT SUM(cantidad) as quantity_used FROM tbl_avance_fisico_conceptos WHERE id_avance_fisico IS NOT NULL'.$cond;
+		return $strQuery;
+	}
+	//FUNCIÓN PARA OBTENER LA CANTIDAD TOTAL DE CONCEPTOS DE UN PRESUPUESTO
+	public function getTotalBudget($id){
+		$strQuery = 'SELECT SUM(cantidad) as total_quantity FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_obra = '.$id;
+		return $strQuery;
+	}
+
+	public function getConceptFromBudget($id_budget){
+		$strQuery = 'SELECT id_presupuesto_obra as id, codigo, concepto FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_presupuesto_obra = '.$id_budget.';';
+		return $strQuery;
+	}
+
+	public function deletePhysProg($id, $date){
+		$strQuery = 'UPDATE tbl_avance_fisico SET fecha_eliminacion = "'.$date.'" WHERE (id_avance_fisico = '.$id.');';
+		return $strQuery;
+	}
+
+	public function updatePhysProg($id_phys_prog, $id_work, $resident, $dateStart, $dateFinish){
+		$strQuery = "UPDATE tbl_avance_fisico SET id_obra= '".$id_work."', residente = '".$resident."', fecha_inicio = '".$dateStart."', fecha_termino= '".$dateFinish."' WHERE id_avance_fisico = '".$id_phys_prog."'";
+		return $strQuery;
+	}
+
+	public function updatePPConcept($physprog, $id_concept, $quantity){
+		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = '".$quantity."', id_concepto = '".$id_concept."' WHERE id_avance_fisico = ".$physprog;
+		return $strQuery;
+	}
+
+	public function deletePPConcept($physprog, $concept, $quantity){
+		$strQuery = 'UPDATE tbl_avance_fisico_conceptos (id_avance_fisico, id_concepto, cantidad) ';
+		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", '.$quantity.');';
+		return $strQuery;
+	}
+
 
 	/****************************************************************************/
 	/****************************************************************************/
@@ -341,6 +442,20 @@ public function getContracts($id = 0){
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+
+	public function listConcepts(){
+		$strQuery = 'SELECT id_presupuesto_obra as id, codigo as codigo, id_obra as obra, concepto as concepto FROM tbl_presupuesto_obra ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		return $strQuery;
+	}
+
+	public function llenarComboConceptos($resultados) {
+		foreach($resultados as $resultado){
+			echo '
+			<option value="'.$resultado->id.'" id="concept'.$resultado->id.'" data-code="'.$resultado->codigo.'" data-work="'.$resultado->obra.'">'.$this->cdetectUtf8($resultado->concepto).'</option>
+			';
+			}
+		}
 
 	public function listClientes($id = '',$nombre='', $rfc='', $tipoCte=''){
 		$cond = '';

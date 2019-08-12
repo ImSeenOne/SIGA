@@ -28,7 +28,8 @@
           </div>
         </div>
 
-        <form id="frmWork" name="frmWork" class="cntntFrm mt-1em" style="display:none;">
+        <form id="frmWork" name="frmWork" class="cntntFrm mt-1em" style="display:none;" autocomplete="off">
+          <input autocomplete="false" name="hidden" type="text" style="display:none;">
             <div class="row col-lg-12">
               <div class="col-lg-3">
                 <div class="form-group">
@@ -71,21 +72,21 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="">Fecha inicio</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="text" aria-label="Fecha de inicio" class="form-control" value="<?= date('d-m-Y') ?>">
+                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="date" aria-label="Fecha de inicio" class="form-control" value="<?= date('d/m/Y') ?>">
                   <div id="reqDateStart" class="text-danger"></div>
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="date2">Fecha finalización</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date2" name="date2" type="text" aria-label="Fecha de finalización" class="form-control">
+                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date2" name="date2" type="date" aria-label="Fecha de finalización" class="form-control">
                   <div id="reqDateFinish" class="text-danger"></div>
                 </div>
               </div>
-              <div class="col-lg-3">
-                <div class="form-group">
-                  <label for="txtFolderVol">Volumenes carpeta</label>
-                  <input type="text" maxlength="50" name="txtFolderVol" id="txtFolderVol" class="form-control">
+              <div class="col-lg-3" hidden>
+                <div class="form-group" hidden>
+                  <label hidden for="txtFolderVol">Volumenes carpeta</label>
+                  <input type="hidden" maxlength="50" name="txtFolderVol" id="txtFolderVol" class="form-control">
                   <div id="reqFolderVol" class="text-danger"></div>
                 </div>
               </div>
@@ -99,11 +100,11 @@
                 </div>
               </div>
             </div>
-              <div class="row col-lg-12">
-                <div class="col-lg-3">
-                  <div class="form-group">
-                    <label for="txtConcreteVol">Volumen de concreto</label>
-                    <input class="form-control" type="text" name="txtConcreteVol" id="txtConcreteVol">
+              <div class="row col-lg-12" hidden>
+                <div class="col-lg-3" hidden>
+                  <div class="form-group" hidden>
+                    <label for="txtConcreteVol" hidden>Volumen de concreto</label>
+                    <input class="form-control" type="hidden" name="txtConcreteVol" id="txtConcreteVol">
                     <div id="reqConcreteVol" class="text-danger"></div>
                   </div>
                 </div>
@@ -143,8 +144,6 @@
 
 <script type="text/javascript">
   window.onload = function(){
-    activaDatePicker("date1");
-    activaDatePicker("date2");
     work_list();
   }
 </script>

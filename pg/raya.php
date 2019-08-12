@@ -63,7 +63,7 @@
                   <select required name="employee" id="employee" class="form-control" onchange="employeeId()" style="width: 100%;">
                     <option value="0">Selecciona una opción...</option>
                     <?php
-                    $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados());
+                    $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados(1));
                     $funciones->llenarComboEmpleadoCat($combo);
                     ?>
                   </select>

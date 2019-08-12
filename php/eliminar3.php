@@ -110,6 +110,17 @@ switch($_POST['opt']){
 				}
 		}
 	break;
+
+	//ELIMINA UN AVANCE FÍSICO/REPORTE DE AVANCES
+	case 7:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deletePhysProg($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			@$conexion->consulta("UPDATE tbl_avance_fisico_conceptos SET cantidad = 0 WHERE (id_avance_fisico = ".$id.");");
+			$jsondata['resp'] = 1;
+		}
+	break;
 }
 
 header('Content-type: application/json; charset=utf-8');

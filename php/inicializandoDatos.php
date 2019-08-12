@@ -18,7 +18,7 @@
     $querys     = new QuerysB();
     $querys1    = new Querys();
     $querys3    = new Querys3();
-
+    
 	if($autenticado_sis == md5("sistemagrupoaguilera")){
         $modulo = isset($_GET['modulo']) ? $_GET['modulo'] : 'inicio';
     }
