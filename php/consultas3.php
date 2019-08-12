@@ -28,8 +28,8 @@ switch($_POST['opt']){
 		$jsondata['tipo'] = $resp['tipo'];
 		$jsondata['dependencia'] = $resp['dependencia'];
 		$jsondata['monto'] = $resp['monto'];
-		$jsondata['fecha_inicio'] = $fechaini[2]."-".$fechaini[1]."-".$fechaini[0];
-		$jsondata['fecha_finalizacion'] = $fechafin[2]."-".$fechafin[1]."-".$fechafin[0];
+		$jsondata['fecha_inicio'] = $resp['fecha_inicio'];//$fechaini[2]."-".$fechaini[1]."-".$fechaini[0];
+		$jsondata['fecha_finalizacion'] = $resp['fecha_finalizacion'];//$fechafin[2]."-".$fechafin[1]."-".$fechafin[0];
 		$jsondata['volumenes_carpeta'] = $resp['volumenes_carpeta'];
 		$jsondata['tipo_agregado'] = $resp['tipo_agregado'];
 		$jsondata['volumen_concreto'] = $resp['volumen_concreto'];
