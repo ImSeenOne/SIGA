@@ -125,6 +125,7 @@
         $("#listConcepts").slideToggle();
     }
     listPhysProg();
+    $('#concept').select2();
   };
 
 </script>

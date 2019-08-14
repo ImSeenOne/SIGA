@@ -1322,7 +1322,7 @@ $('#addToTable').click(function(){
 			'<td class="text-center">'+id+'</td>'+
 			'<td class="text-center">'+code+'</td>'+
 			'<td class="text-center">'+concept+'</td>'+
-			'<td> <input id="input'+id+'" type="number" required onkeypress="return isNumberKey(event)" class="form-control text-center"style="display: block;" min="1" > </td>'+
+			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control text-center"style="display: block;" min="1" > </td>'+
 			'<td> <button type="button" name="button" class="btn btn-danger text-center" onclick="deleteTR(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
 			'</tr>');
 		} else {
@@ -1468,6 +1468,8 @@ $('#cancelAllConcepts').click(function(){
 	$("#listConcepts tbody tr").each(function (index) {
 		deleteTR($(this).attr('id'));
 	});
+	$('#opcion').val("15");
+	$('#id').html("");
 	$('#newPhysProg').slideToggle();
 	$('#btnNewPhysProg').slideToggle();
 });
@@ -1539,6 +1541,9 @@ function deleteProgress(id){
 }
 
 function editProgress(id){
+	$("#listConcepts tbody tr").each(function (index) {
+		deleteTR($(this).attr('id'));
+	});
 	$.ajax({
 				beforeSend: function(){
 						$("#respServer").html(cargando);
@@ -1557,8 +1562,16 @@ function editProgress(id){
 						$('#addToTable').trigger("click");
 						$('#input'+y['id']).val(y['id']);
 					});
-					$('#newPhysProg').slideToggle();
-					$('#btnNewPhysProg').slideToggle();
+
+					$('#concept').select2();
+
+					if($('#newPhysProg').is(':hidden')){
+						$('#newPhysProg').slideToggle();
+					}
+					if($('#btnNewPhysProg').is(':visible')){
+						$('#btnNewPhysProg').slideToggle();
+					}
+
 					$('#opcion').val("16");
 					$('#id').val(resp.id);
 					$("#respServer").html("");
