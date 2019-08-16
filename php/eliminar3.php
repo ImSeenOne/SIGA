@@ -121,6 +121,15 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	//ELIMINA UN NIVEL
+	case 8:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deleteLevel($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
 }
 
 header('Content-type: application/json; charset=utf-8');

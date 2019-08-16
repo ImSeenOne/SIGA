@@ -433,6 +433,38 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/******************************CATÁLOGO**************************************/
+	/********************************NIVEL***************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	public function getLevels($id=''){
+		$cond = ' ';
+		if($id != ''){
+			$cond.= 'AND id_nivel = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tblc_nivel WHERE fecha_eliminacion IS NULL'.$cond;
+		return $strQuery;
+	}
+
+	public function addLevel($name, $date){
+		$strQuery = 'INSERT INTO tblc_nivel (nombre, fecha_registro) VALUES ("'.$name.'", "'.$date.'")';
+		return $strQuery;
+	}
+
+	public function editLevel($id, $name){
+		$strQuery = 'UPDATE tblc_nivel SET nombre = "'.$name.'" WHERE (id_nivel = '.$id.');';
+		return $strQuery;
+	}
+
+	public function deleteLevel($id, $date){
+		$strQuery = 'UPDATE tblc_nivel SET fecha_eliminacion = "'.$date.'" WHERE (id_nivel = '.$id.');';
+		return $strQuery;
+	}
+
 
 	/****************************************************************************/
 	/****************************************************************************/

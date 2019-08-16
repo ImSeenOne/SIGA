@@ -16,6 +16,8 @@
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
       <!-- Ionicons -->
       <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+      <!-- FANCYBOX -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
       <!-- jvectormap -->
       <!-- DataTables -->
       <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
@@ -29,7 +31,7 @@
       <!-- AdminLTE Skins. Choose a skin from the css/skins
            folder instead of downloading all of them to reduce the load. -->
       <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
-
+       <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
       <!-- style -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -112,10 +114,13 @@
         <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
         <!-- Input Mask -->
         <script src="plugins/input-mask/jquery.inputmask.js"></script>
-
+        <!-- FANCYBOX -->
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+        <!-- -------- -->
         <!-- magnific-popup -->
         <script src="bower_components/magnific-popup/jquery.magnific-popup.min.js"></script>
-
+        <!--icheck-->
+        <script src="plugins/iCheck/icheck.min.js"></script>
         <!-- funciones -->
         <script src="js/sweetalert.min.js"></script>
         <script src="js/funciones.js" charset="UTF-8"></script>

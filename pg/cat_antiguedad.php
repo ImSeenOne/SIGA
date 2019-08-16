@@ -7,7 +7,7 @@
     <li><a href="inicio"><i class="fa fa-home"></i> Inicio</a></li>
     <li><a href="#">Inmobiliaria</a></li>
     <li href="#">Catálogos</li>
-    <li href="cat_desarrollo" class="active">Antigüedad</li>
+    <li href="cat_antiguedad" class="active">Antigüedad</li>
   </ol>
 </section>
 

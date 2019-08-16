@@ -72,14 +72,14 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="">Fecha inicio</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="date" aria-label="Fecha de inicio" class="form-control" value="<?= date('d/m/Y') ?>">
+                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="date" aria-label="Fecha de inicio" class="form-control" value="<?= date('Y-m-d') ?>">
                   <div id="reqDateStart" class="text-danger"></div>
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="date2">Fecha finalización</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date2" name="date2" type="date" aria-label="Fecha de finalización" class="form-control">
+                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de termino" id = "date2" name="date2" type="date" aria-label="Fecha de finalización" class="form-control">
                   <div id="reqDateFinish" class="text-danger"></div>
                 </div>
               </div>
@@ -122,6 +122,12 @@
                   <input type="hidden" id="opcion" name="opcion" value="3">
                   <div id="respServer"></div>
                   <br>
+                  <button id="btnSavePO" type="button" data-fancybox data-type="ajax"
+                  class="btn btn-success btn-sm">Presupuesto de Obra</button>&nbsp;
+                  <button id="btnSaveEI" type="button" data-fancybox data-type="ajax"
+                  class="btn btn-success btn-sm">Explosión de Insumos</button>&nbsp;
+                  <button id="btnSaveMO" type="button" data-fancybox data-type="ajax"
+                  class="btn btn-success btn-sm">Mano de Obra</button>&nbsp;
                   <button id="btnSaveWork" type="button" class="btn btn-primary btn-sm">Guardar</button>&nbsp;
                   <button id="btnCancelWork" type="button" class="btn btn-secondary btn-sm">Cancelar</button>
                 </div>

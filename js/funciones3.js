@@ -286,7 +286,7 @@ $('#btnSaveWork').click(function(){
       },
       url: urlSubir3,
       type: "post",
-      dataType: "html", //<---- REGRESAR A JSON
+      dataType: "json", //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
@@ -353,25 +353,32 @@ function editarRegObra(id){
         data:    params,
         dataType: 'json',
         success: function(resp){
-            console.log(resp);
+			console.log(resp);
+			let srcPO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=1';
+			let srcEI = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=2';
+			let srcMO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=3';
             $('#respServer').empty('');
             $('#txtName').val(resp.nombre);
-						$('#inputType').val(resp.tipo);
-						$('#txtDependency').val(resp.dependencia);
+			$('#inputType').val(resp.tipo);
+			$('#txtDependency').val(resp.dependencia);
             $('#inputAmount').val(resp.monto);
             $('#date1').val(resp.fecha_inicio);
             $('#date2').val(resp.fecha_finalizacion);
-						//$('#txtFolderVol').val(resp.volumenes_carpeta);
-						$('#addedType').val(resp.tipo_agregado);
-						//$('#txtConcreteVol').val(resp.volumen_concreto);
-						$('#txtWorkArea').val(resp.area_obra);
-						$('#idWork').val(resp.id_obra);
-						if($('#btnSavePO').hasClass('hide')){
-							$('#btnSavePO').removeClass('hide');
-							$('#btnSaveEI').removeClass('hide');
-							$('#btnSaveMO').removeClass('hide');
-						}
-						$('#opcion').val("9");
+			//$('#txtFolderVol').val(resp.volumenes_carpeta);
+			$('#addedType').val(resp.tipo_agregado);
+			//$('#txtConcreteVol').val(resp.volumen_concreto);
+			$('#txtWorkArea').val(resp.area_obra);
+			$('#idWork').val(resp.id_obra);
+			$('#btnSavePO').data('src',srcPO);
+			$('#btnSaveEI').data('src',srcEI);
+			$('#btnSaveMO').data('src',srcMO);
+			if($('#btnSavePO').hasClass('hide')){
+
+				$('#btnSavePO').removeClass('hide');
+				$('#btnSaveEI').removeClass('hide');
+				$('#btnSaveMO').removeClass('hide');
+			}
+			$('#opcion').val("9");
         }
   });
 	$('#frmWork').slideToggle();
@@ -1022,7 +1029,7 @@ $('#frmPayment').submit(function(event){
 									console.log(resp);
 										if(resp.resp == 1){
 											console.log(resp.resp);
-												//LISTAR RAYAS
+												listPayments();
 										}
 							}
 					});
@@ -1269,7 +1276,6 @@ $('#frmAdmPayment').submit(function(event){
 												resetForm('frmAdmPayment');
 												$('#frmAdmPayment').slideToggle();
 												$('#btnNewAdmPayment').slideToggle();
-												$('#opcion').val('');                          //CAMBIAR OPCION
 												listAdmPayments();
 											}else{
 												$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
@@ -1577,6 +1583,118 @@ function editProgress(id){
 					$("#respServer").html("");
 				}
 	});
+}
+
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/************************FUNCIONES PARA CATÁLOGO NIVEL**************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function listLevels(){
+
+	urlPag = 'pg/nivel_listado.php';
+
+	$.ajax({
+				beforeSend: function(){
+						$("#cntnListLevels").html(cargando);
+				},
+				type:    'POST',
+				url:     urlPag,
+				dataType: 'html',
+				success: function(data){
+						$('#cntnListLevels').html(data);
+						loadDataTable('listLevels', true);
+				}
+	});
+}
+
+$('#frmLevel').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+			beforeSend: function(){
+				$('#respServer').html(cargando);
+			},
+			type:    'POST',
+			url:     urlSubir3,
+			data:    formData,
+			dataType: 'json',
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(resp){
+					console.log(resp);
+					if(resp.resp == 1){
+						listLevels();
+						$('#respServer').html("");
+					} else {
+						$('#respServer').html(resp.msg);
+					}
+					$('#name').val("");
+					$('#id').val("");
+					$('#opcion').val(17);
+			}
+	});
+});
+
+function editLevel(id){
+	$.ajax({
+			beforeSend: function(){
+				$('#respServer').html(cargando);
+			},
+			type:    'POST',
+			url:     urlConsultas3,
+			data:    {'id':id,'opt': 9},
+			dataType: 'json',
+			success: function(resp){
+					console.log(resp);
+					$('#name').val(resp.name);
+					$('#id').val(resp.id);
+					$('#respServer').html("");
+					$('#opcion').val('18');
+			}
+	});
+}
+
+function deleteLevel(id, name){
+	swal({
+				html: true,
+				title: "¿Está seguro?",
+				text: "Ésta acción no se puede revertir, está a punto de eliminar el nivel: <br>"+name+"</br>",
+				type: "warning",
+				showCancelButton: true,
+				cancelButtonClass: "btn-primary",
+				confirmButtonColor: "#7BED81",
+				confirmButtonText: "Aceptar",
+				cancelButtonText: "Cancelar",
+				closeOnConfirm: true
+			},
+			function(){
+					$.ajax({
+								beforeSend: function(){
+										$("#cntnListLevels").html(cargando);
+								},
+								type:    'POST',
+								url:     urlEliminar3,
+								data: {'id':id, 'opt':8},
+								dataType: 'json',
+								success: function(resp){
+									console.log(resp);
+									if(resp.resp == 1){
+										$("#cntnListLevels").html("");
+										listLevels();
+									} else {
+										$("#cntnListLevels").html("");
+									}
+								}
+					});
+			});
 }
 
 /*******************************************************************************/

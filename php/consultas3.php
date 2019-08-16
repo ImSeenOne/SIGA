@@ -4,6 +4,7 @@ require 'inicializandoDatosExterno.php';
 $datos = array(); $jsondata = array();
 
 switch($_POST['opt']){
+	//OBTIENE LOS DATOS DE UN DESARROLLO PARA SER EDITADOS
 	case 1:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getListadoDesarrollo($id));
@@ -15,7 +16,7 @@ switch($_POST['opt']){
 		$jsondata['codigo_postal'] = $resp['codigo_postal'];
 		$jsondata['icono']  = $resp['icono'];
 	break;
-
+	//OBTIENE TODOS LOS DATOS DE UNA OBRA PARA SER EDITADOS
 	case 2:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getListadoObras($id));
@@ -35,7 +36,7 @@ switch($_POST['opt']){
 		$jsondata['volumen_concreto'] = $resp['volumen_concreto'];
 		$jsondata['area_obra'] = $resp['area_obra'];
 	break;
-
+	//OBTIENE LOS DATOS DE UN LISTADO DE SEGUIMIENTO PARA SER EDITADOS
 	case 3:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getListadoSeguimiento($id));
@@ -115,7 +116,8 @@ switch($_POST['opt']){
 		$jsondata['archivo'] = $resp['archivo'];
 		$jsondata['observaciones'] = $resp['observaciones'];
 	break;
-
+	//OBTIENE LOS DATOS DE UN AVANCE FÍSICO/REPORTE DE AVANCES PARA SER EDITADOS
+	//RETORNA ID, NOMBRE DEL RESIDENTE, PERÍODO, OBRA Y FOLIO
 	case 8:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getPhysProg($id, ''));
@@ -135,7 +137,15 @@ switch($_POST['opt']){
 		$jsondata['concepts'] = $datos;
 
 	break;
-
+	//OBTIENE LOS DATOS DEL NIVEL PARA SER EDITADOS, RETORNA EL NOMBRE Y EL ID
+	case 9:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getLevels($id));
+		$jsondata['id'] = $resp['id_nivel'];
+		$jsondata['name'] = $resp['nombre'];
+	break;
+	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
+	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:
 	$category = $funciones->limpia($_POST['category']);
 	$strQuery = 'SELECT nombre, dias, sueldo FROM tblc_categorias WHERE id_categoria = '.$category.' AND fecha_eliminacion IS NULL';
