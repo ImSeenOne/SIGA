@@ -721,5 +721,31 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+
+	case 19:
+	$name = $_POST['name'];
+	$date = $datos['fecha_actual'];
+	if(@$conexion->consulta($querys->addCompany($name, $date)) == 0){
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+	} else {
+		$jsondata['resp'] = 1;
+	}
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
+	break;
+
+	case 20:
+		$name = $_POST['name'];
+		$id = $_POST['id'];
+		if(@$conexion->consulta($querys->editCompany($id, $name)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
 }
 ?>

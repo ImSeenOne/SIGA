@@ -465,6 +465,38 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/******************************CATÁLOGO**************************************/
+	/******************************EMPRESAS**************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	public function getCompanies($id=''){
+		$cond = ' ';
+		if($id != ''){
+			$cond.= 'AND id_empresa = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tblc_empresas WHERE fecha_eliminacion IS NULL'.$cond;
+		return $strQuery;
+	}
+
+	public function addCompany($name, $date){
+		$strQuery = 'INSERT INTO tblc_empresas (nombre, fecha_registro) VALUES ("'.$name.'", "'.$date.'")';
+		return $strQuery;
+	}
+
+	public function editCompany($id, $name){
+		$strQuery = 'UPDATE tblc_empresas SET nombre = "'.$name.'" WHERE (id_empresa = '.$id.');';
+		return $strQuery;
+	}
+
+	public function deleteCompany($id, $date){
+		$strQuery = 'UPDATE tblc_empresas SET fecha_eliminacion = "'.$date.'" WHERE (id_empresa = '.$id.');';
+		return $strQuery;
+	}
+
 
 	/****************************************************************************/
 	/****************************************************************************/
