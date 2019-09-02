@@ -11,6 +11,7 @@
       <th class="col">Folio</th>
       <th class="col">Cliente</th>
       <th class="col">Propiedad</th>
+      <th class="col">Período</th>
       <th class="col">Vigencia</th>
       <th class="col">Tipo de contrato</th>
       <th class="col">Arrendatario/Propietario</th>
@@ -37,6 +38,25 @@
             echo $nombre;
             ?>
           </td>
+          <td><?php
+            switch ($key->periodo) {
+              case 1:
+                echo 'Quincenal';
+              break;
+              case 2:
+                echo 'Mensual';
+              break;
+              case 3:
+                echo 'Trimestral';
+              break;
+              case 4:
+                echo 'Semestral';
+              break;
+              case 5:
+                echo 'Anual';
+              break;
+              }
+          ?></td>
           <td><?= $key->vigencia ?></td>
           <td>
             <?php
@@ -81,6 +101,7 @@
       <th class="col">Folio</th>
       <th class="col">Cliente</th>
       <th class="col">Propiedad</th>
+      <th class="col">Período</th>
       <th class="col">Vigencia</th>
       <th class="col">Tipo de contrato</th>
       <th class="col">Arrendatario/Propietario</th>

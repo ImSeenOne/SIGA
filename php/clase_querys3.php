@@ -282,12 +282,14 @@ class Querys3 {
 	}
 
 	//QUERY FOR ADDING NEW CONTRACTS
-	public function addContract($folio, $id_cliente, $id_propiedad,
+	public function addContract($folio, $id_cliente, $periodo, $id_propiedad,
 	$fecha_realizacion, $vigencia, $tipo_contrato, $monto, $id_arrendatario = '0',
 	$id_propietario = '0', $enganche_deposito, $archivo, $observaciones, $fecha_actual){
 
-		$strQuery = "INSERT INTO tblc_contratos (folio, id_cliente, id_propiedad, fecha_realizacion, vigencia, tipo_contrato, monto, id_arrendatario, id_propietario, enganche_deposito, archivo, observaciones, fecha_registro)
-		VALUES ('".$folio."','".$id_cliente."','".$id_propiedad."','".$fecha_realizacion."','".$vigencia."','".$tipo_contrato."','".$monto."','".$id_arrendatario."','".$id_propietario."','".$enganche_deposito."','".$archivo."','".$observaciones."','".$fecha_actual."')";
+		$strQuery = "INSERT INTO tblc_contratos (folio, id_cliente, id_propiedad, fecha_realizacion, vigencia, tipo_contrato, monto, id_arrendatario, id_propietario, enganche_deposito, archivo, observaciones, fecha_registro, periodo)
+		VALUES ('".$folio."','".$id_cliente."','".$id_propiedad."','".$fecha_realizacion."',
+		'".$vigencia."','".$tipo_contrato."','".$monto."','".$id_arrendatario."','".$id_propietario."',
+		'".$enganche_deposito."','".$archivo."','".$observaciones."','".$fecha_actual."','".$periodo."')";
 
 		return $strQuery;
 	}
@@ -316,11 +318,11 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
-	public function updateContract($id,$folio, $id_cliente, $id_propiedad,
+	public function updateContract($id,$folio, $id_cliente, $periodo, $id_propiedad,
 	$fecha_realizacion, $vigencia, $tipo_contrato, $monto, $id_arrendatario = '0',
 	$id_propietario = '0', $enganche_deposito, $archivo, $observaciones, $fecha_actual){
 		$strQuery = 'UPDATE tblc_contratos SET folio='.$folio.', id_cliente = '.$id_cliente.', id_propiedad ='.$id_propiedad.', fecha_realizacion = '.$fecha_realizacion.', vigencia = '.$vigencia.', tipo_contrato = '.$tipo_contrato.', monto = '.$monto.', id_arrendatario = '.$id_arrendatario.', id_propietario'.$id_propietario.',
-		 enganche_deposito = '.$enganche_deposito.', archivo = '.$archivo.', observaciones = '.$observaciones.' WHERE (id_contrato = '.$id.' )';
+		 enganche_deposito = '.$enganche_deposito.', archivo = '.$archivo.', observaciones = '.$observaciones.', periodo = '.$periodo.' WHERE (id_contrato = '.$id.' )';
 		 return $strQuery;
 	}
 

@@ -109,7 +109,19 @@
                 <p class="text-danger" id="flContractReq"></p>
               </div>
 
-              <div class="form-group col-lg-8 col-md-8 col-sm-12 ">
+              <div class="form-group col-lg-4 col-md-4 col-sm-12 ">
+                <label for="period">Período</label>
+                <select class="form-control" name="period">
+                  <option value="0">Selecciona un período</option>
+                  <option value="1">Quincenal</option>
+                  <option value="2">Mensual</option>
+                  <option value="3">Trimestral</option>
+                  <option value="4">Semestral</option>
+                  <option value="5">Anual</option>
+                </select>
+              </div>
+
+              <div class="form-group col-lg-4 col-md-4 col-sm-12 ">
                 <label for="remarks">Observaciones<sub>(opcional)</sub> </label>
                 <input class="form-control" type="text" name="remarks" id="remarks">
               </div>

@@ -422,6 +422,7 @@ break;
 		$dateContract = explode("-", $dateContractTmp);
 
 		$property = $funciones->limpia($_POST['propertySelected']);
+		$period = $funciones->limpia($_POST['period']);
 		$client = $funciones->limpia($_POST['clientSelected']);
 		$type = $funciones->limpia($_POST['contractType']);
 		$remarks = $funciones->limpia($_POST['remarks']);
@@ -488,7 +489,7 @@ break;
 				$datos['flContract'] = null;
 		}
 
-		if($conexion->consulta($querys->addContract($folio,$client,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addContract($folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		} else {
@@ -577,7 +578,7 @@ break;
 				$datos['flContract'] = $_POST['hdFlContract'];
 		}
 
-		if($conexion->consulta($querys->updateContract($id,$folio,$client,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		} else {
