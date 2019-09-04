@@ -114,6 +114,7 @@ switch($_POST['opt']){
 		$jsondata['id_propietario'] = $resp['id_propietario'];
 		$jsondata['enganche_deposito'] = $resp['enganche_deposito'];
 		$jsondata['archivo'] = $resp['archivo'];
+		$jsondata['periodo'] = $resp['periodo'];
 		$jsondata['observaciones'] = $resp['observaciones'];
 	break;
 	//OBTIENE LOS DATOS DE UN AVANCE FÍSICO/REPORTE DE AVANCES PARA SER EDITADOS
@@ -214,7 +215,9 @@ switch($_POST['opt']){
 		$resp = @$conexion->obtenerlista('SELECT * FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL AND id_cliente = '.$idClient);
 		foreach ($resp as $key) {
 			$respC = @$conexion->fetch_array($querys3->getPropiedades($key->id_propiedad));
-			$datos[] = array('id_property' => $key->id_propiedad, 'name'=>$respC['valor'], 'amount' => $key->monto, 'development'=>$respC['id_desarrollo']);
+			//print_r($respC);
+			$datos[] = array('id_property' => $key->id_propiedad, 'name'=>$respC['valor'], 'amount' => $key->monto, 'development'=>$respC['id_desarrollo'],
+							'owner' => $respC['propietario'],'type' => $respC['id_tipo']);
 		}
 		$jsondata['properties'] = $datos;
 	break;

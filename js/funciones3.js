@@ -95,7 +95,6 @@ $('#btnGuardaDesarrollo').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1 ){
             desarrollo_listado();
@@ -123,7 +122,6 @@ function editarRegDesarrollo(id){
         data:    params,
         dataType: 'json',
         success: function(resp){
-            console.log(resp);
             $('#respServer').empty('');
             $('#txtNombre').val(resp.nombre);
 						$('#txtAlias').val(resp.alias);
@@ -292,7 +290,6 @@ $('#btnSaveWork').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1){
 						$('#frmWork').slideToggle();
@@ -333,7 +330,6 @@ function eliminarRegObra(id, nombre){
               data:    params,
               dataType: 'json',
               success: function(resp){
-                    console.log(resp);
                     if(resp.resp == 1){
                         work_list();
                     }
@@ -353,7 +349,6 @@ function editarRegObra(id){
         data:    params,
         dataType: 'json',
         success: function(resp){
-			console.log(resp);
 			let srcPO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=1';
 			let srcEI = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=2';
 			let srcMO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=3';
@@ -522,7 +517,6 @@ $('#saveTrackEst').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1 ){
             estimation_list();
@@ -549,7 +543,6 @@ function editarRegSegEst(id){
         data:    params,
         dataType: 'json',
         success: function(resp){
-            console.log(resp);
 						$('#idEstTrack').val(resp.id_seg_est);
             $('#respServer').empty('');
             $('#inputTrackEst').val(resp.nombre_obra);
@@ -590,7 +583,6 @@ function eliminarRegSegEst(id, nombre){
               data:    params,
               dataType: 'json',
               success: function(resp){
-                    console.log(resp);
                     if(resp.resp == 1 || resp.resp == 2){
                         estimation_list();
                     }
@@ -657,7 +649,6 @@ $('#btnGuardarAnt').click(function(){
       contentType: false,
       processData: false,
       success: function(resp){
-				console.log(resp);
           $("#respServer").empty();
           if(resp.resp == 1 ){
             antiquity_list();
@@ -684,7 +675,6 @@ function editarRegAntiguedad(id){
         dataType: 'json',
         success: function(resp){
 						antiquity_list();
-            console.log(resp);
 						$('#txtNombre').val(resp.nombre);
 						$('#hdFlIcono').val(resp.icono);
 						$('#idAntiguedad').val(resp.id_antiguedad);
@@ -719,7 +709,6 @@ function eliminarRegAntiguedad(id, nombre){
               data:    params,
               dataType: 'json',
               success: function(resp){
-                    console.log(resp);
                     if(resp.resp == 1 || resp.resp == 2){
                         antiquity_list();
                     }
@@ -858,7 +847,6 @@ $('#btnAddEmployee').click(function(){
 	      contentType: false,
 	      processData: false,
 	      success: function(resp){
-              console.log(resp);
 	          $("#respServer").empty();
 	          if(resp.resp == 1 ){
 	            employees_list();
@@ -886,7 +874,6 @@ function editEmployee(id) {
         dataType: 'json',
         success: function(resp){
 						employees_list();
-            console.log(resp);
 						$('#txtName').val(resp.nombre);
 						$('#txtLastName').val(resp.apellido_paterno);
 						$('#txtMLastName').val(resp.apellido_materno);
@@ -935,7 +922,6 @@ function deleteEmployee(id, name){
 	              data:    params,
 	              dataType: 'json',
 	              success: function(resp){
-										console.log(resp);
 	                    if(resp.resp == 1){
 	                        employees_list();
 	                    }
@@ -1026,9 +1012,7 @@ $('#frmPayment').submit(function(event){
 							contentType: false,
 							processData: false,
 							success: function(resp){
-									console.log(resp);
 										if(resp.resp == 1){
-											console.log(resp.resp);
 												listPayments();
 										}
 							}
@@ -1079,14 +1063,8 @@ $('#cancelContract').click(function(){
 
 //GUARDA UN CONTRATO
 $('#frmContract').submit(function(event){
-
 		event.preventDefault();
 		let formData = new FormData($(this)[0]);
-		console.log(formData);
-
-		for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]);
-	}
 
 		$.ajax({beforeSend: function(){
 							$("#respServer").html(cargando);
@@ -1099,7 +1077,6 @@ $('#frmContract').submit(function(event){
 						contentType: false,
 						processData: false,
 						success: function(resp){
-							console.log(resp);
 								if(resp.resp == 1 ){
 									$("#respServer").html('');
 									resetForm('frmContract');
@@ -1129,30 +1106,31 @@ function editContract(id){
 	        data:    params,
 	        dataType: 'json',
 	        success: function(resp){
-							listContracts();
-	            console.log(resp);
-							console.log(resp.id_contrato);
-							$('#idContract').val(resp.id_contrato);
-							$('#folio').val(resp.folio);
-							$('#dateContract').val(resp.fecha_realizacion);
-							$('#propertySelected').val(resp.id_propiedad);
-							$('#clientSelected').val(resp.id_cliente);
-							$('#contractValidity').val(resp.vigencia);
-							$('#contractType').val(resp.tipo_contrato);
-							$('#contractAmount').val(resp.monto);
-							$('#contractAmount').keyup();
-							$('#contractOwner').val(resp.id_propietario);
-							$('#contractLessee').val(resp.estado_civil);
-							$('#hitch').val(resp.enganche_deposito);
-							$('#hdFlContract').val(resp.archivo);
-							$('#remarks').val(resp.observaciones);
-	            $('#respServer').empty('');
-							$('#sillyTable').attr('style','');
-							$('#frmContract').slideToggle();
-							$('#btnNewContract').slideToggle();
-							changeContractType();
-							$('#flContract').prop('required',false);
-							$('#opcion').val("13");
+									listContracts();
+									$('#idContract').val(resp.id_contrato);
+									$('#folio').val(resp.folio);
+									$('#dateContract').val(resp.fecha_realizacion);
+									$('#clientSelected').val(resp.id_cliente);
+									clientChanged(resp.id_propiedad);
+									$('#contractValidity').val(resp.vigencia);
+									$('#contractType').val(resp.tipo_contrato);
+									$('#contractAmount').val(resp.monto);
+									$('#contractAmount').keyup();
+									$('#contractOwner').val(resp.id_propietario);
+									$('#contractLessee').val(resp.estado_civil);
+									$('#hitch').val(resp.enganche_deposito);
+									$('#hitch').keyup();
+									$('#hdFlContract').val(resp.archivo);
+									$('#remarks').val(resp.observaciones);
+									$('#respServer').empty('');
+									$('#sillyTable').attr('style','');
+									$('#frmContract').slideToggle();
+									$('#btnNewContract').slideToggle();
+									$('#period').val(resp.periodo);
+									//$('#propertySelected').val(resp.id_propiedad);
+									changeContractType();
+									$('#flContract').prop('required',false);
+									$('#opcion').val("13");
 	        }
 				});
 }
@@ -1177,7 +1155,6 @@ function deleteContract(id, name, archivo){
 		              data:    params,
 		              dataType: 'json',
 		              success: function(resp){
-											console.log(resp);
 		                    if(resp.resp == 1 || resp.resp == 2){
 		                        listContracts();
 		                    }
@@ -1187,7 +1164,7 @@ function deleteContract(id, name, archivo){
 }
 
 //OBTIENE PROPIEDADES QUE INTERESAN AL CLIENTE
-function clientChanged(){
+function clientChanged(idProperty=0){
 	let idClient = $('#clientSelected').val();
 	let params = {idClient: idClient, opt: 24};
 	let properties;
@@ -1203,13 +1180,22 @@ function clientChanged(){
 				dataType: 'json',
 				data: params,
 				success: function(resp){
-					console.log(resp);
 					$("#respServer").html('');
 					$.each(resp.properties,function(i,y){
-						$('#propertySelected').append(
-						`<option name ="`+y['name']+`" data-development="`+y['development']+`" data-amount="`+y['amount']+`">`+
-						y['name']+
-						`</option>`);
+						if(idProperty !=0){
+							$('#propertySelected').append(
+								`<option selected value="`+y['id_property']+`" name ="`+y['name']+`" data-development="`+y['development']+`" data-amount="`+y['amount']+
+								`" data-owner="`+y['owner']+`" data-type="`+y['type']+`">`+
+								y['name']+
+								`</option>`);
+						}
+						else{
+							$('#propertySelected').append(
+							`<option value="`+y['id_property']+`" name ="`+y['name']+`" data-development="`+y['development']+`" data-amount="`+y['amount']+
+							`" data-owner="`+y['owner']+`" data-type="`+y['type']+`">`+
+							y['name']+
+							`</option>`);
+						}
 					});
 					changeProperty();
 				}
@@ -1269,11 +1255,6 @@ $('#frmAdmPayment').submit(function(event){
 	event.preventDefault();
 
 	let formData = new FormData($(this)[0]);
-	console.log(formData);
-
-	for (var pair of formData.entries()) {
-	console.log(pair[0]+ ', ' + pair[1]);
-}
 
 	swal({
 				html: true,
@@ -1300,7 +1281,6 @@ $('#frmAdmPayment').submit(function(event){
 									contentType: false,
 									processData: false,
 									success: function(resp){
-										console.log(resp);
 											if(resp.resp == 1 ){
 												$("#respServer").html('');
 												resetForm('frmAdmPayment');
@@ -1346,8 +1326,6 @@ $('#addToTable').click(function(){
 				data:    params,
 				dataType: 'json',
 				success: function(resp){
-					console.log(quant+"\n");
-					console.log(resp.used+"\n");
 					$('#input'+id).attr("max", parseFloat(quant) - parseFloat(resp.used));
 				}
 		});
@@ -1527,7 +1505,6 @@ function lookDetails(id){
 				data: {'id':id, 'opt':23},
 				dataType: 'json',
 				success: function(resp){
-					console.log(resp);
 						$.each(resp.concepts,function(i,y){
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
@@ -1568,7 +1545,6 @@ function deleteProgress(id){
 								data: {'id':id, 'opt':7},
 								dataType: 'json',
 								success: function(resp){
-									console.log(resp);
 									$("#cntnListProgress").html("");
 									listPhysProg();
 								}
@@ -1659,7 +1635,6 @@ $('#frmLevel').submit(function(event){
 			contentType: false,
 			processData: false,
 			success: function(resp){
-					console.log(resp);
 					if(resp.resp == 1){
 						listLevels();
 						$('#respServer').html("");
@@ -1683,7 +1658,6 @@ function editLevel(id){
 			data:    {'id':id,'opt': 9},
 			dataType: 'json',
 			success: function(resp){
-					console.log(resp);
 					$('#name').val(resp.name);
 					$('#id').val(resp.id);
 					$('#respServer').html("");
@@ -1715,7 +1689,6 @@ function deleteLevel(id, name){
 								data: {'id':id, 'opt':8},
 								dataType: 'json',
 								success: function(resp){
-									console.log(resp);
 									if(resp.resp == 1){
 										$("#cntnListLevels").html("");
 										listLevels();

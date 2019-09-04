@@ -64,8 +64,8 @@
               <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-6">
                 <label for="contractType">Tipo</label>
                 <select class="form-control" name="contractType" id="contractType" onchange="changeContractType()">
-                  <option value="1">Arrendatario</option>
-                  <option value="2">Propietario</option>
+                  <option value="1">Propietario</option>
+                  <option value="2">Arrendatario</option>
                 </select>
                 <p class="text-danger" id="contractTypeReq"></p>
               </div>
@@ -75,7 +75,7 @@
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="contractAmount" id="contractAmount" placeholder="Monto">
                 <p class="text-danger" id="contractAmountReq"></p>
               </div>
-              <div id="ownerField" class="form-group col-lg-4 col-md-4 col-sm-6" style="display: none;">
+              <div id="ownerField" class="form-group col-lg-4 col-md-4 col-sm-6" >
                 <label for="contractOwner">Propietario</label>
                 <select class="form-control" name="contractOwner" id="contractOwner" style="width:100%">
                   <option value="0">Seleccione un propietario</option>
@@ -107,7 +107,7 @@
 
               <div class="form-group col-lg-4 col-md-4 col-sm-12 ">
                 <label for="period">Período</label>
-                <select class="form-control" name="period">
+                <select class="form-control" name="period" id="period">
                   <option value="0">Selecciona un período</option>
                   <option value="1">Quincenal</option>
                   <option value="2">Mensual</option>
@@ -187,31 +187,36 @@
   function changeProperty(){
     let dev = $('#propertySelected').find(":selected").data("development");
     let amount = $('#propertySelected').find(":selected").data("amount");
+    let type = $('#propertySelected').find(":selected").data("type");
+    let owner = $('#propertySelected').find(":selected").data("owner");
+
     $('#idDevelopment').val(dev);
     $('#contractAmount').val(amount);
+    $("#contractType option[value="+ type +"]").attr("selected",true);
+    $("#contractOwner option[value="+ owner +"]").attr("selected",true);
     $('#contractAmount').keyup();
   }
 
   function changeContractType(){
     let type = parseInt($('#contractType').val());
     switch(type){
-      case 1://lessee
+      case 2://lessee
       $('#hitchLabel').text("Depósito");
-      if($('#ownerField').is(":visible")){
+      /*if($('#ownerField').is(":visible")){
         $('#ownerField').hide();
       }
       if($('#lesseeField').is(":hidden")){
         $('#lesseeField').show();
-      }
+      }*/
       break;
-      case 2://owner
+      case 1://owner
       $('#hitchLabel').text("Enganche");
-      if($('#lesseeField').is(":visible")){
+      /*if($('#lesseeField').is(":visible")){
         $('#lesseeField').hide();
       }
       if($('#ownerField').is(":hidden")){
         $('#ownerField').show();
-      }
+      }*/
       break;
     }
   }

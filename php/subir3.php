@@ -418,8 +418,8 @@ break;
 		$dateContractTmp = $funciones->limpia($_POST['dateContract']);
 		$validityTmp = $funciones->limpia($_POST['contractValidity']);
 
-		$validity = explode("-", $validityTmp);
-		$dateContract = explode("-", $dateContractTmp);
+		$validity = explode("/", $validityTmp);
+		$dateContract = explode("/", $dateContractTmp);
 
 		$property = $funciones->limpia($_POST['propertySelected']);
 		$period = $funciones->limpia($_POST['period']);
@@ -517,7 +517,7 @@ break;
 		$remarks = $funciones->limpia($_POST['remarks']);
 		$amountTmp = $funciones->limpia($_POST['contractAmount']);
 		$hitchTmp = $funciones->limpia($_POST['hitch']);
-
+		$period =  $funciones->limpia($_POST['period']);
 		$dev = $funciones->limpia($_POST['idDevelopment']);
 
 		$res = @$conexion->obtenerlista($querys->getListadoDesarrollo($dev));
@@ -543,17 +543,20 @@ break;
 		}
 		$folio.=$major;
 
-		switch ($type) {
-			case '1':
+		$owner = $funciones->limpia($_POST['contractOwner']);
+		$lessee = 0;
+
+		/*switch ($type) {
+			case '2':
 					$lessee = $funciones->limpia($_POST['contractLessee']);
 					$owner = 0;
 				break;
 
-			case '2':
+			case '1':
 				$owner = $funciones->limpia($_POST['contractOwner']);
 				$lessee = 0;
 			break;
-		}
+		}*/
 
 		$amount = str_replace(",", "", $amountTmp);
 		$hitch = str_replace(",", "", $hitchTmp);
@@ -577,8 +580,8 @@ break;
 		}else{
 				$datos['flContract'] = $_POST['hdFlContract'];
 		}
-
-		if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
+		
+		if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$datos['flContract'],$remarks,$datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		} else {
