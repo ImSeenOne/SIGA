@@ -37,21 +37,10 @@
                 <input required class="form-control" type="text" name="dateContract" id="dateContract" placeholder="Fecha">
                 <p class="text-danger" id="dateContractReq"></p>
               </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                <label for="propertySelected"style="display: block;">Propiedad</label>
-                <select name="propertySelected" id="propertySelected" class="form-control" style="width: 100%;"onchange="changeProperty()">
-                  <option value="0">Selecciona una propiedad</option>
-                  <?php
-                    $combo = @$conexion->obtenerlista($querys3->getPropiedades());
-                    $querys3->llenarcomboPropiedades($combo);
-                  ?>
-                </select>
-                <p class="text-danger" id="propertySelectedReq"></p>
-              </div>
               <!--id_tipo cliente: arrendatario = 1, comprador = 2-->
               <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-6">
                 <label for="clientSelected">Cliente</label>
-                <select class="form-control" id="clientSelected" name="clientSelected">
+                <select class="form-control" id="clientSelected" name="clientSelected" onchange="clientChanged()">
                   <option value="0">Seleccione un cliente</option>
                   <?php
                     $combo = @$conexion->obtenerlista($querys3->listClientes());
@@ -59,6 +48,13 @@
                   ?>
                 </select>
                 <p class="text-danger" id="clientSelectedReq"></p>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                <label for="propertySelected"style="display: block;">Propiedad</label>
+                <select name="propertySelected" id="propertySelected" class="form-control" style="width: 100%;"onchange="changeProperty()">
+                  <option value="0">Selecciona una propiedad</option>
+                </select>
+                <p class="text-danger" id="propertySelectedReq"></p>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-6">
                 <label for="contractValidity">Vigencia</label>
@@ -182,15 +178,18 @@
 </div>
 <script type="text/javascript">
   window.onload = function(){
-    activaDatePicker('dateContract');
-    activaDatePicker('contractValidity');
+    dateControl('contractValidity');
+    dateControl('dateContract');
     listContracts();
     changeContractType();
   };
 
   function changeProperty(){
     let dev = $('#propertySelected').find(":selected").data("development");
+    let amount = $('#propertySelected').find(":selected").data("amount");
     $('#idDevelopment').val(dev);
+    $('#contractAmount').val(amount);
+    $('#contractAmount').keyup();
   }
 
   function changeContractType(){

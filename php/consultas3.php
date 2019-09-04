@@ -207,6 +207,17 @@ switch($_POST['opt']){
 		$jsondata['work'] = $work['nombre'];
 		$jsondata['concepts'] = $datos;
 	break;
+
+	//FUNCION PARA OBTENER LAS PROPIEDADES QUE LE INTERESAN AL CLIENTE
+	case 24:
+		$idClient = $funciones->limpia($_POST['idClient']);
+		$resp = @$conexion->obtenerlista('SELECT * FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL AND id_cliente = '.$idClient);
+		foreach ($resp as $key) {
+			$respC = @$conexion->fetch_array($querys3->getPropiedades($key->id_propiedad));
+			$datos[] = array('id_property' => $key->id_propiedad, 'name'=>$respC['valor'], 'amount' => $key->monto, 'development'=>$respC['id_desarrollo']);
+		}
+		$jsondata['properties'] = $datos;
+	break;
 }
 
 header('Content-type: application/json; charset=utf-8');

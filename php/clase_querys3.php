@@ -523,7 +523,7 @@ public function getContracts($id = 0){
 			}
 		}
 
-	public function listClientes($id = '',$nombre='', $rfc='', $tipoCte=''){
+	public function listClientes($id = '',$nombre='', $rfc='', $tipoCte='',$interes=0){
 		$cond = '';
 
 		$cond = ($id != '')? ' AND id_cliente = '.$id.' ':'';
@@ -533,8 +533,10 @@ public function getContracts($id = 0){
 
 		$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
 		$strQuery.= 'FROM tblc_clientes ';
-		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
-		$strQuery.= 'ORDER BY fecha_registro DESC, id_cliente DESC';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		if($interes != 0)
+		$strQuery.= 'AND id_cliente IN (SELECT id_cliente FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL) ';
+		$strQuery.= $cond.'ORDER BY fecha_registro DESC, id_cliente DESC';
 
 		return $strQuery;
 	}
@@ -552,7 +554,7 @@ public function getContracts($id = 0){
 	 }
 
 	 function getPropiedades($id = ''){
-		 $sentencia = ($id != '')? ' WHERE id_propiedad = ' . $id:'';
+		 $sentencia = ($id != '')? ' WHERE id_propiedad = ' . $id . ' AND fecha_eliminado IS NULL':' WHERE fecha_eliminado IS NULL';
 		 $strQuery = "SELECT @rownum:=@rownum+1 numero, t.*,t.id_propiedad id,t.descripcion valor,t.desarrollo id_desarrollo,t.monto monto ";
 		 $strQuery .= "FROM tblc_propiedades t , (SELECT @rownum:=0) r " . $sentencia;
 		 $strQuery .= " ORDER BY t.id_propiedad DESC;";

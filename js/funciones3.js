@@ -1156,7 +1156,7 @@ function editContract(id){
 	        }
 				});
 }
-
+//ELIMINA UN CONTRATO
 function deleteContract(id, name, archivo){
 		  swal({
 		        html: true,
@@ -1184,6 +1184,36 @@ function deleteContract(id, name, archivo){
 		              }
 		          });
 		      });
+}
+
+//OBTIENE PROPIEDADES QUE INTERESAN AL CLIENTE
+function clientChanged(){
+	let idClient = $('#clientSelected').val();
+	let params = {idClient: idClient, opt: 24};
+	let properties;
+	$.ajax({
+				beforeSend: function(){
+						$("#respServer").html(cargando);
+						$('#propertySelected').empty();
+						$('#propertySelected').append(
+						`<option value="0">Selecciona una propiedad</option>`);
+				},
+				type:    "post",
+				url:     urlConsultas3,
+				dataType: 'json',
+				data: params,
+				success: function(resp){
+					console.log(resp);
+					$("#respServer").html('');
+					$.each(resp.properties,function(i,y){
+						$('#propertySelected').append(
+						`<option name ="`+y['name']+`" data-development="`+y['development']+`" data-amount="`+y['amount']+`">`+
+						y['name']+
+						`</option>`);
+					});
+					changeProperty();
+				}
+	});
 }
 
 /*******************************************************************************/
