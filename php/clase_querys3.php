@@ -499,6 +499,38 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/******************************LICITACIONES**********************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	public function getBiddings($id = ''){
+		$cond = ' ';
+		if($id != ''){
+			$cond.= 'AND id_licitacion = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tbl_licitaciones WHERE fecha_eliminacion IS NULL'.$cond;
+		return $strQuery;
+	}
+
+	public function addBidding($bidNumber, $work, $proposedDelivery, $place, $failDate, $file, $date){
+		$strQuery = 'INSERT INTO tbl_licitaciones (numero_licitacion, nombre_obra, entrega_propuesta, lugar, fecha_fallo, archivo, fecha_registro) VALUES ('.$bidNumber.', \''.$work.'\',\''.$proposedDelivery.'\','.$place.',\''.$failDate.'\',\''.$file.'\',\''.$date.'\')';
+		return $strQuery;
+	}
+
+	public function editBidding($id, $bidNumber, $work, $proposedDelivery, $place, $failDate, $file, $date){
+		$strQuery = 'UPDATE tbl_licitaciones SET numero_licitacion = '.$bidNumber.', nombre_obra = \''.$work.'\', entrega_propuesta = \''.$proposedDelivery.'\', lugar = '.$place.', fecha_fallo = \''.$failDate.'\', archivo = \''.$file.'\' WHERE id_licitacion = '.$id;
+		return $strQuery;
+	}
+
+	public function deleteBidding($id, $date){
+		$strQuery = 'UPDATE tbl_licitaciones SET fecha_eliminacion = \''.$date.'\' WHERE id_licitacion = '.$id;
+		return $strQuery;
+	}
+
 
 	/****************************************************************************/
 	/****************************************************************************/

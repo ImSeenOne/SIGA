@@ -54,10 +54,10 @@ function desarrollo_listado(){
         beforeSend: function(){
             $("#cntnListPagos").html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlPag,
         //data:    params,
-        dataType: 'html',
+        dataType: 'HTML',
         success: function(data){
             $('#cntnListPagos').html(data);
             loadDataTable('listDesarrollo', true);
@@ -81,27 +81,27 @@ $('#btnGuardaDesarrollo').click(function(){
 			return false;
 		}
 
-    let formData = new FormData(document.getElementById("frmDesarrollo"));
+    let formData = new FormData(document.getElementById('frmDesarrollo'));
 
     $.ajax({
       beforeSend: function(){
-        $("#respServer").html(guardando);
+        $('#respServer').html(guardando);
       },
       url: urlSubir3,
-      type: "post",
-      dataType: "json", //<---- REGRESAR A JSON
+      type: 'POST',
+      dataType: 'JSON', //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
-          $("#respServer").empty();
+          $('#respServer').empty();
           if(resp.resp == 1 ){
             desarrollo_listado();
             $('#opcion').val(1);
             resetForm('frmDesarrollo');
           }else{
-            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+            $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
           }
       }
     });
@@ -115,9 +115,9 @@ function editarRegDesarrollo(id){
   let params = {'id':id, 'opt':1}
   $.ajax({
         beforeSend: function(){
-            $("#respServer").html(cargando);
+            $('#respServer').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -141,20 +141,20 @@ function editarRegDesarrollo(id){
 function eliminarRegDesarrollo(id, icono, nombre){
   swal({
         html: true,
-        title: "¿Está seguro?",
-        text: "eliminar el registro <strong>" + nombre + "</strong>",
-        type: "warning",
+        title: '¿Está seguro?',
+        text: 'eliminar el registro <strong>' + nombre + '</strong>',
+        type: 'warning',
         showCancelButton: true,
-        cancelButtonClass: "btn-primary",
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
         closeOnConfirm: true
       },
       function(){
           let params = {'id':id, 'icono':icono, 'opt':1};
           $.ajax({
-              type:    "post",
+              type:    'POST',
               url:     urlEliminar3,
               data:    params,
               dataType: 'json',
@@ -196,12 +196,12 @@ function work_list(){
 
   $.ajax({
         beforeSend: function(){
-            $("#cntnListPagos").html(cargando);
+            $('#cntnListPagos').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlPag,
         //data:    params,
-        dataType: 'html',
+        dataType: 'HTML',
         success: function(data){
             $('#cntnListPagos').html(data);
             loadDataTable('listWorks', true);
@@ -276,21 +276,21 @@ $('#btnSaveWork').click(function(){
 			$('#reqDateFinish').empty();
 		}
 
-    let formData = new FormData(document.getElementById("frmWork"));
+    let formData = new FormData(document.getElementById('frmWork'));
 
     $.ajax({
       beforeSend: function(){
-        $("#respServer").html(guardando);
+        $('#respServer').html(guardando);
       },
       url: urlSubir3,
-      type: "post",
-      dataType: "json", //<---- REGRESAR A JSON
+      type: 'POST',
+      dataType: 'JSON', //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
-          $("#respServer").empty();
+          $('#respServer').empty();
           if(resp.resp == 1){
 						$('#frmWork').slideToggle();
 					  $('#btnNewWork').slideToggle();
@@ -303,7 +303,7 @@ $('#btnSaveWork').click(function(){
             $('#opcion').val(3);
             resetForm('frmWork');
           }else{
-            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+            $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
           }
       }
     });
@@ -312,20 +312,20 @@ $('#btnSaveWork').click(function(){
 function eliminarRegObra(id, nombre){
   swal({
         html: true,
-        title: "¿Está seguro?",
-        text: "eliminar el registro <strong>" + nombre + "</strong>",
-        type: "warning",
+        title: '¿Está seguro?',
+        text: 'eliminar el registro <strong>' + nombre + '</strong>',
+        type: 'warning',
         showCancelButton: true,
-        cancelButtonClass: "btn-primary",
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
         closeOnConfirm: true
       },
       function(){
           let params = {'id':id, 'opt':2};
           $.ajax({
-              type:    "post",
+              type:    'POST',
               url:     urlEliminar3,
               data:    params,
               dataType: 'json',
@@ -342,9 +342,9 @@ function editarRegObra(id){
   let params = {'id':id, 'opt':2}
   $.ajax({
         beforeSend: function(){
-            $("#respServer").html(cargando);
+            $('#respServer').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -373,7 +373,7 @@ function editarRegObra(id){
 				$('#btnSaveEI').removeClass('hide');
 				$('#btnSaveMO').removeClass('hide');
 			}
-			$('#opcion').val("9");
+			$('#opcion').val('9');
         }
   });
 	$('#frmWork').slideToggle();
@@ -409,12 +409,12 @@ function estimation_list(){
   urlPag = 'pg/seguimiento_listado.php';
   $.ajax({
         beforeSend: function(){
-            $("#cntnListPagos").html(cargando);
+            $('#cntnListPagos').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlPag,
         //data:    params,
-        dataType: 'html',
+        dataType: 'HTML',
         success: function(data){
             $('#cntnListPagos').html(data);
             loadDataTable('listEstimations', true);
@@ -456,7 +456,7 @@ $('#saveTrackEst').click(function(){
 			$('#reqInputStatus').empty();
 		}
 
-		if(!($('#date2').val() != "0000-00-00") || !($('#date2').val() != "00-00-0000")){
+		if(!($('#date2').val() != '0000-00-00') || !($('#date2').val() != '00-00-0000')){
 			if(!checkDate($('#date1').val(), $('#date2').val())){
 				$('#reqDate1').html('Este fecha no debe ser mayor a la fecha de finalización');
 				return false;
@@ -480,10 +480,10 @@ $('#saveTrackEst').click(function(){
 		if($('#date2').val().length > 0){
 			var date2 = $('#date2').val().split('-');
 			if(date2[2].length == 4){
-				$('#date2').val(date2[2] + "-" + date2[1] + "-" + date2[0]);
+				$('#date2').val(date2[2] + '-' + date2[1] + '-' + date2[0]);
 			} else {
 				if(date2[2].length == 2){
-					$('#date2').val(date2[0] + "-" + date2[1] + "-" + date2[2]);
+					$('#date2').val(date2[0] + '-' + date2[1] + '-' + date2[2]);
 				} else {
 					$('#date1').focus();
 					$('#reqDate1').html('Ingrese fechas en el formato DD-MM-YYYY ó YYYY-MM-DD');
@@ -492,10 +492,10 @@ $('#saveTrackEst').click(function(){
 			}
 		}
 		if(date1[2].length == 4){
-			$('#date1').val(date1[2] + "-" + date1[1] + "-" + date1[0]);
+			$('#date1').val(date1[2] + '-' + date1[1] + '-' + date1[0]);
 		} else {
 			if(date1[2].length == 2){
-				$('#date1').val(date1[0] + "-" + date1[1] + "-" + date1[2]);
+				$('#date1').val(date1[0] + '-' + date1[1] + '-' + date1[2]);
 			} else {
 				$('#date1').focus();
 				$('#reqDate1').html('Ingrese fechas en el formato DD-MM-YYYY ó YYYY-MM-DD');
@@ -503,21 +503,21 @@ $('#saveTrackEst').click(function(){
 			}
 		}
 
-    let formData = new FormData(document.getElementById("frmEstTrack"));
+    let formData = new FormData(document.getElementById('frmEstTrack'));
 
     $.ajax({
       beforeSend: function(){
-        $("#respServer").html(guardando);
+        $('#respServer').html(guardando);
       },
       url: urlSubir3,
-      type: "post",
-      dataType: "json", //<---- REGRESAR A JSON
+      type: 'POST',
+      dataType: 'JSON', //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
-          $("#respServer").empty();
+          $('#respServer').empty();
           if(resp.resp == 1 ){
             estimation_list();
             $('#opcion').val(4);
@@ -525,7 +525,7 @@ $('#saveTrackEst').click(function(){
 						$('#frmEstTrack').slideToggle();
 						$('#btnNewEstTrack').slideToggle();
           }else{
-            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+            $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
           }
       }
     });
@@ -536,9 +536,9 @@ function editarRegSegEst(id){
   let params = {'id':id, 'opt':3}
   $.ajax({
         beforeSend: function(){
-            $("#respServer").html(cargando);
+            $('#respServer').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -553,7 +553,7 @@ function editarRegSegEst(id){
 						$('#inputPhysicAdv').val(resp.avance_fisico);
 						$('#inputStatus').val(resp.status);
 						$('#hdFlsImg').val(resp.imagen);
-						$('#opcion').val("10");
+						$('#opcion').val('10');
         }
   });
 	$('#frmEstTrack').slideToggle();
@@ -565,20 +565,20 @@ function editarRegSegEst(id){
 function eliminarRegSegEst(id, nombre){
   swal({
         html: true,
-        title: "¿Está seguro?",
-        text: "eliminar el registro " + nombre,
-        type: "warning",
+        title: '¿Está seguro?',
+        text: 'eliminar el registro ' + nombre,
+        type: 'warning',
         showCancelButton: true,
-        cancelButtonClass: "btn-primary",
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
         closeOnConfirm: true
       },
       function(){
           let params = {'id':id, 'opt':3};
           $.ajax({
-              type:    "post",
+              type:    'POST',
               url:     urlEliminar3,
               data:    params,
               dataType: 'json',
@@ -608,11 +608,11 @@ function antiquity_list(){
 
   $.ajax({
         beforeSend: function(){
-            $("#cntnListAntiguedad").html(cargando);
+            $('#cntnListAntiguedad').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlPag,
-        dataType: 'html',
+        dataType: 'HTML',
         success: function(data){
             $('#cntnListAntiguedad').html(data);
             loadDataTable('listAntiguedad', true);
@@ -635,27 +635,27 @@ $('#btnGuardarAnt').click(function(){
 			;
 		}
 
-    let formData = new FormData(document.getElementById("frmAntique"));
+    let formData = new FormData(document.getElementById('frmAntique'));
 
     $.ajax({
       beforeSend: function(){
-        $("#respServer").html(guardando);
+        $('#respServer').html(guardando);
       },
       url: urlSubir3,
-      type: "post",
-      dataType: "json", //<---- REGRESAR A JSON
+      type: 'POST',
+      dataType: 'JSON', //<---- REGRESAR A JSON
       data: formData,
       cache: false,
       contentType: false,
       processData: false,
       success: function(resp){
-          $("#respServer").empty();
+          $('#respServer').empty();
           if(resp.resp == 1 ){
             antiquity_list();
             $('#opcion').val(5);
             resetForm('frmAntique');
           }else{
-            $("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+            $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
           }
       }
     });
@@ -667,9 +667,9 @@ function editarRegAntiguedad(id){
   let params = {'id':id, 'opt':6}
   $.ajax({
         beforeSend: function(){
-            $("#respServer").html(cargando);
+            $('#respServer').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -678,7 +678,7 @@ function editarRegAntiguedad(id){
 						$('#txtNombre').val(resp.nombre);
 						$('#hdFlIcono').val(resp.icono);
 						$('#idAntiguedad').val(resp.id_antiguedad);
-						$('#opcion').val("6");
+						$('#opcion').val('6');
             $('#respServer').empty('');
 
         }
@@ -691,20 +691,20 @@ function editarRegAntiguedad(id){
 function eliminarRegAntiguedad(id, nombre){
   swal({
         html: true,
-        title: "¿Está seguro?",
-        text: "eliminar el registro <strong>" + nombre + "</strong>",
-        type: "warning",
+        title: '¿Está seguro?',
+        text: 'eliminar el registro <strong>' + nombre + '</strong>',
+        type: 'warning',
         showCancelButton: true,
-        cancelButtonClass: "btn-primary",
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
         closeOnConfirm: true
       },
       function(){
           let params = {'id':id, 'opt':4};
           $.ajax({
-              type:    "post",
+              type:    'POST',
               url:     urlEliminar3,
               data:    params,
               dataType: 'json',
@@ -729,19 +729,19 @@ function eliminarRegAntiguedad(id, nombre){
 function employees_list(){
   urlPag = 'pg/empleados_listado.php';
 
-	let formData = new FormData(document.getElementById("frmSearchEmployee"));
+	let formData = new FormData(document.getElementById('frmSearchEmployee'));
 
   $.ajax({
         beforeSend: function(){
-            $("#cntnListEmployees").html(cargando);
+            $('#cntnListEmployees').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlPag,
 				data: formData,
 				cache: false,
 				contentType: false,
 				processData: false,
-        dataType: 'html',
+        dataType: 'HTML',
         success: function(data){
             $('#cntnListEmployees').html(data);
             loadDataTable('employees_list', false);
@@ -833,21 +833,21 @@ $('#btnAddEmployee').click(function(){
 				$('#reqAdmissionDate').empty();
 			}
 
-	    let formData = new FormData(document.getElementById("frmAddEmployee"));
+	    let formData = new FormData(document.getElementById('frmAddEmployee'));
 
 	    $.ajax({
 	      beforeSend: function(){
-	        $("#respServer").html(guardando);
+	        $('#respServer').html(guardando);
 	      },
 	      url: urlSubir3,
-	      type: "post",
-	      dataType: "json", //<---- REGRESAR A JSON
+	      type: 'POST',
+	      dataType: 'JSON', //<---- REGRESAR A JSON
 	      data: formData,
 	      cache: false,
 	      contentType: false,
 	      processData: false,
 	      success: function(resp){
-	          $("#respServer").empty();
+	          $('#respServer').empty();
 	          if(resp.resp == 1 ){
 	            employees_list();
 	            $('#opcion').val(7);
@@ -856,7 +856,7 @@ $('#btnAddEmployee').click(function(){
 							$('#btnNewEmployee').slideToggle();
 							$('#btnSearchEmployee').slideToggle();
 	          }else{
-							$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+							$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
 	          }
 	      }
 	    });
@@ -866,9 +866,9 @@ function editEmployee(id) {
 	let params = {'id':id, 'opt':5}
   $.ajax({
         beforeSend: function(){
-            $("#respServer").html(cargando);
+            $('#respServer').html(cargando);
         },
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -889,7 +889,7 @@ function editEmployee(id) {
 						$('#txtArea').val(resp.area);
 						$('#txtType').val(resp.tipo);
 						$('#id_employee').val(resp.id_empleado);
-						$('#opcion').val("8");
+						$('#opcion').val('8');
             $('#respServer').empty('');
         }
   });
@@ -904,20 +904,20 @@ function deleteEmployee(id, name){
 
 	  swal({
 	        html: true,
-	        title: "¿Está seguro?",
-	        text: "eliminar el empleado <strong>" + name + "</strong>",
-	        type: "warning",
+	        title: '¿Está seguro?',
+	        text: 'eliminar el empleado <strong>' + name + '</strong>',
+	        type: 'warning',
 	        showCancelButton: true,
-	        cancelButtonClass: "btn-primary",
-	        confirmButtonColor: "#DD6B55",
-	        confirmButtonText: "Aceptar",
-	        cancelButtonText: "Cancelar",
+	        cancelButtonClass: 'btn-primary',
+	        confirmButtonColor: '#DD6B55',
+	        confirmButtonText: 'Aceptar',
+	        cancelButtonText: 'Cancelar',
 	        closeOnConfirm: true
 	      },
 	      function(){
 	          let params = {'id':id, 'opt':5};
 	          $.ajax({
-	              type:    "post",
+	              type:    'POST',
 	              url:     urlEliminar3,
 	              data:    params,
 	              dataType: 'json',
@@ -945,11 +945,11 @@ function listPayments(){
 
 	$.ajax({
 				beforeSend: function(){
-						$("#cntnListPayments").html(cargando);
+						$('#cntnListPayments').html(cargando);
 				},
-				type:    "post",
+				type:    'POST',
 				url:     urlPag,
-				dataType: 'html',
+				dataType: 'HTML',
 				success: function(data){
 						$('#cntnListPayments').html(data);
 						loadDataTable('listPayments', true);
@@ -983,7 +983,7 @@ $('#cancelPaymentBtn').click(function(){
 	$('#btnSearchPayment').slideToggle();
 	$('#btnNewPayment').slideToggle();
 	resetForm('frmPayment');
-	$('#opcion').val("11");
+	$('#opcion').val('11');
 });
 
 $('#frmPayment').submit(function(event){
@@ -991,20 +991,20 @@ $('#frmPayment').submit(function(event){
 		event.preventDefault();
 	swal({
 				html: true,
-				title: "¿Está seguro?",
-				text: "Una vez agregado un pago, no se puede modificar ni eliminar",
-				type: "warning",
+				title: '¿Está seguro?',
+				text: 'Una vez agregado un pago, no se puede modificar ni eliminar',
+				type: 'warning',
 				showCancelButton: true,
-				cancelButtonClass: "btn-primary",
-				confirmButtonColor: "#7BED81",
-				confirmButtonText: "Aceptar",
-				cancelButtonText: "Prefiero revisar los datos",
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#7BED81',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Prefiero revisar los datos',
 				closeOnConfirm: true
 			},
 			function(){
-					let formData = new FormData(document.getElementById("frmPayment"));
+					let formData = new FormData(document.getElementById('frmPayment'));
 					$.ajax({
-							type:    "post",
+							type:    'POST',
 							url:     urlSubir3,
 							data:    formData,
 							dataType: 'json',
@@ -1036,11 +1036,11 @@ function listContracts(){
 
 	$.ajax({
 				beforeSend: function(){
-						$("#cntnListContracts").html(cargando);
+						$('#cntnListContracts').html(cargando);
 				},
-				type:    "post",
+				type:    'POST',
 				url:     urlPag,
-				dataType: 'html',
+				dataType: 'HTML',
 				success: function(data){
 						$('#cntnListContracts').html(data);
 						loadDataTable('listContracts', true);
@@ -1067,18 +1067,18 @@ $('#frmContract').submit(function(event){
 		let formData = new FormData($(this)[0]);
 
 		$.ajax({beforeSend: function(){
-							$("#respServer").html(cargando);
+							$('#respServer').html(cargando);
 						},
 						url: urlSubir3,
-						type: "post",
-						dataType: "json", //<---- REGRESAR A JSON
+						type: 'POST',
+						dataType: 'JSON', //<---- REGRESAR A JSON
 						data: formData,
 						cache: false,
 						contentType: false,
 						processData: false,
 						success: function(resp){
 								if(resp.resp == 1 ){
-									$("#respServer").html('');
+									$('#respServer').html('');
 									resetForm('frmContract');
 									$('#sillyTable').attr('style','margin-top: -10%');
 									$('#frmContract').slideToggle();
@@ -1087,7 +1087,7 @@ $('#frmContract').submit(function(event){
 									$('#flContract').prop('required',true);
 									listContracts();
 								}else{
-									$("#respServer").html('Ocurrió un error al intentar guardar en la base de datos');
+									$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
 								}
 						}
 
@@ -1096,41 +1096,45 @@ $('#frmContract').submit(function(event){
 //EDITA UN CONTRATO
 function editContract(id){
 
-		let params = {'id':id, 'opt':7};
-	  $.ajax({
+	let params = {'id':id, 'opt':7};
+	$.ajax({
 	        beforeSend: function(){
-	            $("#respServer").html(cargando);
+	            $('#respServer').html(cargando);
 	        },
-	        type:    "post",
+	        type:    'POST',
 	        url:     urlConsultas3,
 	        data:    params,
 	        dataType: 'json',
 	        success: function(resp){
-									listContracts();
-									$('#idContract').val(resp.id_contrato);
-									$('#folio').val(resp.folio);
-									$('#dateContract').val(resp.fecha_realizacion);
-									$('#clientSelected').val(resp.id_cliente);
-									clientChanged(resp.id_propiedad);
-									$('#contractValidity').val(resp.vigencia);
-									$('#contractType').val(resp.tipo_contrato);
-									$('#contractAmount').val(resp.monto);
-									$('#contractAmount').keyup();
-									$('#contractOwner').val(resp.id_propietario);
-									$('#contractLessee').val(resp.estado_civil);
-									$('#hitch').val(resp.enganche_deposito);
-									$('#hitch').keyup();
-									$('#hdFlContract').val(resp.archivo);
-									$('#remarks').val(resp.observaciones);
-									$('#respServer').empty('');
-									$('#sillyTable').attr('style','');
-									$('#frmContract').slideToggle();
-									$('#btnNewContract').slideToggle();
-									$('#period').val(resp.periodo);
-									//$('#propertySelected').val(resp.id_propiedad);
-									changeContractType();
-									$('#flContract').prop('required',false);
-									$('#opcion').val("13");
+				listContracts();
+				$('#idContract').val(resp.id_contrato);
+				$('#folio').val(resp.folio);
+				let fecha = moment(resp.fecha_realizacion,'DD-MM-YYYY').format('DD/MM/YYYY').toString();
+				$('#dateContract').val(fecha);
+				$('#dateContract').keyup();
+				$('#clientSelected').val(resp.id_cliente);
+				clientChanged(resp.id_propiedad);
+				fecha = moment(resp.vigencia,'DD-MM-YYYY').format('DD/MM/YYYY').toString();
+				$('#contractValidity').val(fecha);
+				$('#contractValidity').keyup();
+				$('#contractType').val(resp.tipo_contrato);
+				$('#contractAmount').val(resp.monto);
+				$('#contractAmount').keyup();
+				$('#contractOwner').val(resp.id_propietario);
+				$('#contractLessee').val(resp.estado_civil);
+				$('#hitch').val(resp.enganche_deposito);
+				$('#hitch').keyup();
+				$('#hdFlContract').val(resp.archivo);
+				$('#remarks').val(resp.observaciones);
+				$('#respServer').empty('');
+				$('#sillyTable').attr('style','');
+				$('#frmContract').slideToggle();
+				$('#btnNewContract').slideToggle();
+				$('#period').val(resp.periodo);
+				//$('#propertySelected').val(resp.id_propiedad);
+				changeContractType();
+				$('#flContract').prop('required',false);
+				$('#opcion').val('13');
 	        }
 				});
 }
@@ -1138,19 +1142,19 @@ function editContract(id){
 function deleteContract(id, name, archivo){
 		  swal({
 		        html: true,
-		        title: "¿Está seguro?",
-		        text: "¿Eliminará el registro del contrato con el cliente <strong>" + name + "</strong>?",
-		        type: "warning",
+		        title: '¿Está seguro?',
+		        text: '¿Eliminará el registro del contrato con el cliente <strong>' + name + '</strong>?',
+		        type: 'warning',
 		        showCancelButton: true,
-		        confirmButtonColor: "#DD6B55",
-		        confirmButtonText: "Eliminar",
-		        cancelButtonText: "Cancelar",
+		        confirmButtonColor: '#DD6B55',
+		        confirmButtonText: 'Eliminar',
+		        cancelButtonText: 'Cancelar',
 		        closeOnConfirm: true
 		      },
 		      function(){
 		          let params = {'id':id, 'archivo':archivo, 'opt':6};
 		          $.ajax({
-		              type:    "post",
+		              type:    'POST',
 		              url:     urlEliminar3,
 		              data:    params,
 		              dataType: 'json',
@@ -1170,12 +1174,12 @@ function clientChanged(idProperty=0){
 	let properties;
 	$.ajax({
 				beforeSend: function(){
-						$("#respServer").html(cargando);
+						$('#respServer').html(cargando);
 						$('#propertySelected').empty();
 						$('#propertySelected').append(
-						`<option value="0">Selecciona una propiedad</option>`);
+						`<option value='0'>Selecciona una propiedad</option>`);
 				},
-				type:    "post",
+				type:    'POST',
 				url:     urlConsultas3,
 				dataType: 'json',
 				data: params,
@@ -1219,9 +1223,9 @@ function listAdmPayments(){
 				beforeSend: function(){
 						$("#cntnListAdmPayments").html(cargando);
 				},
-				type:    "post",
+				type:    'POST',
 				url:     urlPag,
-				dataType: 'html',
+				dataType: 'HTML',
 				success: function(data){
 						$('#cntnListAdmPayments').html(data);
 						loadDataTable('listAdmPayments', true);
@@ -1274,8 +1278,8 @@ $('#frmAdmPayment').submit(function(event){
 										$("#respServer").html(cargando);
 									},
 									url: urlSubir3,
-									type: "post",
-									dataType: "json", //<---- REGRESAR A JSON
+									type: 'POST',
+									dataType: 'JSON', //<---- REGRESAR A JSON
 									data: formData,
 									cache: false,
 									contentType: false,
@@ -1321,7 +1325,7 @@ $('#addToTable').click(function(){
 		}
 		let params = {'id':id, 'opt':22}
 		$.ajax({
-				type:    "post",
+				type:    'POST',
 				url:     urlConsultas3,
 				data:    params,
 				dataType: 'json',
@@ -1411,7 +1415,7 @@ $('#addToTable').click(function(){
 									'quantities':quantities}
 
 		$.ajax({
-				type:    "post",
+				type:    'POST',
 				url:     urlSubir3,
 				data:    params,
 				dataType: 'json',
@@ -1436,7 +1440,7 @@ $('#addToTable').click(function(){
 		let params = {'work': work, 'opt': 21}
 		let element = '';
     $.ajax({
-        type:    "post",
+        type:    'POST',
         url:     urlConsultas3,
         data:    params,
         dataType: 'json',
@@ -1468,9 +1472,9 @@ function listPhysProg(){
 				beforeSend: function(){
 						$("#cntnListProgress").html(cargando);
 				},
-				type:    "post",
+				type:    'POST',
 				url:     urlPag,
-				dataType: 'html',
+				dataType: 'HTML',
 				success: function(data){
 						$('#cntnListProgress').html(data);
 						loadDataTable('listPhysicalProgress', true);
@@ -1612,7 +1616,7 @@ function listLevels(){
 				},
 				type:    'POST',
 				url:     urlPag,
-				dataType: 'html',
+				dataType: 'HTML',
 				success: function(data){
 						$('#cntnListLevels').html(data);
 						loadDataTable('listLevels', true);
@@ -1698,6 +1702,239 @@ function deleteLevel(id, name){
 								}
 					});
 			});
+}
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/************************FUNCIONES PARA EMPRESAS****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+$('#cancelCompany').click(function(){
+	resetForm('frmCompany');
+	$('#opcion').val('19');
+});
+
+function listCompanies(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListCompanies').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'HTML',
+		url: 'pg/empresas_listado.php',
+		success: function(data){
+			$('#cntnListCompanies').html(data);
+			loadDataTable('listCompanies', true);
+		}
+	});
+}
+
+$('#frmCompany').submit(function(event){
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		data: formData,
+		dataType: 'JSON',
+		url: urlSubir3,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(){
+			$('#respServer').html('');
+			listCompanies();
+			resetForm('frmCompany');
+			$('#opcion').val('19');
+		}
+	});
+});
+
+function editCompany(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		data: {id:id, opt: 10},
+		dataType: 'JSON',
+		url: urlConsultas3,
+		success: function(resp){
+			$('#respServer').html('');
+			$('#id').val(resp.id);
+			$('#name').val(resp.name);
+			$('#opcion').val('20');
+		}
+	});
+}
+
+function deleteCompany(id, name){
+	swal({
+        html: true,
+        title: '¿Está seguro?',
+        text: 'Se eliminará el registro <strong>' + name + '</strong>',
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'opt': 9};
+          $.ajax({
+              type:    'POST',
+              url:     urlEliminar3,
+              data:    params,
+              dataType: 'JSON',
+              success: function(resp){
+                    listCompanies();
+              }
+          });
+      });
+}
+
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/************************FUNCIONES PARA LICITACIONES****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+$('#btnNewBidding').click(function(){
+	resetForm('frmBidding');
+	$('#frmBidding').slideToggle();
+	$('#btnNewBidding').slideToggle();
+});
+
+$('#cancelBidding').click(function(){
+	resetForm('frmBidding');
+	$('#frmBidding').slideToggle();
+	$('#btnNewBidding').slideToggle();
+	$('#respServer').html('');
+});
+
+function listBiddings(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListBiddings').html(cargando);
+		},
+		type: 'POST',
+		url: 'pg/licitaciones_listado.php',
+		dataType: 'HTML',
+		success: function(data){
+			$('#cntnListBiddings').html(data);
+			loadDataTable('listBiddings', true);
+		}
+	});
+}
+
+$('#frmBidding').submit(function(event){
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+					beforeSend: function(){
+						$('#respServer').html(cargando);
+					},
+					url: urlSubir3,
+					type: 'POST',
+					dataType: 'JSON', //<---- REGRESAR A JSON
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(resp){
+							if(resp.resp == 1 ){
+								$('#respServer').html('');
+								resetForm('frmBidding');
+								if($('#frmBidding').is(':visible')){
+									$('#frmBidding').slideToggle();
+								}
+								if($('#btnNewBidding').is(':hidden')){
+									$('#btnNewBidding').slideToggle();
+								}
+
+								$('#opcion').val('21');
+								listBiddings();
+							}else{
+								$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+							}
+					}
+
+	});
+});
+
+function editBidding(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		data: {id:id, opt: 11},
+		dataType: 'JSON',
+		url: urlConsultas3,
+		success: function(resp){
+			console.log(resp);
+			$('#bidNum').val(resp.bidNumber);
+			$('#work').val(resp.work);
+			$('#propDelivery').val(resp.propDelivery);
+			$('#failDate').val(resp.failDate);
+			$('#place').val(resp.place);
+			$('#hdFile').val(resp.file);
+			$('#idBid').val(resp.id);
+			$('#respServer').html('');
+			$('#respServer').html('El archivo ya subido se mantendrá intacto a menos que subas uno nuevo');
+			$('#opcion').val('22');
+			if($('#frmBidding').is(':hidden')){
+				$('#frmBidding').slideToggle();
+			}
+			if($('#btnNewBidding').is(':visible')){
+				$('#btnNewBidding').slideToggle();
+			}
+		}
+	});
+}
+
+function deleteBidding(id, name){
+	swal({
+        html: true,
+        title: '¿Está seguro?',
+        text: 'Se eliminará la licitación <strong>#' + name + '</strong>',
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'opt': 10};
+          $.ajax({
+              type:    'POST',
+              url:     urlEliminar3,
+              data:    params,
+              dataType: 'JSON',
+              success: function(resp){
+                listCompanies();
+              }
+          });
+					listCompanies();
+	});
 }
 
 /*******************************************************************************/

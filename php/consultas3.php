@@ -145,12 +145,24 @@ switch($_POST['opt']){
 		$jsondata['id'] = $resp['id_nivel'];
 		$jsondata['name'] = $resp['nombre'];
 	break;
-
+	//OBTIENE LOS DATOS DE LA EMPRESA PARA SER EDITADOS, RETORNA EL NOMBRE Y EL ID
 	case 10:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->getCompanies($id));
 		$jsondata['id'] = $resp['id_empresa'];
 		$jsondata['name'] = $resp['nombre'];
+	break;
+	//OBTIENE LOS DATOS DE UNA LICITACIÓN PARA SER EDITADOS, RETORNA NOMBRE Y EL ID
+	case 11:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getBiddings($id));
+		$jsondata['id'] = $resp['id_licitacion'];
+		$jsondata['bidNumber'] = $resp['numero_licitacion'];
+		$jsondata['work'] = $resp['nombre_obra'];
+		$jsondata['propDelivery'] = $resp['entrega_propuesta'];
+		$jsondata['place'] = $resp['lugar'];
+		$jsondata['failDate'] = $resp['fecha_fallo'];
+		$jsondata['file'] = $resp['archivo'];
 	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA

@@ -580,7 +580,7 @@ break;
 		}else{
 				$datos['flContract'] = $_POST['hdFlContract'];
 		}
-		
+
 		if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$datos['flContract'],$remarks,$datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
@@ -725,7 +725,7 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
-
+	//AGREGA UNA NUEVA EMPRESA
 	case 19:
 	$name = $_POST['name'];
 	$date = $datos['fecha_actual'];
@@ -738,7 +738,7 @@ break;
 	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($jsondata);
 	break;
-
+	//EDITA UNA EMPRESA
 	case 20:
 		$name = $_POST['name'];
 		$id = $_POST['id'];
@@ -748,8 +748,84 @@ break;
 		} else {
 			$jsondata['resp'] = 1;
 		}
-		header('Content-type: application/json; charset=utf-8');
-		echo json_encode($jsondata);
+
+	break;
+	//AGREGA UNA NUEVA LICITACIÓN
+	case 21:
+	$bidNumber = $funciones->limpia($_POST['bidNum']);
+	$work = $funciones->limpia($_POST['work']);
+	$proposedDelivery = date('Y-m-d',strtotime($funciones->limpia($_POST['propDelivery'])));
+	$failDate = date('Y-m-d',strtotime($funciones->limpia($_POST['failDate'])));
+	$place = $funciones->limpia($_POST['place']);
+
+	if(isset($_FILES["file"]["tmp_name"]) and $_FILES["file"]["tmp_name"] != ""){
+			if($upload->load("file") === false){
+				echo '<script languaje="javascript">
+						parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
+						</script>';
+				exit(0);
+			}
+			$archivo = "archivos/licitaciones/".$upload->nombre_final;
+			$upload->setisimage(false);
+			if($upload->save('../'.$archivo) === false){
+				echo '<script languaje="javascript">
+						parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
+						</script>';
+				exit(0);
+			}
+			$datos['file'] = $archivo;
+	}else{
+			$datos['file'] = $_POST['hdFile'];
+	}
+
+	if(@$conexion->consulta($querys->addBidding($bidNumber, $work, $proposedDelivery, $place, $failDate, $_FILES["file"]["tmp_name"], $datos['fecha_actual'])) == 0){
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+	} else {
+		$jsondata['resp'] = 1;
+	}
+
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
+	break;
+	//EDITA UNA LICITACIÓN EXISTENTE
+	case 22:
+	$id = $funciones->limpia($_POST['idBid']);
+	$bidNumber = $funciones->limpia($_POST['bidNum']);
+	$work = $funciones->limpia($_POST['work']);
+	$proposedDelivery = date('Y-m-d',strtotime($funciones->limpia($_POST['propDelivery'])));
+	$failDate = date('Y-m-d',strtotime($funciones->limpia($_POST['failDate'])));
+	$place = $funciones->limpia($_POST['place']);
+
+	if(isset($_FILES["file"]["tmp_name"]) and $_FILES["file"]["tmp_name"] != ""){
+			if($upload->load("file") === false){
+				echo '<script languaje="javascript">
+						parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
+						</script>';
+				exit(0);
+			}
+			$archivo = "archivos/licitaciones/".$upload->nombre_final;
+			$upload->setisimage(false);
+			if($upload->save('../'.$archivo) === false){
+				echo '<script languaje="javascript">
+						parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
+						</script>';
+				exit(0);
+			}
+			$datos['file'] = $archivo;
+	}else{
+			$datos['file'] = $_POST['hdFile'];
+	}
+
+	if(@$conexion->consulta($querys->editBidding($id, $bidNumber, $work, $proposedDelivery, $place, $failDate, $_FILES["file"]["tmp_name"], $datos['fecha_actual'])) == 0){
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+	} else {
+		$jsondata['resp'] = 1;
+	}
+
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
 	break;
 }
 ?>
