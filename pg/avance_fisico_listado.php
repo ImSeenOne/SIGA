@@ -14,7 +14,9 @@
       <th class="text-center" scope="col" style="width: 20%;">Obra</th>
       <th class="text-center" scope="col" style="width: 8%;">Porcentaje de avance</th>
       <th class="text-center" scope="col" style="width: 35%;">Período</th>
+      <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
       <th class="text-center" scope="col" style="width: 20%;">Acciones</th>
+      <?php } ?>
     </tr>
   </thead>
   <tbody>

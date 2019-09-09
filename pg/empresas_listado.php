@@ -11,7 +11,7 @@
         <th class="text-center">Id</th>
         <th class="text-center">Nombre</th>
         <th class="text-center">Fecha registro</th>
-        <?php if($_SESSION["dUsuario"]["editar"] == 1 && $_SESSION["dUsuario"]["eliminar"] == 1){?>
+        <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
         <th class="text-center">Acciones</th>
         <?php } ?>
       </tr>
@@ -27,7 +27,7 @@
          	<button type="button" class="btn btn-success btn-sm" onclick="editCompany(<?= $key->id_empresa ?>)"><i class="fa fa-edit"></i></button>
           <?php } ?>
           <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
-         	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash" onclick="deleteCompany(<?= $key->id_empresa ?>, '<?= $key->nombre ?>')"></i></button>
+         	<button type="button" class="btn btn-danger btn-sm" onclick="deleteCompany(<?= $key->id_empresa ?>, '<?= $key->nombre ?>')"><i class="fa fa-trash"></i></button>
           <?php } ?>
         </td>
       </tr>
@@ -46,5 +46,9 @@
   </table>
 </div>
 <?php }else{ ?>
-  <center><h4>¡No existen registros!</h4></center>
+  <center>
+    <h4>
+      ¡No existen registros!
+    </h4>
+  </center>
 <?php } ?>

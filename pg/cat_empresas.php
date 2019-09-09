@@ -31,7 +31,7 @@
             <input type="hidden" id="id" name="id">
             <input type="hidden" id="opcion" name="opcion" value="19">
             <button class="btn btn-primary btn-sm" id="saveCompany" type="submit" name="saveCompany">Guardar</button>&nbsp;
-            <button class="btn btn-secondary btn-sm"id="cancelCompany" type="button" name="saveCompany">Cancelar</button>
+            <button class="btn btn-secondary btn-sm"id="cancelCompany" type="button" name="cancelCompany">Cancelar</button>
           </div>
         </form>
       </div>

@@ -16,7 +16,9 @@
       <th class="col">RFC</th>
       <th class="col">Tipo</th>
       <th class="col">IMSS</th>
+      <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
       <th class="col">Acciones</th>
+      <?php } ?>
     </thead>
     <tbody>
       <?php foreach ($listado as $key) { ?>

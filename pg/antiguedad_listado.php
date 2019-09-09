@@ -12,7 +12,7 @@
         <th class="text-center">Nombre</th>
         <th class="text-center">Icono</th>
         <th class="text-center">Fecha registro</th>
-        <?php if($_SESSION["dUsuario"]["editar"] == 1 && $_SESSION["dUsuario"]["eliminar"] == 1){?>
+        <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
         <th class="text-center">Acciones</th>
         <?php } ?>
       </tr>

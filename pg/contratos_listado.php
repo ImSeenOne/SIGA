@@ -16,7 +16,10 @@
       <th class="col">Tipo de contrato</th>
       <th class="col">Arrendatario/Propietario</th>
       <th class="col">Depósito/Enganche</th>
+      <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
       <th class="col">Acciones</th>
+      <?php } ?>
+
     </thead>
     <tbody>
       <?php foreach ($listado as $key) { ?>
@@ -90,8 +93,12 @@
          </td>
           <td>$<?= number_format($key->enganche_deposito,2) ?></td>
           <td class="text-center">
+            <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
             <button type="button" class="btn btn-success btn-sm" onclick="editContract(<?= $key->id_contrato ?>);"><i class="fa fa-edit"></i></button>
+            <?php } ?>
+            <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
             <button type="button" class="btn btn-danger btn-sm" onclick="deleteContract(<?= $key->id_contrato ?>, '<?= $nombre.' '.$apellido ?>','<?= $key->archivo ?>');"><i class="fa fa-trash"></i></button>
+            <?php } ?>
           </td>
         </tr>
       <?php } ?>

@@ -13,7 +13,9 @@
       <th hidden class="text-left" style="width:15%">Número</th>
       <th class="text-center" style="width:10%;">C.P.</th>
       <th class="text-center" style="width:10%;">Icono</th>
+      <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
       <th class="text-center" style="width:20%;">Acciones</th>
+      <?php } ?>
     </tr>
   </thead>
   <tbody>
@@ -26,8 +28,12 @@
       <td class="text-center"><?= $key->codigo_postal ?></td>
       <td class="text-center"><img src="<?= $key->icono ?>" class="iconSize"/></td>
       <td class="text-center">
-       	<button type="button" class="btn btn-success btn-sm" onclick="editarRegDesarrollo(<?= $key->id_desarrollo ?>);"><i class="fa fa-edit"></i></button>
-       	<button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegDesarrollo(<?= $key->id_desarrollo ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
+        <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
+        <button type="button" class="btn btn-success btn-sm" onclick="editarRegDesarrollo(<?= $key->id_desarrollo ?>);"><i class="fa fa-edit"></i></button>
+        <?php } ?>
+        <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegDesarrollo(<?= $key->id_desarrollo ?>, '<?= $key->icono ?>', '<?= $key->nombre ?>');"><i class="fa fa-trash"></i></button>
+        <?php } ?>
       </td>
     </tr>
     <?php } ?>
