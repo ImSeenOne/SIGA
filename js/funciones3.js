@@ -1930,10 +1930,10 @@ function deleteBidding(id, name){
               data:    params,
               dataType: 'JSON',
               success: function(resp){
-                listCompanies();
+                listBiddings();
               }
           });
-					listCompanies();
+					listBiddings();
 	});
 }
 
