@@ -1888,7 +1888,6 @@ function editBidding(id){
 		dataType: 'JSON',
 		url: urlConsultas3,
 		success: function(resp){
-			console.log(resp);
 			$('#bidNum').val(resp.bidNumber);
 			$('#work').val(resp.work);
 			$('#propDelivery').val(resp.propDelivery);
@@ -1934,6 +1933,283 @@ function deleteBidding(id, name){
               }
           });
 					listBiddings();
+	});
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************FUNCIONES PARA**********************************/
+/*******************************TIPOS DE GASTOS*********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+$('#cancelExpenseType').click(function(){
+	$('#opcion').val('23');
+	resetForm('frmExpenseType');
+});
+
+
+function listExpensesTypes(){
+	urlPag = 'pg/tipo_gasto_listado.php';
+
+  $.ajax({
+        beforeSend: function(){
+            $("#cntnListExpensesTypes").html(cargando);
+        },
+        type:    'POST',
+        url:     urlPag,
+        //data:    params,
+        dataType: 'HTML',
+        success: function(data){
+            $('#cntnListExpensesTypes').html(data);
+            loadDataTable('listExpensesTypes', false);
+        }
+  });
+}
+
+$('#frmExpenseType').submit(function(event){
+
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+					beforeSend: function(){
+						$('#respServer').html(cargando);
+					},
+					url: urlSubir3,
+					type: 'POST',
+					dataType: 'JSON', //<---- REGRESAR A JSON
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(resp){
+							if(resp.resp == 1 ){
+								$('#respServer').html('');
+								resetForm('frmExpenseType');
+								$('#opcion').val('23');
+								listExpensesTypes();
+							}else{
+								$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+							}
+					}
+	});
+});
+
+function updateExpenseType(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+			resetForm('frmExpenseType');
+		},
+		type: 'POST',
+		data: {id:id, opt: 12},
+		dataType: 'JSON',
+		url: urlConsultas3,
+		success: function(resp){
+			$('#id').val(resp.id);
+			$('#name').val(resp.name);
+			$('#respServer').html('');
+			$('#opcion').val('24');
+		}
+	});
+}
+
+function deleteExpenseType(id, name){
+	swal({
+        html: true,
+        title: '¿Está seguro?',
+        text: 'Se eliminará el tipo de gasto \'<strong>' + name + '</strong>\'',
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonClass: 'btn-primary',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        closeOnConfirm: true
+      },
+      function(){
+          let params = {'id':id, 'opt': 11};
+          $.ajax({
+              type:    'POST',
+              url:     urlEliminar3,
+              data:    params,
+              dataType: 'JSON',
+              success: function(resp){
+                listExpensesTypes();
+              }
+          });
+					listExpensesTypes();
+	});
+}
+
+
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************FUNCIONES PARA**********************************/
+/***********************************GASTOS**************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+//LISTA LOS GASTOS
+function listExpenses(month='', year='', expenseType = ''){
+	urlPag = 'pg/gastos_listado.php';
+
+	let params = {'month': month, 'year': year, 'expenseType': expenseType};
+
+  $.ajax({
+        beforeSend: function(){
+            $('#cntnListExpenses').html(cargando);
+        },
+        type:    'POST',
+        url:     urlPag,
+				data: params,
+        dataType: 'HTML',
+        success: function(data){
+            $('#cntnListExpenses').html(data);
+            loadDataTable('listExpenses', false);
+        }
+  });
+}
+
+//ACTIVA LA CREACIÓN DE UN NUEVO GASTO
+$('#btnNewExpense').click(function(){
+	if($('#frmNewExpense').is(':hidden')){
+		$('#frmNewExpense').slideToggle();
+	}
+	if($('#frmExpenseSearch').is(':visible')){
+		$('#frmExpenseSearch').slideToggle();
+	}
+	if($('#btnSearchExpense').is(':hidden')){
+		$('#btnSearchExpense').slideToggle();
+	}
+	if($('#btnNewExpense').is(':visible')){
+		$('#btnNewExpense').slideToggle();
+	}
+
+	resetForm('frmNewExpense');
+	$('#amount').val(0);
+	$('#amount').keyup();
+});
+
+//ACTIVA LA BÚSQUEDA
+$('#btnSearchExpense').click(function(){
+	if($('#frmExpenseSearch').is(':hidden')){
+		$('#frmExpenseSearch').slideToggle();
+	}
+	if($('#btnSearchExpense').is(':visible')){
+		$('#btnSearchExpense').slideToggle();
+	}
+	if($('#frmNewExpense').is(':visible')){
+		$('#frmNewExpense').slideToggle();
+	}
+	if($('#btnNewExpense').is(':hidden')){
+		$('#btnNewExpense').slideToggle();
+	}
+	resetForm('frmExpenseSearch');
+});
+
+//CANCELA LA CREACIÓN DE UN NUEVO GASTO
+$('#cancelExpense').click(function(){
+	if($('#frmNewExpense').is(':visible')){
+		$('#frmNewExpense').slideToggle();
+	}
+	if($('#btnNewExpense').is(':hidden')){
+		$('#btnNewExpense').slideToggle();
+	}
+});
+
+//REINICIA EL FORMATO DE BÚSQUEDA
+$('#resetSearchForm').click(function(){
+	resetForm('frmExpenseSearch');
+	listExpenses();
+});
+
+//BUSCA EL GASTO
+$('#searchExpense').click(function() {
+	let month = $('#searchMonth').val();
+	let year = $('#searchYear').val();
+	let expenseType = $('#searchExpenseType').val();
+	listExpenses(month, year, expenseType);
+});
+
+//CANCELA LA BÚSQUEDA
+$('#cancelSearch').click(function(){
+	if($('#frmExpenseSearch').is(':visible')){
+		$('#frmExpenseSearch').slideToggle();
+	}
+	if($('#btnSearchExpense').is(':hidden')){
+		$('#btnSearchExpense').slideToggle();
+	}
+	listExpenses();
+});
+
+//CREA UN NUEVO GASTO
+$('#frmNewExpense').submit(function(event){
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+					beforeSend: function(){
+						$('#respServer').html(cargando);
+					},
+					url: urlSubir3,
+					type: 'POST',
+					dataType: 'JSON', //<---- REGRESAR A JSON
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(resp){
+							if($('#frmNewExpense').is(':visible')){
+								$('#frmNewExpense').slideToggle();
+							}
+							if($('#btnNewExpense').is(':hidden')){
+								$('#btnNewExpense').slideToggle();
+							}
+							if(resp.resp == 1 ){
+								$('#respServer').html('');
+								resetForm('frmNewExpense');
+								$('#opcion').val('25');
+								listExpenses();
+							}else{
+								$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+							}
+					}
+	});
+});
+
+//CANCELA EL GASTO
+function cancelExpense(id, name) {
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se cancelará el gasto <strong>#' + id + '</strong>: \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 12};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								listExpenses();
+							}
+					});
 	});
 }
 

@@ -531,6 +531,85 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	/****************************************************************************/
+	/****************************************************************************/
+	/***************************CATÁLOGO DE TIPO*********************************/
+	/******************************DE GASTOS*************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+
+	public function getTypesOfExpenses($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' AND id_tipo_gasto = '.$id;
+		}
+
+		$strQuery = 'SELECT id_tipo_gasto, id_tipo_gasto as id, nombre, nombre as valor FROM tblc_tipo_gasto WHERE fecha_eliminado IS NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	public function addTypeOfExpenses($name){
+		$strQuery = 'INSERT INTO tblc_tipo_gasto (nombre) VALUES (\''.$name.'\')';
+		return $strQuery;
+	}
+
+	public function updateTypeOfExpenses($id, $name){
+		$strQuery = 'UPDATE tblc_tipo_gasto SET nombre = \''.$name.'\' WHERE (id_tipo_gasto = '.$id.')';
+		return $strQuery;
+	}
+
+	public function deleteTypeOfExpenses($id, $date){
+		$strQuery = 'UPDATE tblc_tipo_gasto SET fecha_eliminado = \''.$date.'\' WHERE (id_tipo_gasto = '.$id.')';
+		return $strQuery;
+	}
+
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/*********************************GASTOS*************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+
+	public function getExpenses($id = '', $month = '', $year = '', $expenseType = ''){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' AND id_gasto';
+		}
+		if($month != ''){
+			$cond.= ' AND MONTH(fecha_pago) = \''.$month.'\'';
+		}
+		if($year != ''){
+			$cond.= ' AND YEAR(fecha_pago) = \''.$year.'\'';
+		}
+
+		$strQuery = 'SELECT * FROM tbl_gastos WHERE fecha_registro IS NOT NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	//$_SESSION['dUsuario']['id_usuario']
+
+	public function addExpense($idUser, $idProperty, $idTOExpense, $amount, $description, $datePayment, $date, $status){
+		$strQuery = 'INSERT INTO tbl_gastos (id_usuario, id_propiedad, id_tipo_gasto, monto, descripcion, fecha_pago, fecha_registro, estatus)
+		VALUES (\''.$idUser.'\', \''.$idProperty.'\', \''.$idTOExpense.'\', \''.$amount.'\', \''.$description.'\', \''.$datePayment.'\', \''.$date.'\', \''.$status.'\')';
+		return $strQuery;
+	}
+
+	public function updateExpense($idExpense, $idUser, $idProperty, $idTOExpense, $amount, $remarks, $datePayment, $date, $status){
+		$strQuery = 'UPDATE tbl_gastos SET
+		 id_usuario = '.$idUser.', id_propiedad = '.$idProperty.', id_tipo_gasto = '.$idTOExpense.',
+		 monto = '.$amount.', descripcion = \''.$description.'\', fecha_pago = \''.$datePayment.'\',
+		 fecha_registro = \''.$date.'\', estatus = '.$status.' WHERE (id_gasto = '.$idExpense.')';
+		return $strQuery;
+	}
+
+	public function deleteExpense($id){
+		$strQuery = 'UPDATE tbl_gastos SET estatus = 2 WHERE (id_gasto = '.$id.')';
+		return $strQuery;
+	}
+
 
 	/****************************************************************************/
 	/****************************************************************************/

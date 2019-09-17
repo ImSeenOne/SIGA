@@ -827,5 +827,62 @@ break;
 	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($jsondata);
 	break;
+	//AGREGA UN NUEVO TIPO DE GASTO
+	case 23:
+		$name = $funciones->limpia($_POST['name']);
+
+		if(@$conexion->consulta($querys->addTypeOfExpenses($name)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+
+	break;
+	//EDITA UN TIPO DE GASTO
+	case 24:
+		$id = $funciones->limpia($_POST['id']);
+		$name = $funciones->limpia($_POST['name']);
+
+		if(@$conexion->consulta($querys->updateTypeOfExpenses($id, $name)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UN NUEVO GASTO
+	case 25:
+		$property = $funciones->limpia($_POST['property']);
+		$expenseType = $funciones->limpia($_POST['typeExpense']);
+		$amountmp = $funciones->limpia($_POST['amount']);
+		$amount = str_replace(",", "", $amountmp);
+
+		$date = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['date']) ) ) );
+
+		//echo $date;
+
+		$remarks = $funciones->limpia($_POST['remarks']);
+
+		if(@$conexion->consulta($querys->addExpense($_SESSION['dUsuario']['id_usuario'], $property, $expenseType, $amount, $remarks, $date, $datos['fecha_actual'], 1)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN GASTO
+	case 26:
+		//$ = $funciones->limpia($_POST['']);
+	break;
 }
 ?>

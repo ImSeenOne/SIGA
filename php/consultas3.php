@@ -164,6 +164,13 @@ switch($_POST['opt']){
 		$jsondata['failDate'] = $resp['fecha_fallo'];
 		$jsondata['file'] = $resp['archivo'];
 	break;
+
+	case 12:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->getTypesOfExpenses($id));
+		$jsondata['id'] = $resp['id_tipo_gasto'];
+		$jsondata['name'] = $resp['nombre'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:

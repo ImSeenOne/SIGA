@@ -27,17 +27,82 @@
         <div class="col-lg-6"></div>
         <div class="col-lg-3"></div>
         <div class="col-lg-3 alignMiddle">
-          <button id="btnNvoGasto" type="button" class="btn btn-primary btn-sm pull-right mt-2em ml-05em" >Nuevo gasto</button>
-          <button id="btnBusquedaGastos" type="button" class="btn btn-success btn-sm pull-right mt-2em" ><i class="fa fa-search"></i>Búsqueda</button>
+          <button id="btnNewExpense" type="button" class="btn btn-primary btn-sm pull-right mt-2em ml-05em" >Nuevo gasto</button>
+          <button id="btnSearchExpense" type="button" class="btn btn-success btn-sm pull-right mt-2em" ><i class="fa fa-search"></i>Búsqueda</button>
         </div>
         <!-- /.col -->
-      </div>      
+      </div>
 
-      <div id="frmBusquedaGasto" class="row cntntFrm mt-1em" style="display:none;">
+      <form id="frmNewExpense" autocomplete="off" class="row cntntFrm mt-1em" style="display:none;">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <h3 class="ml-1em mt-0">Nuevo gasto</h3><br>
+        <div class="col-lg-12">
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="property">Propiedad</label>
+              <select id="property" name="property" class="form-control select2" style="width: 100%;">
+                <option value="0" selected="selected">Seleccionar...</option>
+                <?php
+                  $combo = @$conexion->obtenerlista($querys3->getPropiedades());
+                  $funciones->llenarCombo($combo);
+                ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="type">Tipo de gasto</label>
+              <select class="form-control" id="type" name="typeExpense" style="width: 100%;">
+                <option>Seleccionar...</option>
+                <?php
+                  $combo = @$conexion->obtenerlista($querys3->getTypesOfExpenses());
+                  $funciones->llenarCombo($combo);
+                ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="amount">Monto</label>
+              <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" id="amount" name="amount">
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="date">Fecha</label>
+              <input type="text" id="date" name="date" class="form-control" >
+            </div>
+          </div>
+
+          <div class="col-lg-8 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="remarks">Descripción</label>
+              <input id="remarks" name="remarks" class="form-control"></input>
+            </div>
+          </div>
+
+          <input type="hidden" name="opcion" value="25">
+          <input type="hidden" id="id" name="id">
+
+          <div class="form-group col-lg-4 col-md-4 col-sm-12 mt-2em">
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <button class="btn btn-primary btn-block" type="submit" id="saveExpense">Agregar</button>
+              &nbsp;
+            </div>
+            <div class="col-sm-12 col-lg-6 col-md-6">
+              <button class="btn btn-secondary btn-block" type="button" id="cancelExpense">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form id="frmExpenseSearch" class="row cntntFrm mt-1em" style="display:none;">
         <div class="col-lg-3 col-md-3 col-sm-12">
           <div class="form-group">
               <label>Mes</label>
-              <select class="form-control select2" style="width: 100%;">
+              <select id="searchMonth" class="form-control select2" style="width: 100%;">
                 <?php for ($i=1; $i < 13; $i++) { ?>
                   <option <?php if($i == date('m')){echo 'selected';} ?>  value="<?= $i; ?>"><?= $funciones->mes($i); ?></option>
                 <?php } ?>
@@ -47,7 +112,7 @@
         <div class="col-lg-3 col-md-3 col-sm-12">
           <div class="form-group">
               <label>Año</label>
-              <select class="form-control select2" style="width: 100%;">
+              <select id="searchYear" class="form-control select2" style="width: 100%;">
                 <option selected="selected">2019</option>
                 <option>2018</option>
                 <option>2017</option>
@@ -56,258 +121,42 @@
               </select>
           </div>
         </div>
+
         <div class="col-lg-3 col-md-3 col-sm-12">
           <label>Tipo de gasto</label>
-              <select class="form-control select2" style="width: 100%;">
-                <option selected="selected">Propaganda</option>
-                <option>Mantenimiento</option>
-                <option>Operación</option>
-                <option>Servicios</option>
-                <option>Suministros</option>
+              <select id="searchExpenseType" class="form-control select2" style="width: 100%;">
+                <option value='0' selected="selected">Cualquiera</option>
+                <?php
+                  $combo = @$conexion->obtenerlista($querys3->getTypesOfExpenses());
+                  $funciones->llenarCombo($combo);
+                ?>
               </select>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12">
-          <button id="btnBusquedaGastos" type="button" class="btn btn-success btn-sm pull-right mt-2em ml-05em" ><i class="fa fa-eraser"></i> Resetear</button>
-          <button id="btnNvoGasto" type="button" class="btn btn-primary btn-sm pull-right mt-2em" ><i class="fa fa-search"></i> Buscar</button>
+          <button id="resetSearchForm" type="button" class="btn btn-success btn-sm mt-2em" ><i class="fa fa-eraser"></i>&nbsp;Borrar</button>
+          <button id="searchExpense" type="button" class="btn btn-primary btn-sm mt-2em" ><i class="fa fa-search"></i>&nbsp;Buscar</button>
+          <button id="cancelSearch" type="button" class="btn btn-danger btn-sm mt-2em" ><i class="fa fa-times"></i>&nbsp;Cancelar</button>
         </div>
-      </div>
-      <div id="frmGasto" class="row cntntFrm mt-1em" style="display:none;">
-        <h3 class="ml-1em mt-0">Nuevo gasto</h3><br>
-        <div class="col-lg-12">
-          <div class="col-lg-4">
-            <div class="form-group">
-              <label>Propiedad</label>
-              <select class="form-control select2" style="width: 100%;">
-                <option value="0" selected="selected">Seleccionar</option>
-                <option value="1" >Propiedad 1</option>
-                <option value="2" >Proiedad 2</option>
-                <option value="3" >Proiedad 3</option>
-                <option value="4" >Proiedad 4</option>
-                <option value="5" >Proiedad 5</option>
-                <option value="6" >Proiedad 6</option>
-                <option value="7" >Proiedad 7</option>
-                <option value="8" >Proiedad 8</option>
-                <option value="9" >Proiedad 9</option>
-                <option value="10" >Proiedad 10</option>
-                <option value="11" >Proiedad 11</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <div class="form-group">
-              <label for="txtFolio">Tipo de gasto</label>
-              <select class="form-control select2" style="width: 100%;">
-                <option value="0" selected="selected">Seleccionar</option>
-                <option value="1" >Pago Agua</option>
-                <option value="2" >Pago Luz</option>
-                <option value="3" >Fontanería</option>
-                <option value="4" >Gastos de operación</option>
-                <option value="5" >Publicidad</option>
-                <option value="6" >Otros Gastos</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <div class="form-group">
-              <label for="txtMonto">Monto</label>              
-              <input type="text" id="txtMonto" name="txtMonto" class="form-control">
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <div class="form-group">
-              <label for="txtFecha">Fecha</label>              
-              <input type="text" id="txtFecha" name="txtFecha" class="form-control" >
-            </div>
-          </div>
-
-          <div class="col-lg-12">
-            <div class="form-group">
-              <label for="txtObservaciones">Obervaciones</label>              
-              <textarea id="txtObservaciones" name="txtObservaciones" class="form-control" rows="3"></textarea>
-            </div>
-          </div>
-
-          <div class="col-lg-12 text-center">
-              <button id="btnGuardaGasto" class="btn btn-primary btn-sm">Guardar</button>
-              <button id="btnCancelaGasto" class="btn btn-secondary btn-sm">Cancelar</button>
-          </div>
-        </div>
-      </div>
+      </form>
       <hr>
       <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-          <h3>Gastos del mes de <cite class="cite">Junio</cite></h3>
-        </div>
-        <div id="cntnListGastos" class="col-lg-12 col-md-12 col-sm-12">
-          <table id="listGastos" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th class="text-center">Propiedad</th>
-                  <th class="text-center">Tipo de gasto</th>
-                  <th class="text-center">Descripción</th>
-                  <th class="text-center">Monto</th>
-                  <th class="text-center">Fecha</th>
-                  <th class="text-center">Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
+        <div id="cntnListExpenses" class="col-lg-12 col-md-12 col-sm-12">
 
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                <tr>
-                  <td class="text-center">Casa Num. 1, Fracc. Nombre</td>
-                  <td class="text-center">Fontanería</td>
-                  <td class="text-center">Cambio de llaves de lavabo</td>
-                  <td class="text-right">$500.00</td>
-                  <td class="text-center">13-06-2019</td>
-                  <td class="text-center"><button type="button" class="btn btn-success btn-sm" title="Comprobante de gasto"><i class="fa fa-file-text-o"></i></button></td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th class="text-center">Propiedad</th>
-                  <th class="text-center">Tipo de gasto</th>
-                  <th class="text-center">Descripción</th>
-                  <th class="text-center">Monto</th>
-                  <th class="text-center">Fecha</th>
-                  <th class="text-center">Acciones</th>
-                </tr>
-                </tfoot>
-              </table>
         </div>
       </div>
     </div>
 
     <div class="box-footer">
      </div>
-  </div>  
+  </div>
 <!-- /.row -->
 </section>
 <!-- /.content -->
 
 <script type="text/javascript">
-  window.onload = function() {    
-    //Initialize Select2 Elements
-    selectFrm('select2');
+  window.onload = function() {
+    listExpenses();
 
-    //frmNumerico('txtMonto');
-
-    //Inicializa DatePicker
-    activaDatePicker('txtFecha');
-
-    loadDataTable('listGastos', true);
+    dateControl('date');
   }
 </script>

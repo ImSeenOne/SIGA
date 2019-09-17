@@ -139,9 +139,28 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	//ELIMINA UNA LICITACIÓN
 	case 10:
 		$id = $funciones->limpia($_POST['id']);
 		if(@$conexion->consulta($querys->deleteBidding($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
+	//ELIMINA UN TIPO DE GASTO
+	case 11:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deleteTypeOfExpenses($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
+
+	case 12:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deleteExpense($id)) == 0){
 			$jsondata['resp'] = 0;
 		} else {
 			$jsondata['resp'] = 1;
