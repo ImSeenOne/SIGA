@@ -424,14 +424,13 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
-	public function updatePPConcept($physprog, $id_concept, $quantity){
-		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = '".$quantity."', id_concepto = '".$id_concept."' WHERE id_avance_fisico = ".$physprog;
+	public function updatePPConcept($id, $quantity){
+		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = ".$quantity." WHERE id_avance_concepto = ".$id;
 		return $strQuery;
 	}
 
-	public function deletePPConcept($physprog, $concept, $quantity){
-		$strQuery = 'UPDATE tbl_avance_fisico_conceptos (id_avance_fisico, id_concepto, cantidad) ';
-		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", '.$quantity.');';
+	public function deletePPConcept($id){
+		$strQuery = 'UPDATE tbl_avance_fisico_conceptos SET cantidad = 0 WHERE id_avance_concepto = '.$id;
 		return $strQuery;
 	}
 

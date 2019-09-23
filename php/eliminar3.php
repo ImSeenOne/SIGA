@@ -166,7 +166,16 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	case 20:
+		$idR = $funciones->limpia($_POST['id_r_concept']);
+		if(@$conexion->consulta($querys->deletePPConcept($idR)) == 0){
+			$jsondata['resp'] = 0;
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
 }
+
 
 header('Content-type: application/json; charset=utf-8');
 echo json_encode($jsondata);

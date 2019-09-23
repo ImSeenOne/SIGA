@@ -627,8 +627,8 @@ break;
 
 	//AGREGA UN NUEVO AVANCE FISICO
 	case 15:
-		$dateStart = date('Y-m-d',strtotime($funciones->limpia($_POST['dateStart'])));
-		$dateFinish = date('Y-m-d',strtotime($funciones->limpia($_POST['dateFinish'])));
+		$dateStart = date('Y-m-d',strtotime(str_replace('/', '-', $funciones->limpia($_POST['dateStart']))));
+		$dateFinish = date('Y-m-d',strtotime(str_replace('/', '-', $funciones->limpia($_POST['dateFinish']))));
 
 		$work = $funciones->limpia($_POST['work']);
 
@@ -638,17 +638,17 @@ break;
 
 		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
 
-		if($conexion->consulta($querys->addNewPhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
+		if(@$conexion->consulta($querys->addNewPhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		} else {
 			$current = $conexion->ultimoid();
 			$folio = 'RA'.str_pad($current, 5, '0', STR_PAD_LEFT);
-			$conexion->consulta($querys->addFolioToNewPhysProg($current, $folio));
+			@$conexion->consulta($querys->addFolioToNewPhysProg($current, $folio));
 
 			$transactions = true;
 			for ($i=0; $i < sizeof($concepts); $i++) {
-				if($conexion->consulta($querys->addPPConcept($current, $concepts[$i], $quantities[$i])) == 0){
+				if(@$conexion->consulta($querys->addPPConcept($current, $concepts[$i], $quantities[$i])) == 0){
 					$transactions = false;
 				}
 			}
@@ -665,8 +665,8 @@ break;
 	case 16:
 		$id = $funciones->limpia($_POST['id']);
 
-		$dateStart = date('Y-m-d',strtotime($funciones->limpia($_POST['dateStart'])));
-		$dateFinish = date('Y-m-d',strtotime($funciones->limpia($_POST['dateFinish'])));
+		$dateStart = date('Y-m-d',strtotime(str_replace('/', '-', $funciones->limpia($_POST['dateStart']))));
+		$dateFinish = date('Y-m-d',strtotime(str_replace('/', '-', $funciones->limpia($_POST['dateFinish']))));
 
 		$work = $funciones->limpia($_POST['work']);
 
@@ -676,18 +676,22 @@ break;
 
 		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
 
-		if($conexion->consulta($querys->updatePhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
+		$r_concepts = json_decode($funciones->limpia($_POST['r_concepts']),true);
+
+		if($conexion->consulta($querys->updatePhysProg($id, $work, $resident, $dateStart, $dateFinish)) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		} else {
 			$transactions = true;
 			for ($i=0; $i < sizeof($concepts); $i++) {
-				$conexion->consulta('SELECT id_concepto FROM tbl_avance_fisico_conceptos WHERE id_concepto = '.$concepts[$i]);
-				if($conexion->numregistros() < 1){
+				$respC = @$conexion->obtenerlista('SELECT id_concepto FROM tbl_avance_fisico_conceptos WHERE id_concepto = '.$concepts[$i].' AND id_avance_fisico = '.$id);
+				$totRegs = $conexion->numregistros();
+				if($totRegs == 0 && !isnull($r_concepts[$i])){
 					if($conexion->consulta($querys->addPPConcept($id, $concepts[$i], $quantities[$i])) == 0){
+						$transactions = false;
 					}
 				} else {
-					$conexion->consulta($querys->updatePPConcept($id, $concepts[$i], $quantities[$i]));
+					$conexion->consulta($querys->updatePPConcept($r_concepts[$i], $quantities[$i]));
 				}
 			}
 			$jsondata['resp'] = 1;

@@ -1341,7 +1341,8 @@ $('#addToTable').click(function(){
 			'<td class="text-center">'+code+'</td>'+
 			'<td class="text-center">'+concept+'</td>'+
 			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control text-center"style="display: block;" min="1" > </td>'+
-			'<td> <button type="button" name="button" class="btn btn-danger text-center" onclick="deleteTR(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
+			'<td> <button type="button" name="button" class="btn btn-danger text-center" onclick="deleteTR(\''+id+'\')" onmousedown="deletePPConcept(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
+			'<td id="sillyColumn'+id+'" style="display: none;"> </td>'+
 			'</tr>');
 		} else {
 			swal({
@@ -1373,6 +1374,7 @@ $('#addToTable').click(function(){
 
 		let idConcept = [];
 		let quantConcept = [];
+		let idRConcept = [];
 
 		$("#listConcepts tbody tr").each(function (index) {
 	    $(this).children("td").each(function (index2) {
@@ -1383,6 +1385,11 @@ $('#addToTable').click(function(){
 
 	        case 3:
 					quantConcept.push($(this).children().val());
+					break;
+
+					case 5:
+					console.log($(this).html());
+					idRConcept.push($(this).html());
 					break;
 	      }
 	    });
@@ -1404,6 +1411,8 @@ $('#addToTable').click(function(){
 
 		let quantities = JSON.stringify(quantConcept);
 
+		let r_concepts = JSON.stringify(idRConcept);
+
 		let params = {
 									'id':id,
 									'resident':resident,
@@ -1411,6 +1420,7 @@ $('#addToTable').click(function(){
 									'dateStart':dateStart,
 									'dateFinish':dateFinish,
 									'opcion':opcion,
+									'r_concepts': r_concepts,
 									'concepts':concepts,
 									'quantities':quantities}
 
@@ -1420,15 +1430,21 @@ $('#addToTable').click(function(){
 				data:    params,
 				dataType: 'json',
 				success: function(resp){
-					$('#respServer').html("");
-					resetForm('newPhysProg');
-					listPhysProg();
-					$('#newPhysProg').slideToggle();
-					$('#btnNewPhysProg').slideToggle();
-					$("#listConcepts tbody tr").each(function (index) {
-						deleteTR($(this).attr('id'));
-					});
-					$('#opcion').val("15");
+					if(resp.resp == 1){
+						$('#respServer').html("");
+						resetForm('newPhysProg');
+						listPhysProg();
+						$('#newPhysProg').slideToggle();
+						$('#btnNewPhysProg').slideToggle();
+						$("#listConcepts tbody tr").each(function (index) {
+							deleteTR($(this).attr('id'));
+						});
+						$('#opcion').val("15");
+						fillConcepts();
+				} else {
+					$("#respServer").html(resp.msg);
+				}
+
 				}
 		});
 	});
@@ -1460,6 +1476,31 @@ $('#addToTable').click(function(){
     });
 	}
 
+	function fillConceptsAlt(){
+		$('#waitingConcepts').html(cargando);
+		$('#concept').slideToggle();
+		var work = $('#work').val();
+		let params = {'work': work, 'opt': 21}
+		let element = '';
+		$.ajax({
+				async: false,
+				type:    'POST',
+				url:     urlConsultas3,
+				data:    params,
+				dataType: 'json',
+				success: function(resp){
+						element+= '<option value="0">Seleccionar...</option>';
+						$.each(resp.conceptos,function(i,y){
+								element+= '<option value="' + y['id'] + '"data-quant="'+y['cantidad']+'" data-code="'+y['codigo']+'">' + y['concepto'] + '</option>';
+						});
+						$("#concept").empty();
+						$('#concept').append(element);
+						$('#concept').slideToggle();
+						$('#waitingConcepts').html("");
+				}
+		});
+	}
+
 $('#btnNewPhysProg').click(function(){
   $('#newPhysProg').slideToggle();
 	$('#btnNewPhysProg').slideToggle();
@@ -1483,13 +1524,18 @@ function listPhysProg(){
 }
 
 $('#cancelAllConcepts').click(function(){
-	$("#listConcepts tbody tr").each(function (index) {
+	$("#listConcepts tbody tr").each(function(index) {
 		deleteTR($(this).attr('id'));
 	});
 	$('#opcion').val("15");
 	$('#id').html("");
-	$('#newPhysProg').slideToggle();
-	$('#btnNewPhysProg').slideToggle();
+	resetForm('newPhysProg');
+	if($('#newPhysProg').is(':hidden')){
+		$('#newPhysProg').slideToggle();
+	}
+	if($('#btnNewPhysProg').is(':visible')){
+		$('#btnNewPhysProg').slideToggle();
+	}
 });
 
 function lookDetails(id){
@@ -1510,6 +1556,7 @@ function lookDetails(id){
 				dataType: 'json',
 				success: function(resp){
 						$.each(resp.concepts,function(i,y){
+							if(y['cantidad'] > 0){
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
 								'<td class="text-center">'+y['id']+'</td>'+
@@ -1517,6 +1564,7 @@ function lookDetails(id){
 								'<td class="text-center">'+y['concepto']+'</td>'+
 								'<td class="text-center">'+y['cantidad']+'</td>'+
 								'</tr>');
+							}
 						});
 						$('#respServerModalDetail').html("");
 						$('#folioModal').html('Folio: <b>'+resp.folio+'</b>');
@@ -1557,9 +1605,7 @@ function deleteProgress(id){
 }
 
 function editProgress(id){
-	$("#listConcepts tbody tr").each(function (index) {
-		deleteTR($(this).attr('id'));
-	});
+	$("#respServer").html(cargando);
 	$.ajax({
 				beforeSend: function(){
 						$("#respServer").html(cargando);
@@ -1569,29 +1615,47 @@ function editProgress(id){
 				data: {'id':id, 'opt':8},
 				dataType: 'json',
 				success: function(resp){
+					$("#listConcepts tbody tr").each(function (index) {
+						deleteTR($(this).attr('id'));
+					});
+					console.log(resp);
 					$('#resident').val(resp.resident);
 					$('#work').val(resp.work);
+					$('#concept').select2();
 					$('#dateStart').val(resp.dateStart);
 					$('#dateFinish').val(resp.dateFinish);
+					fillConceptsAlt();
 					$.each(resp.concepts,function(i,y){
-						$('#concept').val(y['id']);
-						$('#addToTable').trigger("click");
-						$('#input'+y['id']).val(y['id']);
+						if(parseFloat(y['cantidad'])>0){
+							$('#concept').val(y['id']);
+							$('#addToTable').trigger("click");
+							$('#input'+y['id']).val(y['cantidad']);
+							$('#sillyColumn'+y['id']).text(y['rId']);
+						}
 					});
-
-					$('#concept').select2();
-
 					if($('#newPhysProg').is(':hidden')){
 						$('#newPhysProg').slideToggle();
 					}
 					if($('#btnNewPhysProg').is(':visible')){
 						$('#btnNewPhysProg').slideToggle();
 					}
-
 					$('#opcion').val("16");
 					$('#id').val(resp.id);
 					$("#respServer").html("");
 				}
+	});
+}
+
+function deletePPConcept(id_concept){
+	console.log($('#sillyColumn'+id_concept).text());
+	let id_r = $('#sillyColumn'+id_concept).text();
+	$.ajax({
+		type: 'POST',
+		data: {opt: 20, id_r_concept: id_r},
+		url: urlEliminar3,
+		dataType: 'JSON',
+		success: function(resp){
+		}
 	});
 }
 

@@ -132,7 +132,7 @@ switch($_POST['opt']){
 		$physprog = @$conexion->obtenerlista($querys3->getUsedConcept($resp['id']));
 		foreach ($physprog as $key) {
 			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
-			$datos[] = array('id' => $respC['id'], 'cantidad' => $key->cantidad);
+			$datos[] = array('id' => $respC['id'], 'cantidad' => $key->cantidad, 'rId' => $key->id);
 		}
 
 		$jsondata['concepts'] = $datos;
@@ -187,6 +187,7 @@ switch($_POST['opt']){
 	case 21:
 		$work = $funciones->limpia($_POST['work']);
 		$strQuery = 'SELECT concepto, id_presupuesto_obra as id, codigo, cantidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_obra = '.$work;
+
 		$resp = @$conexion->obtenerlista($strQuery);
 		$totRegs = $conexion->numregistros();
 

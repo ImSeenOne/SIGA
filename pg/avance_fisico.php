@@ -37,8 +37,8 @@
               <label for="work" style="display: block;">Obra</label>
               <select name="work" id="work" class="form-control" style="width: 100%;" onchange="fillConcepts()">
                 <?php
-                $combo = @$conexion->obtenerlista($querys1->loadCboObras());
-                $funciones->llenarcombo($combo);
+                  $combo = @$conexion->obtenerlista($querys1->loadCboObras());
+                  $funciones->llenarcombo($combo);
                 ?>
               </select>
             </div>
@@ -48,12 +48,12 @@
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-              <label class="text-center" for="dateStart">Fecha de inicio <sub>del avance</sub> </label>
-              <input required class="form-control" type="date" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
+              <label class="text-center" for="dateStart">Fecha de inicio</label>
+              <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-              <label class="text-center" for="dateFinish">Fecha de finalización <sub>del avance</sub></label>
-              <input required class="form-control" type="date" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
+              <label class="text-center" for="dateFinish">Fecha de finalización</label>
+              <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
             </div>
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
@@ -119,13 +119,17 @@
 
 <script type="text/javascript">
   window.onload = function() {
-    fillConcepts();
+    dateControl('dateStart');
+    dateControl('dateFinish');
+
     var tbody = $("#listConcepts tbody");
     if (tbody.children().length == 0) {
         $("#listConcepts").slideToggle();
     }
-    listPhysProg();
+
     $('#concept').select2();
+    listPhysProg();
+    fillConcepts();
   };
 
 </script>
