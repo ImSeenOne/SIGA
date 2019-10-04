@@ -96,7 +96,7 @@
             <td class="text-center"><?= @$conexion->fetch_array($querys3->getTypesOfExpenses($key->id_tipo_gasto))['nombre'] ?></td>
             <td class="text-center"><?= $key->descripcion ?></td>
             <td class="text-center"><?= $key->monto ?></td>
-            <td class="text-center"><?= $key->fecha_pago ?></td>
+            <td class="text-center"><?= date("d/m/Y", strtotime($key->fecha_pago))?></td>
             <td class="text-center"><?php switch ($key->estatus) {
               case 1:
                 echo '<span class="badge progress-bar-success">Activo</span>';
