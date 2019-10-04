@@ -930,6 +930,108 @@ function deleteEmployee(id, name){
 	      });
 }
 
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+*******************FUNCIONES PARA CATEGORÍAS DE EMPLEADOS***********************
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+function listEmpCategories(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListEmpCategory').html(cargando);
+		},
+		url: 'pg/categoria_empleado_listado.php',
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+			$('#cntnListEmpCategory').html(data);
+		}
+	})
+}
+
+$('#frmEmpCategory').submit(function(event){
+
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		url: urlSubir3,
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			if(resp.resp == 1){
+				$('#respServer').html('');
+				resetForm('frmEmpCategory');
+				listEmpCategories();
+				$('#opcion').val('30');
+			}
+		}
+	});
+});
+
+function editEmpCategory(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		data: {id: id, opt: 13},
+		dataType: 'JSON',
+		url: urlConsultas3,
+		success: function(resp){
+			$('#id').val(resp.id);
+			$('#name').val(resp.name);
+			$('#workDays').val(resp.workDays);
+			$('#payment').val(resp.payment);
+			$('#payment').trigger('keyup');
+			$('#respServer').html('');
+			$('#opcion').val('30');
+		}
+	});
+}
+
+function deleteEmpCategory(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'eliminar la categoría <strong>' + name + '</strong>',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt':13};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'json',
+							success: function(resp){
+										if(resp.resp == 1){
+												listEmpCategories();
+										} else {
+											$('#respServer').html(resp.msg);
+										}
+							}
+					});
+			});
+}
+
 /**
 ********************************************************************************
 ********************************************************************************
@@ -1333,16 +1435,22 @@ $('#addToTable').click(function(){
 					$('#input'+id).attr("max", parseFloat(quant) - parseFloat(resp.used));
 				}
 		});
+		let cond = '';
+		if($('#opcion').val() == '16'){
+			cond = '<td id="sillyColumn'+id+'" style="display: none;">1</td>'
+		} else {
+			cond = '<td id="sillyColumn'+id+'" style="display: none;"> </td>';
+		}
 
 		if(!$('#'+id).length){
 			$('#listConcepts tbody').append(
 			'<tr id="'+id+'">'+
-			'<td class="text-center">'+id+'</td>'+
-			'<td class="text-center">'+code+'</td>'+
-			'<td class="text-center">'+concept+'</td>'+
-			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control text-center"style="display: block;" min="1" > </td>'+
-			'<td> <button type="button" name="button" class="btn btn-danger text-center" onclick="deleteTR(\''+id+'\')" onmousedown="deletePPConcept(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
-			'<td id="sillyColumn'+id+'" style="display: none;"> </td>'+
+			'<td >'+id+'</td>'+
+			'<td >'+code+'</td>'+
+			'<td >'+concept+'</td>'+
+			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control"style="display: block;" min="1" > </td>'+
+			'<td> <button type="button" name="button" class="btn btn-danger " onclick="deleteTR(\''+id+'\')" onmousedown="deletePPConcept(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
+			cond+
 			'</tr>');
 		} else {
 			swal({
@@ -1375,7 +1483,6 @@ $('#addToTable').click(function(){
 		let idConcept = [];
 		let quantConcept = [];
 		let idRConcept = [];
-
 		$("#listConcepts tbody tr").each(function (index) {
 	    $(this).children("td").each(function (index2) {
 	      switch (index2) {
@@ -1530,10 +1637,10 @@ $('#cancelAllConcepts').click(function(){
 	$('#opcion').val("15");
 	$('#id').html("");
 	resetForm('newPhysProg');
-	if($('#newPhysProg').is(':hidden')){
+	if($('#newPhysProg').is(':visible')){
 		$('#newPhysProg').slideToggle();
 	}
-	if($('#btnNewPhysProg').is(':visible')){
+	if($('#btnNewPhysProg').is(':hidden')){
 		$('#btnNewPhysProg').slideToggle();
 	}
 });
@@ -1559,10 +1666,10 @@ function lookDetails(id){
 							if(y['cantidad'] > 0){
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
-								'<td class="text-center">'+y['id']+'</td>'+
-								'<td class="text-center">'+y['codigo']+'</td>'+
-								'<td class="text-center">'+y['concepto']+'</td>'+
-								'<td class="text-center">'+y['cantidad']+'</td>'+
+								'<td>'+y['id']+'</td>'+
+								'<td>'+y['codigo']+'</td>'+
+								'<td>'+y['concepto']+'</td>'+
+								'<td>'+y['cantidad']+'</td>'+
 								'</tr>');
 							}
 						});
@@ -2280,9 +2387,135 @@ function cancelExpense(id, name) {
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
+/**********************************Gasolina Interna*****************************/
 /*******************************************************************************/
 /*******************************************************************************/
-/**************************FORMAT CURRENCY FUNCTIONS*****************************/
+/*******************************************************************************/
+
+function listInsFuelExps(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListInsFuelExp').html(cargando);
+		},
+		type: 'POST',
+		url: 'pg/gasolina_interna_listado.php',
+		dataType: 'HTML',
+		success: function(data){
+			$('#cntnListInsFuelExp').html(data);
+		}
+	});
+}
+
+$('#btnCancelInsFuelExp').click(function(){
+	if($('#btnNewInsFuelExp').is(':hidden')){
+		$('#btnNewInsFuelExp').slideToggle();
+	}
+
+	if($('#frmNewInsFuelExp').is(':visible')){
+		$('#frmNewInsFuelExp').slideToggle();
+	}
+	resetForm('frmNewInsFuelExp');
+});
+
+$('#btnNewInsFuelExp').click(function(){
+	if($('#btnNewInsFuelExp').is(':visible')){
+		$('#btnNewInsFuelExp').slideToggle();
+	}
+
+	if($('#frmNewInsFuelExp').is(':hidden')){
+		$('#frmNewInsFuelExp').slideToggle();
+	}
+});
+
+$('#frmNewInsFuelExp').submit(function(event){
+
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+					beforeSend: function(){
+						$('#respServer').html(cargando);
+					},
+					url: urlSubir3,
+					type: 'POST',
+					dataType: 'JSON',
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(resp){
+							if(resp.resp == 1 ){
+								if($('#btnNewInsFuelExp').is(':hidden')){
+									$('#btnNewInsFuelExp').slideToggle();
+								}
+
+								if($('#frmNewInsFuelExp').is(':visible')){
+									$('#frmNewInsFuelExp').slideToggle();
+								}
+								resetForm('frmNewInsFuelExp');
+								$('#respServer').html('');
+								$('#opcion').val('27');
+								listInsFuelExps();
+							}else{
+								$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+							}
+					}
+	});
+});
+
+function listFuelExpAssEmployees(id){
+	$('#idModal').val(id);
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListAssignedFuelExpenses').html(cargando);
+		},
+		data: {'id': id},
+		type: 'POST',
+		dataType: 'HTML',
+		url: 'pg/gasolina_interna_asignacion_modal_listado.php',
+		success: function(data){
+			$('#cntnListAssignedFuelExpenses').html(data);
+		}
+	});
+}
+
+$('#frmAssignExpense').submit(function(event){
+
+	event.preventDefault();
+
+	let formData = new FormData($(this)[0]);
+
+	$.ajax({
+		beforeSend: function(){
+			$('#respServerAssFuelExp').html(cargando);
+		},
+		url: urlSubir3,
+		type: 'POST',
+		data: formData,
+		dataType: 'JSON',
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			if(resp.resp == 1){
+				$('#respServerAssFuelExp').html('');
+				listFuelExpAssEmployees($('#idModal').val());
+				resetForm('frmAssignExpense');
+				$('#respServerAssFuelExp').html('');
+			} else {
+				$('#respServerAssFuelExp').html(resp.msg);
+			}
+		}
+	});
+});
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/**************************FORMAT CURRENCY FUNCTIONS****************************/
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/

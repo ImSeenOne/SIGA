@@ -262,7 +262,53 @@ class Querys3 {
 		return $strQuery;
 	}
 
-	//QUERY FOR ADDING RAYAS
+	//****************************************************************************
+	//****************************************************************************
+	//****************************************************************************
+	//*************************CATEGORÍA DE EMPLEADOS*****************************
+	//****************************************************************************
+	//****************************************************************************
+	//****************************************************************************
+
+	//QUERY PARA AGREGAR UNA CATEGORÍA DE EMPLEADOS
+	public function addEmployeeCategory($name, $workDays, $payment){
+		$strQuery = 'INSERT INTO tblc_categorias (nombre, dias, sueldo) VALUES (\''.$name.'\', '.$workDays.', '.$payment.')';
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER TODAS LAS CATEGORÍAS DE EMPLEADOS
+	public function listEmployeeCategories($id=''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' AND id_categoria = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tblc_categorias WHERE fecha_eliminacion IS NULL'.$cond;
+		return $strQuery;
+	}
+
+	//QUERY PARA EDITAR UNA CATEGORÍA DE EMPLEADO
+	function editEmployeeCategory($id, $name, $workDays, $payment){
+		$strQuery = 'UPDATE tblc_categorias SET nombre = \''.$name.'\',
+		dias = '.$workDays.',
+		sueldo = \''.$payment.'\'
+		WHERE (id_categoria = '.$id.')';
+		return $strQuery;
+	}
+
+	function deleteEmployeeCategory($id, $date){
+		$strQuery = 'UPDATE tblc_categorias SET fecha_eliminacion = \''.$date.'\' WHERE id_categoria = '.$id.'';
+		return $strQuery;
+	}
+
+	//****************************************************************************
+	//****************************************************************************
+	//****************************************************************************
+	//**********************************RAYA**************************************
+	//****************************************************************************
+	//****************************************************************************
+	//****************************************************************************
+
+	//QUERY FOR ADDING RAYA
 	public function addPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
 	$addedActivities, $addedActAmount, $totalAmount, $status, $observations, $employeeSelected,
 	$workSelected, $currentDate){
@@ -275,7 +321,7 @@ class Querys3 {
 	return $strQuery;
 	}
 
-	//QUERY FOR SEARCHING RAYAS
+	//QUERY FOR SEARCHING RAYA
 	public function searchPayments(){
 
 		return 'SELECT * FROM tbl_rayas';
@@ -365,7 +411,7 @@ public function getContracts($id = 0){
 	//AGREGA UN CONCEPTO Y LA CANTIDAD USADA, QUE PERTENECEN A UN AVANCE FÍSICO
 	public function addPPConcept($physprog, $concept, $quantity){
 		$strQuery = 'INSERT INTO tbl_avance_fisico_conceptos (id_avance_fisico, id_concepto, cantidad) ';
-		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", '.$quantity.');';
+		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", \''.$quantity.'\');';
 		return $strQuery;
 	}
 	//OBTIENE UN AVANCE FÍSICO POR ID, O POR ID DE LA OBRA A LA QUE PERTENECE
@@ -425,7 +471,7 @@ public function getContracts($id = 0){
 	}
 
 	public function updatePPConcept($id, $quantity){
-		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = ".$quantity." WHERE id_avance_concepto = ".$id;
+		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = ".$quantity." WHERE id_avance_concepto = ".$id."";
 		return $strQuery;
 	}
 
@@ -609,6 +655,61 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************GASOLINA INTERNA********************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	function listInsFuelExp($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' AND id_gas_int = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	function addInsFuelExpFolio($id, $folio){
+		$strQuery = 'UPDATE tbl_gasolina_interna SET folio = \''.$folio.'\' WHERE id_gas_int = '.$id;
+		return $strQuery;
+	}
+
+	function addInsFuelExp($dateS, $dateF, $magnaLiters, $premiumLiters,
+													$dieselLiters, $magnaPrice, $premiumPrice, $dieselPrice,
+													$status, $amount, $date){
+		$strQuery = 'INSERT INTO tbl_gasolina_interna ';
+		$strQuery.= '(fecha_inicio, fecha_final, litros_magna, litros_premium,
+									litros_diesel, precio_magna, precio_premium, precio_diesel, status, monto,
+									fecha_registro) ';
+		$strQuery.= 'VALUES (\''.$dateS.'\', \''.$dateF.'\',
+									'.$magnaLiters.', '.$premiumLiters.', '.$dieselLiters.',
+									'.$magnaPrice.', '.$premiumPrice.', '.$dieselPrice.', '.$status.',
+									'.$amount.', \''.$date.'\')';
+
+		return $strQuery;
+	}
+
+	function getInsFuelExpEmployees($idInsFuelExp = ''){
+		$cond = '';
+
+		if($idInsFuelExp != ''){
+			$cond = ' AND id_gas_int = '.$idInsFuelExp;
+		}
+
+		$strQuery = 'SELECT * FROM tbl_gas_int_empleados WHERE fecha_eliminado IS NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	function addAssignedFuelExpEmployee($idEmployee, $idInsFuelExp, $liters, $amount, $fuelType, $machineryType, $location){
+		$strQuery = 'INSERT INTO `demosystem_siga`.`tbl_gas_int_empleados`
+									(id_empleado, id_gas_int, litros, monto_asignado, tipo_combustible, tipo_vehiculo, ubicacion)
+									VALUES ('.$idEmployee.', '.$idInsFuelExp.', '.$liters.', '.$amount.', '.$fuelType.', '.$machineryType.', \''.$location.'\')';
+		return $strQuery;
+	}
 
 	/****************************************************************************/
 	/****************************************************************************/
@@ -618,6 +719,21 @@ public function getContracts($id = 0){
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+
+	public function listMachineryTypes($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' AND id_tipo_maquinaria = '.$id;
+		}
+		$strQuery = 'SELECT id_tipo_maquinaria as id, nombre FROM tblc_tipo_maquinaria WHERE fecha_eliminado IS NULL'.$cond;
+		return $strQuery;
+	}
+
+	function fillSelectMachineryTypes($results){
+		foreach($results as $result){
+			echo '<option value="'.$result->id.'">'.$result->nombre.'</option>';
+		}
+	}
 
 	public function listConcepts(){
 		$strQuery = 'SELECT id_presupuesto_obra as id, codigo as codigo, id_obra as obra, concepto as concepto FROM tbl_presupuesto_obra ';

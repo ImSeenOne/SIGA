@@ -171,6 +171,16 @@ switch($_POST['opt']){
 		$jsondata['id'] = $resp['id_tipo_gasto'];
 		$jsondata['name'] = $resp['nombre'];
 	break;
+
+	//FUNCION PARA OBTENER LOS DATOS DE UNA CATEGORÍA DE EMPLEADOS
+	case 13:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listEmployeeCategories($id));
+		$jsondata['id'] = $resp['id_categoria'];
+		$jsondata['name'] = $resp['nombre'];
+		$jsondata['workDays'] = $resp['dias'];
+		$jsondata['payment'] = $resp['sueldo'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:
@@ -241,6 +251,7 @@ switch($_POST['opt']){
 		}
 		$jsondata['properties'] = $datos;
 	break;
+
 }
 
 header('Content-type: application/json; charset=utf-8');
