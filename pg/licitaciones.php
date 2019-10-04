@@ -42,7 +42,7 @@
           </div>
 
           <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12 col-xl-12">
-            <label class="text-center" for="propDelivery">Entrega propuesta</label>
+            <label class="text-center" for="propDelivery">Fecha de entrega propuesta</label>
             <input required type="text" id="propDelivery" name="propDelivery" class="form-control" />
           </div>
 
