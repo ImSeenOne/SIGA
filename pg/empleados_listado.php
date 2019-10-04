@@ -23,7 +23,7 @@
     <tbody>
       <?php foreach ($listado as $key) { ?>
         <tr>
-          <td><?= $key->nombre ?></td>
+          <td><?= $key->nombre.' '.$key->apellido_paterno.' '.$key->apellido_materno ?></td>
           <td><?= $key->rfc ?></td>
           <td><?= $key->tipo ?></td>
           <td><?= $key->imss ?></td>
