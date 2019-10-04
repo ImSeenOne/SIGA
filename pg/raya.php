@@ -74,7 +74,7 @@
                 </select>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="payment">Sueldo<sub>(por día)</sub> </label>
+                <label for="payment">Sueldo(por día) </label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
               </div>
 
