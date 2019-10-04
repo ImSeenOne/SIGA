@@ -8,12 +8,12 @@
 <table id="listPhysicalProgress" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
-      <th class="text-center" scope="col" style="width: 5%;">ID</th>
-      <th class="text-center" scope="col" style="width: 5%;">Folio</th>
-      <th class="text-center" scope="col" style="width: 7%;">Residente</th>
-      <th class="text-center" scope="col" style="width: 20%;">Obra</th>
-      <th class="text-center" scope="col" style="width: 8%;">Porcentaje de avance</th>
-      <th class="text-center" scope="col" style="width: 35%;">Período</th>
+      <th scope="col" style="width: 5%;">ID</th>
+      <th scope="col" style="width: 5%;">Folio</th>
+      <th scope="col" style="width: 7%;">Residente</th>
+      <th scope="col" style="width: 20%;">Obra</th>
+      <th scope="col" style="width: 8%;">Porcentaje de avance</th>
+      <th scope="col" style="width: 35%;">Período</th>
       <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
       <th class="text-center" scope="col" style="width: 20%;">Acciones</th>
       <?php } ?>
@@ -22,10 +22,10 @@
   <tbody>
     <?php foreach ($listado as $key) {?>
         <tr>
-          <td class="text-center"><?= $key->id ?></td>
-          <td class="text-center"><?= $key->folio ?></td>
-          <td class="text-center"><?= $key->residente ?></td>
-          <td class="text-center">
+          <td><?= $key->id ?></td>
+          <td><?= $key->folio ?></td>
+          <td><?= $key->residente ?></td>
+          <td>
             <?php
               $resp = @$conexion->fetch_array($querys3->getListadoObras($key->id_obra));
               echo $resp['nombre'];

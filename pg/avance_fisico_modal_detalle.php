@@ -15,10 +15,10 @@
         <div class="col-lg-12 col-sm-12 col-md-12">
             <table id="listConceptsDetail" class="table table-bordered table-striped table-hover">
               <thead>
-                <th style="width:4%" scope="col" class="text-center">ID</th>
-                <th style="width:8%" scope="col" class="text-center">Código</th>
-                <th scope="col" class="text-center">Concepto</th>
-                <th style="width:23%" scope="col" class="text-center">Cantidad</th>
+                <th style="width:4%" scope="col">ID</th>
+                <th style="width:8%" scope="col">Código</th>
+                <th scope="col">Concepto</th>
+                <th style="width:23%" scope="col">Cantidad</th>
               </thead>
               <tbody>
               </tbody>
