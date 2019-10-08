@@ -33,7 +33,7 @@
             <div class="row col-lg-12">
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label for="txtName">Nombre</label>
+                  <label for="txtName">Nombre de la obra</label>
                   <input type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="45">
                   <div id="reqTxtName" class="text-danger"></div>
                 </div>

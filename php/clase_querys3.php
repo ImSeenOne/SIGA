@@ -788,6 +788,13 @@ public function getContracts($id = 0){
 		 return $strQuery;
 	 }
 
+	 public function llenarComboEmpleadoCat($resultados){
+		 foreach($resultados as $resultado){
+			 echo '
+			 <option value="'.$resultado->id.'" name="'.$resultado->valor.'" data-cat="'.$resultado->category.'">'.$this->cdetectUtf8($resultado->valor).'</option>';
+			 }
+	 }
+
 	 public function llenarcomboPropiedades($resultados) {
 		 foreach($resultados as $resultado){
 			 echo '

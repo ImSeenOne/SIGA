@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle">Asignación de gastos</h5>
+        <h5 class="modal-title" id="modalTitle">Asignación de combustible</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -17,7 +17,7 @@
                 <option value="0">Selecciona una opción...</option>
                 <?php
                 $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados());
-                $funciones->llenarComboEmpleadoCat($combo);
+                $querys3->llenarComboEmpleadoCat($combo);
                 ?>
               </select>
             </div>

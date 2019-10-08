@@ -150,9 +150,9 @@
 
 <script type="text/javascript">
   window.onload = function() {
-    //listInsFuelExps();
+    listInsFuelExps();
     dateControl('dateStart');
-    //dateControl('dateFinish');
+    dateControl('dateFinish');
     $('#assignExpenseModal').on('shown.bs.modal', function () {
       $('#modalUser').trigger('focus');
     });
