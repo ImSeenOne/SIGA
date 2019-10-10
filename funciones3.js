@@ -211,51 +211,41 @@ function work_list(){
 
 //ESTA FUNCIÓN AGREGA UNA NUEVA OBRA
 $('#btnSaveWork').on('click',function(){
-	let validity = false;
-	validity = ($('#txtName').checkValidity()) ? true : false;
-	validity = ($('#inputType').checkValidity()) ? true : false;
-	validity = ($('#txtDependency').checkValidity()) ? true : false;
-	validity = ($('#inputAmount').checkValidity()) ? true : false;
-	validity = ($('#date1').checkValidity()) ? true : false;
-	validity = ($('#date2').checkValidity()) ? true : false;
-	validity = ($('#txtName').checkValidity()) ? true : false;
 
-
-    let formData = new FormData(document.getElementById('frmWork'));
-		if(validity){
+    // let formData = new FormData($(this)[0]);
+		if($('#frmWork')[0].checkValidity()){
 			$.ajax({
 	      beforeSend: function(){
 	        $('#respServer').html(cargando);
 	      },
 	      url: urlSubir3,
 	      type: 'POST',
-	      dataType: 'JSON', //<---- REGRESAR A JSON
+	      dataType: 'html', //<---- REGRESAR A JSON
 	      data: formData,
 	      cache: false,
 	      contentType: false,
 	      processData: false,
 	      success: function(resp){
 					console.log(resp);
-	          $('#respServer').empty();
-	          if(resp.resp == 1){
-							$('#frmWork').slideToggle();
-						  $('#btnNewWork').slideToggle();
-							if(!$('#btnNewWork').hasClass('hide')){
-								$('#btnSavePO').addClass('hide');
-								$('#btnSaveEI').addClass('hide');
-								$('#btnSaveMO').addClass('hide');
-							}
-	            work_list();
-	            $('#opcion').val(3);
-	            resetForm('frmWork');
-	          }else{
-	            $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
-	          }
+	          // $('#respServer').empty();
+	          // if(resp.resp == 1){
+						// 	$('#frmWork').slideToggle();
+						//   $('#btnNewWork').slideToggle();
+						// 	if(!$('#btnNewWork').hasClass('hide')){
+						// 		$('#btnSavePO').addClass('hide');
+						// 		$('#btnSaveEI').addClass('hide');
+						// 		$('#btnSaveMO').addClass('hide');
+						// 	}
+	          //   work_list();
+	          //   $('#opcion').val(3);
+	          //   resetForm('frmWork');
+	          // }else{
+	          //   $('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+	          // }
 	      }
 	    });
 		} else {
-			$('#reqFormWork').html("Complete todos los campos");
-			$('#reqFormWork').addClass('text-danger');
+			console.log('no es valido');
 		}
 
 });
@@ -318,14 +308,14 @@ function editarRegObra(id){
 			$('#btnSavePO').data('src',srcPO);
 			$('#btnSaveEI').data('src',srcEI);
 			$('#btnSaveMO').data('src',srcMO);
-			if($('#btnSavePO').hasClass('hidden')){
+			if($('#btnSavePO').hasClass('hide')){
 
-				$('#btnSavePO').removeClass('hidden');
-				$('#btnSaveEI').removeClass('hidden');
-				$('#btnSaveMO').removeClass('hidden');
+				$('#btnSavePO').removeClass('hide');
+				$('#btnSaveEI').removeClass('hide');
+				$('#btnSaveMO').removeClass('hide');
 			}
 			$('#opcion').val('9');
-      }
+        }
   });
 	$('#frmWork').slideToggle();
   $('#btnNewWork').slideToggle();
@@ -2461,104 +2451,6 @@ $('#frmAssignExpense').submit(function(event){
 		}
 	});
 });
-
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
-/****************************CATÁLOGO STATUS GERENCIA***************************/
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
-
-function listStatusInsFuel(){
-	$.ajax({
-		beforeSend: function(){
-			$('#cntnListStatusInsFuel').html(cargando);
-		},
-		type: 'POST',
-		dataType: 'HTML',
-		url: 'pg/status_gerencia_listado.php',
-		success: function(resp){
-			$('#cntnListStatusInsFuel').html(resp);
-		}
-	});
-}
-
-$('#frmStatus').submit(function(event){
-	event.preventDefault();
-
-	let formData = new FormData($(this)[0]);
-
-	$.ajax({
-					beforeSend: function(){
-						$('#respServer').html(cargando);
-					},
-					url: urlSubir3,
-					type: 'POST',
-					dataType: 'JSON',
-					data: formData,
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function(resp){
-							if(resp.resp == 1 ){
-								resetForm('frmStatus');
-								$('#respServer').html('');
-								$('#opcion').val('');
-								listStatusInsFuel();
-								$('#opcion').val('31');
-							}else{
-								$('#respServer').html(resp.msg);
-							}
-					}
-	});
-});
-
-function editInsFuelStatus(id){
-	$.ajax({
-		beforeSend: function(){
-			$('#respServer').html(cargando);
-		},
-		url: urlConsultas3,
-		type: 'POST',
-		dataType: 'JSON',
-		data: {opt: 14, id: id},
-		success: function(resp){
-			$('#respServer').html('');
-			$('#name').val(resp.name);
-			$('#id').val(resp.id);
-			$('#opcion').val('32');
-		}
-	});
-}
-
-function deleteInsFuelStatus(id, name) {
-	swal({
-				html: true,
-				title: '¿Está seguro?',
-				text: 'Se cancelará el status <strong>#' + id + '</strong>: \''+ name +'\'',
-				type: 'warning',
-				showCancelButton: true,
-				cancelButtonClass: 'btn-primary',
-				confirmButtonColor: '#DD6B55',
-				confirmButtonText: 'Aceptar',
-				cancelButtonText: 'Cancelar',
-				closeOnConfirm: true
-			},
-			function(){
-					let params = {'id':id, 'opt': 14};
-					$.ajax({
-							type:    'POST',
-							url:     urlEliminar3,
-							data:    params,
-							dataType: 'JSON',
-							success: function(resp){
-								listStatusInsFuel();
-							}
-					});
-	});
-}
-
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/

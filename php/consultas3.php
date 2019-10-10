@@ -181,6 +181,13 @@ switch($_POST['opt']){
 		$jsondata['workDays'] = $resp['dias'];
 		$jsondata['payment'] = $resp['sueldo'];
 	break;
+	//FUNCIÓN PARA OBTENER LOS DATOS DE UN STATUS DE GERENCIA
+	case 14:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listInsFuelExpStatus($id));
+		$jsondata['id'] = $resp['id_status'];
+		$jsondata['name'] = $resp['nombre'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:

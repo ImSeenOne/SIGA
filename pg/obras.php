@@ -34,7 +34,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="txtName">Nombre de la obra</label>
-                  <input type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="45">
+                  <input required type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="45">
                   <div id="reqTxtName" class="text-danger"></div>
                 </div>
               </div>
@@ -42,7 +42,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="inputType">Tipo</label>
-                  <select id="inputType" name="inputType" class="form-control">
+                  <select required id="inputType" name="inputType" class="form-control">
                     <!-- <option selected>Escoger un tipo</option> -->
                     <option value="1">Licitación</option>
                     <option value="2">Asignación directa</option>
@@ -55,7 +55,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="txtDependency">Dependencia</label>
-                  <input type="text" maxlength="50" id="txtDependency" name="txtDependency" class="form-control" placeholder="Dependencia">
+                  <input required type="text" maxlength="50" id="txtDependency" name="txtDependency" class="form-control" placeholder="Dependencia">
                   <div id="reqTxtDependency" class="text-danger"></div>
                 </div>
               </div>
@@ -63,7 +63,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="inputAmount">Monto</label>
-                  <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" type="text" id="inputAmount" name="inputAmount" class="form-control"/>
+                  <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" type="text" id="inputAmount" name="inputAmount" class="form-control"/>
                   <div id="reqInputAmount" class="text-danger"></div>
                 </div>
               </div>
@@ -72,14 +72,14 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="">Fecha inicio</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="date" aria-label="Fecha de inicio" class="form-control" value="<?= date('Y-m-d') ?>">
+                  <input required onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de inicio" id = "date1" name="date1" type="date" aria-label="Fecha de inicio" class="form-control" value="<?= date('Y-m-d') ?>">
                   <div id="reqDateStart" class="text-danger"></div>
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="date2">Fecha finalización</label>
-                  <input onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de termino" id = "date2" name="date2" type="date" aria-label="Fecha de finalización" class="form-control">
+                  <input required onkeypress="return isNumberKey(event)" data-toggle="tooltip" data-placement="right" title="Fecha de termino" id = "date2" name="date2" type="date" aria-label="Fecha de finalización" class="form-control">
                   <div id="reqDateFinish" class="text-danger"></div>
                 </div>
               </div>
@@ -94,11 +94,14 @@
                 <div class="form-group">
                   <label for="addedType">Tipo agregado</label>
                   <select class="custom-select form-control" name="addedType" id="addedType">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <?php
+                      $lista =$conexion->obtenerlista("SELECT id_tipo_agregado id, nombre valor FROM tblc_tipo_agregado");
+                      $funciones->llenarcombo($lista);
+                    ?>
                   </select>
                 </div>
               </div>
+              <div id="reqFormWork" class="text-danger"></div>
             </div>
               <div class="row col-lg-12" hidden>
                 <div class="col-lg-3" hidden>

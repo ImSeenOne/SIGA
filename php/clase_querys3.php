@@ -711,6 +711,37 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
+	//****************************************************************************
+	//****************************************************************************
+	//***********************QUERYS PARA CATÁLOGO STATUS**************************
+	//****************************************************************************
+	//****************************************************************************
+
+	public function listInsFuelExpStatus($id=''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' AND id_status = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tblc_status_gerencia WHERE fecha_eliminado IS NULL'.$cond;
+
+		return $strQuery;
+	}
+
+	public function addInsFuelExpStatus($name){
+		$strQuery = 'INSERT INTO tblc_status_gerencia (nombre) VALUES (\''.$name.'\');';
+		return $strQuery;
+	}
+
+	public function updateInsFuelExpStatus($id, $name){
+		$strQuery = 'UPDATE tblc_status_gerencia SET nombre = \''.$name.'\' WHERE id_status = '.$id.';';
+		return $strQuery;
+	}
+
+	public function deleteInsFuelStatus($id, $date){
+		$strQuery = 'UPDATE tblc_status_gerencia SET fecha_eliminado = \''.$date.'\' WHERE id_status = '.$id.';';
+		return $strQuery;
+	}
+
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
@@ -719,6 +750,14 @@ public function getContracts($id = 0){
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+
+
+
+	public function fillSelectInsFuelExpStatus($results){
+		foreach ($results as $result) {
+			echo '<option value ="'.$result->id_status.'">'.$result->nombre.'</option>';
+		}
+	}
 
 	public function listMachineryTypes($id = ''){
 		$cond = '';
@@ -729,7 +768,7 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
-	function fillSelectMachineryTypes($results){
+	public function fillSelectMachineryTypes($results){
 		foreach($results as $result){
 			echo '<option value="'.$result->id.'">'.$result->nombre.'</option>';
 		}

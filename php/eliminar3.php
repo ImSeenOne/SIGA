@@ -175,6 +175,15 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	case 14:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deleteInsFuelStatus($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar eliminar, intente de nuevo más tarde';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
 	case 20:
 		$idR = $funciones->limpia($_POST['id_r_concept']);
 		if(@$conexion->consulta($querys->deletePPConcept($idR)) == 0){

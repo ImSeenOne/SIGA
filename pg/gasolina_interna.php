@@ -62,9 +62,11 @@
             <div class="form-group">
               <label for="status">Status</label>
               <select class="form-control" name="status" id="status">
-                <option value="1">Capturado</option>
-                <option value="2">Autorizado</option>
-                <option value="3">Cancelado</option>
+                <option value="0">Selecciona una opción...</option>
+                <?php
+                  $tmpS = @$conexion->obtenerlista($querys3->listInsFuelExpStatus());
+                  $querys3->fillSelectInsFuelExpStatus($tmpS);
+                 ?>
               </select>
             </div>
           </div>

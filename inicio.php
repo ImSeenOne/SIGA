@@ -7,6 +7,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>Sistema SIGA</title>
+      <link href="img/gAguilera.ico" rel="apple-touch-icon" type="image/png" sizes="32x32">
       <!-- Tell the browser to be responsive to screen width -->
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       <!-- Bootstrap 3.3.7 -->
@@ -19,8 +20,11 @@
       <!-- FANCYBOX -->
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
       <!-- jvectormap -->
+      <!--daterangepicker-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
       <!-- DataTables -->
       <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+      <link rel="stylesheet" href="bower_components/datatables.net-bs/css/select.dataTables.min.css">
       <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
       <!-- Select2 -->
       <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
@@ -32,6 +36,9 @@
            folder instead of downloading all of them to reduce the load. -->
       <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
        <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+       <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="plugins/iCheck/all.css">
+
       <!-- style -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -45,8 +52,20 @@
       <!-- Google Font -->
       <link rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href="img/gAguilera.ico" rel="icon" type="image/png" />
     </head>
+    <?php
+        if($dUsuario["tipo"] == 1){
+    ?>
     <body class="hold-transition skin-blue sidebar-mini">
+    <?php
+        }
+        else{
+    ?>
+        <body class="hold-transition skin-black sidebar-collapse sidebar-mini">
+    <?php
+        }
+    ?>
         <div class="wrapper" id="cuerpo" style="height: 100vh; overflow: hidden;">
             <?php include_once('pg/menu_cabeza.php'); ?>
             <?php include_once('pg/menu_inicio.php'); ?>
@@ -70,7 +89,7 @@
                 <div class="pull-right hidden-xs">
                     <b>Version</b> 1.0.0
                 </div>
-                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Recervados.
+                <strong>Copyright &copy; 2019 <a href="https://gruposelbor.com.mx/">Grupo Selbor</a></strong> Todos los derechos Reservados.
             </footer>
         </div>
         <!-- Google Maps -->
@@ -87,12 +106,14 @@
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- DataTables -->
         <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="bower_components/datatables.net/js/dataTables.select.min.js"></script>
         <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
         <!-- SlimScroll -->
         <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
         <!-- FastClick -->
         <script src="bower_components/fastclick/lib/fastclick.js"></script>
-
+        <!-- iCheck --->
+        <script src="plugins/iCheck/icheck.min.js"></script>
         <!-- Morris.js charts -->
         <script src="bower_components/raphael/raphael.min.js"></script>
         <script src="bower_components/morris.js/morris.min.js"></script>
@@ -103,11 +124,14 @@
         <script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
         <!-- jQuery Knob Chart -->
         <script src="bower_components/jquery-knob/dist/jquery.knob.min.js"></script>
+        <!-- ChartJS -->
+        <script src="bower_components/chart.js/Chart.js"></script>
+
         <!-- Select2 -->
         <script src="bower_components/select2/dist/js/select2.full.min.js"></script>
         <!-- daterangepicker -->
         <script src="bower_components/moment/min/moment.min.js"></script>
-        <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <!-- datepicker -->
         <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
         <!-- Bootstrap WYSIHTML5 -->
@@ -121,8 +145,12 @@
         <script src="bower_components/magnific-popup/jquery.magnific-popup.min.js"></script>
         <!--icheck-->
         <script src="plugins/iCheck/icheck.min.js"></script>
+        <!-- Validación Formularios-->
+        <!-- <script type="text/javascript" src="plugins/mdbB/js/popper.min.js"></script>
+        <script type="text/javascript" src="plugins/mdbB/js/mdb.min.js"></script> -->
         <!-- funciones -->
         <script src="js/sweetalert.min.js"></script>
+        <script src="js/simply-toast.js"></script>
         <script src="js/funciones.js" charset="UTF-8"></script>
         <script src="js/funciones2.js" charset="UTF-8"></script>
         <script src="js/funciones3.js" charset="UTF-8"></script>
