@@ -24,7 +24,7 @@
             ?>
           </td>
           <td>$<?= number_format($key->total_nomina,2) ?></td>
-          <td><?= $key->fecha_inicio ?> a <?= $key->fecha_finalizacion ?></td>
+          <td><?= date("d/m/Y", strtotime($key->fecha_inicio)) ?> a <?= date("d/m/Y", strtotime($key->fecha_finalizacion)) ?></td>
           <td>
             <?php
               switch ($key->status) {

@@ -21,7 +21,7 @@
       <tr>
         <td class="text-center"><?= $key->id_nivel ?></td>
         <td class="text-center"><?= $key->nombre ?></td>
-        <td class="text-center"><?= $key->fecha_registro ?></td>
+        <td class="text-center"><?= date("d/m/Y", strtotime($key->fecha_registro)) ?></td>
         <td class="text-center">
           <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
          	<button type="button" class="btn btn-success btn-sm" onclick="editLevel(<?= $key->id_nivel ?>)"><i class="fa fa-edit"></i></button>

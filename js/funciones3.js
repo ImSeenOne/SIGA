@@ -2553,7 +2553,11 @@ function deleteInsFuelStatus(id, name) {
 							data:    params,
 							dataType: 'JSON',
 							success: function(resp){
-								listStatusInsFuel();
+								if(resp.resp == 1){
+										listStatusInsFuel();
+								} else {
+									$('#respServer').html(resp.msg);
+								}
 							}
 					});
 	});
