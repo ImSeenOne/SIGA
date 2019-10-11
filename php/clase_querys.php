@@ -133,17 +133,45 @@ class Querys {
 
 
 	//APARTADO DE CLIENTES
+	//QUERY PARA OBTENER EL ESTATUS DE LAS PROPIEDADES INTERES DE UN CLIENTE
+	public function getEstatusPropIntCte($idCte){
+		$strQuery = 'SELECT des.nombre AS desarrollo, tep.nombre AS estatus_propiedad ';
+		$strQuery.= 'FROM tbl_interes_cliente AS tic ';
+		$strQuery.= 'INNER JOIN tblc_propiedades AS prop ';
+		$strQuery.= 'ON tic.id_propiedad = prop.id_propiedad ';
+		$strQuery.= 'INNER JOIN tblc_estatus_propiedades AS tep ';
+		$strQuery.= 'ON tic.estatus = tep.id_estatus ';
+		$strQuery.= 'INNER JOIN tblc_desarrollo AS des ';
+		$strQuery.= 'ON prop.desarrollo = des.id_desarrollo ';
+		$strQuery.= 'WHERE tic.id_cliente = '.$idCte.' ';
+		$strQuery.= 'ORDER BY tic.fecha_registro DESC';
+
+		return $strQuery;
+	}
 
 	//QUERY PARA OBTENER EL LISTADO Y LOS DATOS DE LOS CLIENTES
-	public function getClientesData($id = '',$nombre, $rfc, $tipoCte){
-		$cond = '';
-
+	public function getClientesData($id = '',$optSelected, $txtBusqueda, $tipoCte, $modalidad){
+		$cond = ''; $fieldFilter = '';
 		$cond = ($id != '')? ' AND id_cliente = '.$id.' ':'';
-		$cond.= ($nombre != '')? ' AND CONCAT(nombre," ",apellido_p," ", apellido_m) LIKE "%'.$nombre.'%" ':' ';
-		$cond.= ($rfc != '')? ' AND rfc LIKE "%'.$rfc.'%" ':' ';
-		$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
 
-		$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
+		switch ($optSelected) {
+			case 1:
+				$fieldFilter = 'CONCAT(nombre," ",apellido_p," ",apellido_m)';
+			break;
+
+			case 2:
+				$fieldFilter = 'rfc';
+			break;
+
+			case 3:
+				$fieldFilter = 'curp';
+			break;
+		}
+		$cond.= ($txtBusqueda != '')? ' AND '.$fieldFilter.' LIKE "%'.$txtBusqueda.'%" ':' ';
+		$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
+		$cond.= ($modalidad != 0)? ' AND id_modalidad = '.$modalidad.' ':' ';
+
+		$strQuery = 'SELECT id_cliente, id_cliente AS id, id_modalidad,rfc, curp, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, modalidad_otro, fecha_registro, observaciones, nss, curp, modalidad_otro ';
 		$strQuery.= 'FROM tblc_clientes ';
 		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
 		$strQuery.= 'ORDER BY fecha_registro DESC, id_cliente DESC';
@@ -152,21 +180,19 @@ class Querys {
 	}
 
 	//QUERY PARA AGREGAR UN NUEVO REGISTRO DE LA TABLA DE CLINTES
-	public function addCliente($idTipo, $nombre, $apellidoP, $apellidoM, $rfc, $correo, $domicilio, $telefono, $celular, $estadoCivil, $observaciones, $fecha){
+	public function addCliente($idTipo,$idUsuario, $nombre, $apellidoP, $apellidoM, $rfc, $correo, $domicilio, $telefono, $celular, $estadoCivil, $observaciones, $fecha, $nss, $curp, $modalidad, $otros){
 		$strQuery = 'INSERT INTO tblc_clientes ';
-		$strQuery.= '(id_tipo, nombre, apellido_p, apellido_m, rfc, correo, domicilio, telefono, celular, estado_civil, observaciones, fecha_registro) ';
-		$strQuery.= 'VALUES('.$idTipo.', "'.$nombre.'", "'.$apellidoP.'", "'.$apellidoM.'", "'.$rfc.'", "'.$correo.'", "'.$domicilio.'", "'.$telefono.'", NULLIF("'.$celular.'",""), "'.$estadoCivil.'", NULLIF("'.$observaciones.'",""), "'.$fecha.'")';
-
-		return $strQuery;
+		$strQuery.= '(id_tipo,id_usuario, nombre, apellido_p, apellido_m, rfc, correo, domicilio, telefono, celular, estado_civil, observaciones, fecha_registro,nss, curp, id_modalidad, modalidad_otro) ';
+		$strQuery.= 'VALUES('.$idTipo.',' . $idUsuario . ', "'.$nombre.'", "'.$apellidoP.'", "'.$apellidoM.'", "'.$rfc.'", "'.$correo.'", NULLIF("'.$domicilio.'",""), NULLIF("'.$telefono.'",""), "'.$celular.'", "'.$estadoCivil.'", NULLIF("'.$observaciones.'",""), "'.$fecha.'","'.$nss.'","'.$curp.'",'.$modalidad.', NULLIF("'.$otros.'",""))';
 
 		return $strQuery;
 	}
 
 
 	//QUERY PARA ACTUALIZAR UN REGISTRO DE LA TABLA DE CLINTES
-	public function actualizaCliente($id, $idTipo, $nombre, $apellidoP, $apellidoM, $rfc, $correo, $domicilio, $telefono, $celular, $estadoCivil, $observaciones){
+	public function actualizaCliente($id, $idTipo, $nombre, $apellidoP, $apellidoM, $rfc, $correo, $domicilio, $telefono, $celular, $estadoCivil, $observaciones,$nss,$curp,$modalidad,$otros){
 		$strQuery = 'UPDATE tblc_clientes ';
-		$strQuery.= 'SET id_tipo = '.$idTipo.', nombre = "'.$nombre.'", apellido_p = "'.$apellidoP.'", apellido_m = "'.$apellidoM.'", rfc = "'.$rfc.'", correo = "'.$correo.'", domicilio = "'.$domicilio.'", telefono = "'.$telefono.'", celular = NULLIF("'.$celular.'",""), estado_civil = '.$estadoCivil.', observaciones = NULLIF("'.$observaciones.'","") ';
+		$strQuery.= 'SET id_tipo = '.$idTipo.', nombre = "'.$nombre.'", apellido_p = "'.$apellidoP.'", apellido_m = "'.$apellidoM.'", rfc = "'.$rfc.'", correo = "'.$correo.'", domicilio = "'.$domicilio.'", telefono = "'.$telefono.'", celular = NULLIF("'.$celular.'",""), estado_civil = '.$estadoCivil.', observaciones = NULLIF("'.$observaciones.'",""),nss = "'.$nss .'",curp = "'.$curp.'",id_modalidad = '.$modalidad .',modalidad_otro = "' . $otros . '" ';
 		$strQuery.= 'WHERE id_cliente = '.$id;
 
 		return $strQuery;
@@ -265,19 +291,32 @@ class Querys {
 
 	//APARTADO DE PROPIEDADES DE INTENERES PARA EL CLIENTE
 	//QUERY PARA CARGAR EL COMBO DE PROPIEDADES
-	public function loadCboPropiedades(){
-		$strQuery = 'SELECT id_propiedad , descripcion ';
-		$strQuery.= 'FROM  tblc_propiedades ';
-		$strQuery.= 'ORDER BY descripcion ASC';
+	public function loadCboPropiedades($idDesarrollo, $numEdificio, $nivel){
+		$strQuery = 'SELECT tp.id_propiedad, tp.numero_departamento, IF(tic.id_propiedad IS NULL, 0, 1) AS habilitado ';
+		$strQuery.= 'FROM  tblc_propiedades AS tp ';
+		$strQuery.= 'LEFT JOIN tbl_interes_cliente AS tic ';
+		$strQuery.= 'ON tp.id_propiedad = tic.id_propiedad ';
+		$strQuery.= 'WHERE tp.fecha_eliminado IS NULL AND tp.desarrollo = '.$idDesarrollo.' AND tp.numero_edificio = "'.$numEdificio.'" AND tp.numero_nivel = '.$nivel.' ';
+		$strQuery.= 'ORDER BY tp.descripcion ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA CARGAR EL COMBO DE NIVEL DEL FORMULARIO DE REGISTRO DE SEGUIMIENTO DE CLIENTES
+	public function loadCboNivel($idDesarrollo, $numEdificio){
+		$strQuery = 'SELECT nvl.id_nivel AS id, nvl.nombre AS valor ';
+		$strQuery.= 'FROM tblc_propiedades AS tp ';
+		$strQuery.= 'INNER JOIN tblc_nivel AS nvl ';
+		$strQuery.= 'ON tp.numero_nivel = nvl.id_nivel ';
+		$strQuery.= 'WHERE nvl.fecha_eliminacion IS NULL AND tp.desarrollo = '.$idDesarrollo.' AND tp.numero_edificio = "'.$numEdificio.'" ';
+		$strQuery.= 'ORDER BY valor ASC';
 
 		return $strQuery;
 	}
 
 	//QUERY PARA CARGAR EL COMBO DE PROPIEDADES
-	public function loadCboeEstatusInteres(){
-		$strQuery = 'SELECT id_estatus , nombre ';
-		$strQuery.= 'FROM  tblc_estatus_interes ';
-		$strQuery.= 'ORDER BY nombre ASC';
+	public function loadCboeEstatusInteres($idArea){
+		$strQuery = 'CALL sp_EstatusPropiedades('.$idArea.')';
 
 		return $strQuery;
 	}
@@ -286,14 +325,39 @@ class Querys {
 	public function getInteresListadoCte($idCliente, $idInteres = ''){
 		$cond = ($idInteres != '')? ' AND id_interes = '.$idInteres.' ':' ';
 
-		$strQuery = 'SELECT tic.id_interes, tic.id_propiedad, prop.Descripcion, tic.monto, tic.agente, tic.estatus, tei.nombre AS txtestatus, tic.fecha_registro ';
+		$strQuery = 'SELECT tic.id_interes, prop.desarrollo, td.nombre AS nombreDesarrollo, prop.numero_edificio, prop.numero_nivel, nvl.nombre AS nivel, prop.numero_departamento, tic.id_propiedad, prop.Descripcion, tic.monto, tic.agente, tic.estatus, tep.nombre AS txtestatus, tic.fecha_firma, tic.fecha_entrega, tic.fecha_registro ';
 		$strQuery.= 'FROM tbl_interes_cliente AS tic ';
 		$strQuery.= 'INNER JOIN tblc_propiedades AS prop ';
 		$strQuery.= 'ON tic.id_propiedad = prop.id_propiedad ';
-		$strQuery.= 'INNER JOIN tblc_estatus_interes AS tei ';
-		$strQuery.= 'ON tic.estatus = tei.id_estatus ';
+		$strQuery.= 'INNER JOIN tblc_estatus_propiedades AS tep ';
+		$strQuery.= 'ON tic.estatus = tep.id_estatus ';
+		$strQuery.= 'INNER JOIN tblc_desarrollo AS td ';
+		$strQuery.= 'ON prop.desarrollo = td.id_desarrollo ';
+		$strQuery.= 'INNER JOIN tblc_nivel AS nvl ';
+		$strQuery.= 'ON prop.numero_nivel = nvl.id_nivel ';
 		$strQuery.= 'WHERE tic.fecha_eliminado IS NULL AND tic.id_cliente = '.$idCliente.$cond;
 		$strQuery.= 'ORDER BY tic.fecha_registro DESC, tic.id_interes DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA CARGAR EL COMBO DE DESARROLLO
+	public function loadCboDesarrollo(){
+		$strQuery = 'SELECT id_desarrollo AS id, nombre AS valor  ';
+		$strQuery.= 'FROM tblc_desarrollo ';
+		$strQuery.= 'WHERE fecha_eliminacion IS NULL ';
+		$strQuery.= 'ORDER BY nombre ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA CARGAR EL COMBO DE NÚMERO DE EDIFICIO
+	public function loadCboNumEdificio($idDesarrollo){
+		$strQuery = 'SELECT numero_edificio AS id, CONCAT("Edificio número"," ", numero_edificio) AS valor ';
+		$strQuery.= 'FROM tblc_propiedades ';
+		$strQuery.= 'WHERE desarrollo = '.$idDesarrollo.' ';
+		$strQuery.= 'GROUP BY numero_edificio ';
+		$strQuery.= 'ORDER BY valor ASC, CAST(numero_edificio AS UNSIGNED) ASC';
 
 		return $strQuery;
 	}
@@ -330,6 +394,122 @@ class Querys {
 
 
 	//MÓDULO DE ORDEN DE COMPRAS
+	//CATÁLOGO DE PROVEEDORES
+
+	//QUERY PARA CARGAR EL COMBO DE PROVEEDORES PARA EL FORMULARIO DE REGISTRO DE COTIZACIONES EN LAS ORDENES DE COMPRA
+	public function loadCboProvedor(){
+		$strQuery = 'SELECT id_proveedor AS id, nombre AS valor ';
+		$strQuery.= 'FROM tblc_proveedor ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY nombre ASC';
+
+		return $strQuery;
+	}
+
+	public function getProveedoresData($idProveedor = '', $opt, $busqueda){
+		$cond = '';
+		$cond = ($idProveedor != '')? ' AND id_proveedor = '.$idProveedor.' ':' ';
+		switch ($opt) {
+			case 1:				
+				$cond.= ($busqueda != '')? ' AND nombre LIKE "%'.$busqueda.'%" ':' ';
+			break;
+			
+			case 2:				
+				$cond.= ($busqueda != '')? ' AND rfc LIKE "%'.$busqueda.'%" ':' ';
+			break;
+
+			case 3:				
+				$cond.= ($busqueda != '')? ' AND nombre_agente LIKE "%'.$busqueda.'%" ':' ';
+			break;
+		}
+
+		$strQuery = 'SELECT id_proveedor, nombre, razon_social, rfc, telefono, direccion, estatus, observaciones, nombre_agente, telefono_agente, correo_agente, fecha_registro ';
+		$strQuery.= 'FROM tblc_proveedor ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL AND estatus = 1'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_proveedor DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN NUEVO PROVEEDOR
+	public function addProveedor($nombre, $razonSocial, $rfc, $telefono, $direccion, $estatus, $observaciones, $nombreAgente, $telefonoAgente, $correoAgente, $fechaRegistro){
+		$strQuery = 'INSERT INTO tblc_proveedor ';
+		$strQuery.= '(nombre, razon_social, rfc, telefono, direccion, estatus, observaciones, nombre_agente, telefono_agente, correo_agente, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$razonSocial.'", "'.$rfc.'", "'.$telefono.'", "'.$direccion.'", '.$estatus.', NULLIF("'.$observaciones.'",""), "'.$nombreAgente.'", "'.$telefonoAgente.'", "'.$correoAgente.'", "'.$fechaRegistro.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR LOS DATOS DE UN PROVEEDOR
+	public function actualizaProveedor($idProveedor, $nombre, $razonSocial, $rfc, $telefono, $direccion, $observaciones, $nombreAgente, $telefonoAgente, $correoAgente){
+		$strQuery = 'UPDATE tblc_proveedor ';
+		$strQuery.= 'SET nombre = "'.$nombre.'", razon_social = "'.$razonSocial.'", rfc = "'.$rfc.'", telefono = "'.$telefono.'", direccion = "'.$direccion.'", observaciones = NULLIF("'.$observaciones.'",""), nombre_agente = "'.$nombreAgente.'", telefono_agente = "'.$telefonoAgente.'", correo_agente = "'.$correoAgente.'" ';
+		$strQuery.= 'WHERE id_proveedor = '.$idProveedor;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO A UN PROVEEDOR
+	public function eliminaProveedor($id, $fecha){
+		$strQuery = 'UPDATE tblc_proveedor ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_proveedor = '.$id;
+
+		return $strQuery;
+	}
+
+	//CUENTAS BANCARIAS DEL PROVEEDOR
+	//QUERY PARA CARGAR EL COMBO DE BANCOS PARA EL REGISTRO DE UNA CUENTA BANCARIA DE UN PROVEEDOR
+	public function loadCboBanco(){
+		$strQuery = 'SELECT id_banco AS id, nombre AS valor ';
+		$strQuery.= 'FROM tblc_banco ';
+		$strQuery.= 'WHERE estatus = 1 AND fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY nombre ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER LOS DATOS DE LAS CUENTAS BANCARIAS DE LOS PROVEEDORES
+	public function getDataProveedorCta($idProveedor, $idProvCta = ''){
+		$cond = ($idProvCta != '')? ' AND tcp.id_cuenta_proveedor = '.$idProvCta.' ':' ';
+
+		$strQuery = 'SELECT tcp.id_cuenta_proveedor, tcp.id_banco, bco.nombre AS banco, tcp.cuenta, tcp.clabe_interbancaria, tcp.fecha_registro ';
+		$strQuery.= 'FROM tblc_cuenta_proveedor AS tcp ';
+		$strQuery.= 'INNER JOIN tblc_banco AS bco ';
+		$strQuery.= 'ON tcp.id_banco = bco.id_banco ';
+		$strQuery.= 'WHERE tcp.fecha_eliminado IS NULL AND tcp.id_proveedor = '.$idProveedor.$cond;
+		$strQuery.= 'ORDER BY tcp.fecha_registro DESC, tcp.id_cuenta_proveedor DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA GUARDAR UNA CUENTA BANCARIA DE UN PROVEEDOR
+	public function addProvCtaBanc($idProveedor, $idBanco, $cuenta, $cbeInterbanc, $fecha){
+		$strQuery = 'INSERT INTO tblc_cuenta_proveedor ';
+		$strQuery.= '(id_proveedor, id_banco, cuenta, clabe_interbancaria, fecha_registro) ';
+		$strQuery.= 'VALUES('.$idProveedor.', '.$idBanco.', "'.$cuenta.'", "'.$cbeInterbanc.'", "'.$fecha.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR LOS DATOS DE UNA CUENTA BANCARIA DE UN PROVEEDOR
+	public function actualizaProvCtaBanc($idProveedor, $idProvCta, $idBanco, $cuenta, $cbeInterbanc){
+		$strQuery = 'UPDATE tblc_cuenta_proveedor ';
+		$strQuery.= 'SET id_banco = '.$idBanco.', cuenta = "'.$cuenta.'", clabe_interbancaria = "'.$cbeInterbanc.'" ';
+		$strQuery.= 'WHERE id_proveedor = '.$idProveedor.' AND id_cuenta_proveedor = '.$idProvCta;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADA UNA CUENTA BANCARIA DE UN PROVEEDOR
+	public function eliminaProvCtaBanc($idProvCta, $fecha){
+		$strQuery = 'UPDATE tblc_cuenta_proveedor ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_cuenta_proveedor = '.$idProvCta;
+
+		return $strQuery;
+	}
+
 
 	//QUERY PARA CARGAR EL COMBO DE OBRA
 	public function loadCboObras(){
@@ -340,9 +520,29 @@ class Querys {
 		return $strQuery;
 	}
 
+	//QUERY PARA OBTENER LOS DATOS NECESARIOS DEL ÁREA DEL USUARIO Y VERIFICAR SI ES JEFE DE DEPTO O NO.
+	public function getDataAreaUsr($idArea){
+		$strQuery = 'SELECT id_permiso, id_departamento ';
+		$strQuery.= 'FROM tblc_areas ';
+		$strQuery.= 'WHERE id_area = '.$idArea;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER LAS ÁREAS DEPENDIENTES DE UN JEFE DE DEPARTAMENTO
+	public function getIdsAreasDep($idDepto, $idAreaP){
+		$strQuery = 'SELECT id_area ';
+		$strQuery.= 'FROM tblc_areas ';
+		$strQuery.= 'WHERE id_departamento = '.$idDepto.' AND id_area != '.$idAreaP.' ';
+		$strQuery.= 'ORDER BY id_area ASC';
+
+		return $strQuery;
+	}
+
 	//QUERY PARA OBTENER EL LISTADO/DATOS DE ORDENES DE COMPRA
-	public function ordenes_compra_listado($folio, $obra, $empresa, $estatus, $tipoComp, $fechaDesde, $fechaHasta, $id = ''){
+	public function ordenes_compra_listado($idsArea, $folio, $obra, $empresa, $estatus, $tipoComp, $fechaDesde, $fechaHasta, $id = ''){
 		$cond ='';
+		$cond.= ($idsArea != '')? ' AND toc.id_Area IN('.$idsArea.') ':' ';
 		$cond.= ($folio != '')? ' AND folio = "'.$folio.'" ':' ';
 		$cond.= ($obra != 0)? ' AND id_obra = "'.$obra.'" ':' ';
 		$cond.= ($empresa != 0)? ' AND id_empresa = "'.$empresa.'" ':' ';
@@ -351,7 +551,7 @@ class Querys {
 		$cond.= ($fechaDesde != '' && $fechaHasta != '')? ' AND fecha_captura BETWEEN "'.$fechaDesde.'" AND "'.$fechaHasta.'" ':' ';
 		$cond.= ($id != '')? ' AND id_orden_compra = '.$id.' ':' ';
 
-		$strQuery = 'SELECT id_orden_compra, folio, id_obra, tob.nombre AS obra, id_empresa, toc.fecha_captura, toc.id_tipo_compra, toc.residente, toc.archivo_transferencia, toc.dirección_obra, toc.estatus ';
+		$strQuery = 'SELECT id_orden_compra, folio, id_obra, tob.nombre AS obra, id_empresa, toc.fecha_captura, toc.id_tipo_compra, toc.residente, toc.archivo_transferencia, toc.archivo_factura, toc.fecha_archivo_transferencia, toc.dirección_obra, toc.estatus ';
 		$strQuery.= 'FROM tbl_orden_compra AS toc ';
 		$strQuery.= 'INNER JOIN tbl_obras AS tob ';
 		$strQuery.= 'ON toc.id_obra = tob.id_obras ';
@@ -362,18 +562,36 @@ class Querys {
 	}
 
 	//QUERY PARA AGREGAR UN NUEVO REGISTRO DE ORDEN DE COMPRA
-	public function addOrdenCompra($folio, $idObra, $idEmpresa, $direccionObra, $fechaCaptura, $fechaRegistro, $residente, $idTipoCompra, $estatus){
+	public function addOrdenCompra($idObra, $idArea, $idEmpresa, $direccionObra, $fechaCaptura, $fechaRegistro, $residente, $idTipoCompra, $estatus){
 		$strQuery = 'INSERT INTO tbl_orden_compra ';
-		$strQuery.= '(id_obra, id_empresa, id_tipo_compra, folio, dirección_obra, fecha_captura, residente, fecha_registro, estatus) ';
-		$strQuery.= 'VALUES('.$idObra.', '.$idEmpresa.', '.$idTipoCompra.', "'.$folio.'", "'.$direccionObra.'", "'.$fechaCaptura.'", "'.$residente.'", "'.$fechaRegistro.'", '.$estatus.')';
+		$strQuery.= '(id_obra, id_area, id_empresa, id_tipo_compra, dirección_obra, fecha_captura, residente, fecha_registro, estatus) ';
+		$strQuery.= 'VALUES('.$idObra.', '.$idArea.', '.$idEmpresa.', '.$idTipoCompra.', "'.$direccionObra.'", "'.$fechaCaptura.'", "'.$residente.'", "'.$fechaRegistro.'", '.$estatus.')';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR EL FOLIO A UNA NUEVA ORDEN DE COMPRA
+	public function addFolioOrdenCompra($idOrdenComp, $folio){
+		$strQuery = 'UPDATE tbl_orden_compra ';
+		$strQuery.= 'SET folio = "'.$folio.'" ';
+		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
 
 		return $strQuery;
 	}
 
 	//QUERY PARA ACTUALIZAR EL REGISTRO DE UNA ORDEN DE PAGO
-	public function actualizarOrdenComp($idOrdenComp, $folio, $idObra, $idEmpresa, $direccionObra, $fechaCaptura, $residente, $idTipoCompra, $estatus){
+	public function actualizarOrdenComp($idOrdenComp, $idObra, $idEmpresa, $direccionObra, $fechaCaptura, $residente, $idTipoCompra){
 		$strQuery = 'UPDATE tbl_orden_compra ';
-		$strQuery.= 'SET folio = "'.$folio.'", id_obra = "'.$idObra.'", id_empresa = "'.$idEmpresa.'", id_tipo_compra = "'.$idTipoCompra.'", dirección_obra = "'.$direccionObra.'", fecha_captura = "'.$fechaCaptura.'", residente = "'.$residente.'", estatus = "'.$estatus.'" ';
+		$strQuery.= 'SET id_obra = "'.$idObra.'", id_empresa = "'.$idEmpresa.'", id_tipo_compra = "'.$idTipoCompra.'", dirección_obra = "'.$direccionObra.'", fecha_captura = "'.$fechaCaptura.'", residente = "'.$residente.'" ';
+		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR EL ARCHIVO DE TRANSFERENCIA/FACTURA
+	public function addFileTransFactOrdComp($idOrdenComp, $field, $file, $fecha){
+		$strQuery = 'UPDATE tbl_orden_compra ';
+		$strQuery.= 'SET '.$field.' = "'.$file.'", fecha_archivo_transferencia = "'.$fecha.'" ';
 		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
 
 		return $strQuery;
@@ -388,23 +606,64 @@ class Querys {
 		return $strQuery;
 	}
 
+	//QUERY PARA OBTENER LOS CONCEPTOS DE UNA OBRA PARA LA ORDEN DE COMPRA
+	public function getObraConceptos($idObra){
+		$strQuery = 'SELECT id_exposion_insumos AS id, concepto AS valor ';
+		$strQuery.= 'FROM tbl_explosion_insumos ';
+		$strQuery.= 'WHERE id_obra = '.$idObra.' ';
+		$strQuery.= 'ORDER BY concepto ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL DETALLE DE UN COCEPTO PARA REGISTRAR UNA ORDEN DE COMPRA
+	public function getDataCpto($id){
+		$strQuery = 'SELECT id_exposion_insumos, unidad, precio_unitario, importe ';
+		$strQuery.= 'FROM tbl_explosion_insumos ';
+		$strQuery.= 'WHERE id_exposion_insumos = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL TOTAL ACUMULADO DE UN CONCEPTO PARA UNA ORDEN DE COMPRA
+	public function getTotAcumCptoOrdComp($idOrdComp, $idExpInsumos){
+		$strQuery = 'SELECT SUM(tac.monto*tac.cantidad) AS totAcumulado, (tei.importe - SUM(tac.monto*tac.cantidad)) AS recDisponible ';
+		$strQuery.= 'FROM tbl_artculo_compra AS tac ';
+		$strQuery.= 'RIGHT JOIN tbl_explosion_insumos AS tei ';
+		$strQuery.= 'ON tac.id_explosion_insumos = tei.id_exposion_insumos ';
+		$strQuery.= 'WHERE tac.id_orden_compra = '.$idOrdComp.' AND tac.id_explosion_insumos = '.$idExpInsumos;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL TOTAL DE IMPORTE Y CANTIDAD DE UN CONCEPTO
+	public function getCptoCantImp($idExpInsumos){
+		$strQuery = 'SELECT importe, cantidad ';
+		$strQuery.= 'FROM tbl_explosion_insumos ';
+		$strQuery.= 'WHERE id_exposion_insumos = '.$idExpInsumos;
+
+		return $strQuery;
+	}
+
 	//QUERY PARA OBTENER LA INFO/LISTADO DE LOS ARTÍCULOS DE UNA ORDEN DE COMPRA
 	public function articulosListado($idOrdenComp, $idArticulo = ''){
 		$cond = ($idArticulo != '')? ' AND id_articulo_compra = '.$idArticulo.' ':' ';
 
-		$strQuery = 'SELECT id_articulo_compra, articulo, cantidad, monto, unidad ';
-		$strQuery.= 'FROM tbl_artculo_compra ';
-		$strQuery.= 'WHERE fecha_eliminado IS NULL AND id_orden_compra = '.$idOrdenComp.$cond;
-		$strQuery.= 'ORDER BY id_articulo_compra DESC';
+		$strQuery = 'SELECT tac.id_articulo_compra, tac.id_explosion_insumos, tei.concepto, tac.cantidad, tac.monto, tac.unidad ';
+		$strQuery.= 'FROM tbl_artculo_compra AS tac ';
+		$strQuery.= 'INNER JOIN tbl_explosion_insumos AS tei ';
+		$strQuery.= 'ON tac.id_explosion_insumos = tei.id_exposion_insumos ';
+		$strQuery.= 'WHERE tac.fecha_eliminado IS NULL AND tac.id_orden_compra = '.$idOrdenComp.$cond;
+		$strQuery.= 'ORDER BY tac.id_articulo_compra DESC';
 
 		return $strQuery;
 	}
 
 	//QUERY PARA AGREGAR ARTÍCULOS A LA ORDEN DE COMPRA
-	public function addArticuloOrdComp($idOrdenComp, $articulo, $unidad, $cantidad, $costo, $fecha){
+	public function addArticuloOrdComp($idOrdenComp, $idExpInsumos, $unidad, $cantidad, $costo, $fecha){
 		$strQuery = 'INSERT INTO tbl_artculo_compra ';
-		$strQuery.= '(id_orden_compra, articulo, unidad, cantidad, monto, fecha_registro) ';
-		$strQuery.= 'VALUES('.$idOrdenComp.', "'.$articulo.'", "'.$unidad.'", '.$cantidad.', '.$costo.', "'.$fecha.'")';
+		$strQuery.= '(id_orden_compra, id_explosion_insumos, unidad, cantidad, monto, fecha_registro) ';
+		$strQuery.= 'VALUES('.$idOrdenComp.', '.$idExpInsumos.', "'.$unidad.'", '.$cantidad.', '.$costo.', "'.$fecha.'")';
 
 		return $strQuery;
 	}
@@ -420,7 +679,7 @@ class Querys {
 
 	//QUERY PARA SUMAR EL TOTAL DE LOS ARTÍCULOS AGREGADOS A LA ORDEN DE COMPRA
 	public function getSumMontoArtOrdComp($idOrdenComp){
-		$strQuery = 'SELECT SUM(monto) AS total ';
+		$strQuery = 'SELECT SUM(monto*cantidad) AS total ';
 		$strQuery.= 'FROM tbl_artculo_compra ';
 		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
 
@@ -448,12 +707,14 @@ class Querys {
 
 	//QUERY PARA OBTENER LA INFORMACIÓN DE LAS COTIZACIONES: LISTADO-EDICIÓN
 	public function getCotizaciones($idOrdenComp, $idCotizacion = ''){
-		$cond = ($idCotizacion != '')? ' AND id_cotizacion = '.$idCotizacion.' ':' ';
+		$cond = ($idCotizacion != '')? ' AND cot.id_cotizacion = '.$idCotizacion.' ':' ';
 
-		$strQuery = 'SELECT id_cotizacion, id_proveedor, num_cuenta, monto, archivo, observaciones, autorizado, fecha_registro  ';
-		$strQuery.= 'FROM tbl_cotizacion ';
-		$strQuery.= 'WHERE fecha_eliminado IS NULL AND id_orden_compra = '.$idOrdenComp.$cond;
-		$strQuery.= 'ORDER BY fecha_registro DESC, id_cotizacion DESC';
+		$strQuery = 'SELECT cot.id_cotizacion, cot.id_proveedor, prov.nombre AS proveedor, cot.num_cuenta, cot.monto, cot.archivo, cot.observaciones, cot.autorizado, cot.fecha_registro  ';
+		$strQuery.= 'FROM tbl_cotizacion AS cot ';
+		$strQuery.= 'INNER JOIN tblc_proveedor AS prov ';
+		$strQuery.= 'ON cot.id_proveedor = prov.id_proveedor ';
+		$strQuery.= 'WHERE cot.fecha_eliminado IS NULL AND cot.id_orden_compra = '.$idOrdenComp.$cond;
+		$strQuery.= 'ORDER BY cot.fecha_registro DESC, cot.id_cotizacion DESC';
 
 		return $strQuery;
 	}
@@ -481,6 +742,24 @@ class Querys {
 		$strQuery = 'UPDATE tbl_cotizacion ';
 		$strQuery.= 'SET autorizado = 1 ';
 		$strQuery.= 'WHERE id_cotizacion = '.$idCotizacion;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA CONTABILIZAR EL NÚMERO DE COTIZACIONES HECHAS PARA UNA ORDEN DE COMPRA
+	public function countCotizacionesOrdComp($idOrdenComp){
+		$strQuery = 'SELECT COUNT(id_cotizacion) AS total ';
+		$strQuery.= 'FROM tbl_cotizacion ';
+		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR EL ESTATUS DE UNA ORDEN DE COMPRA
+	public function actualizaEstatusOrdComp($idOrdenComp, $estatus){
+		$strQuery = 'UPDATE tbl_orden_compra ';
+		$strQuery.= 'SET estatus = '.$estatus.' ';
+		$strQuery.= 'WHERE id_orden_compra = '.$idOrdenComp;
 
 		return $strQuery;
 	}
@@ -531,6 +810,405 @@ class Querys {
 		$strQuery = 'UPDATE tbl_servicio_posventa ';
 		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
 		$strQuery.= 'WHERE id_servicio_posventa = '.$idServPV;
+
+		return $strQuery;
+	}
+
+	//MÓDULO DE MAQUINARIA Y EQUIPO --------------------------------------------------------
+	//QUERY PARA CARGAR EL COMBO DE TIPO DE MAQUINARIA
+	public function loadCboTipoMaquinaria(){
+		$strQuery = 'SELECT id_tipo_maquinaria AS id, nombre AS valor ';
+		$strQuery.= 'FROM tblc_tipo_maquinaria ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY nombre ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL LISTADO DE MAQUINARIA Y VEHÍCULOS
+	public function listadoCatMaqVehic($id = '', $optSelected, $busqueda, $tipoMaquinaria){
+		$fieldFilter = '';
+		switch ($optSelected) {
+			case 1:
+				$fieldFilter = 'marca';
+			break;
+
+			case 2:
+				$fieldFilter = 'numero_economico';
+			break;
+
+			case 3:
+				$fieldFilter = 'numero_serie';
+			break;
+
+			case 4:
+				$fieldFilter = 'placas';
+			break;
+		}
+		$cond = ($id != '')? ' AND tmv.id_maquinaria_vehiculo = '.$id.' ':' ';
+		$cond.= ($busqueda != '')? ' AND tmv.'.$fieldFilter.' LIKE "%'.$busqueda.'%" ':' ';
+		$cond.= ($tipoMaquinaria != 0)? ' AND tmv.id_tipo_maquinaria = '.$tipoMaquinaria.' ':' ';
+
+		$strQuery = 'SELECT tmv.*, ttm.nombre AS tipo_maquinaria ';
+		$strQuery.= 'FROM tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'INNER JOIN tblc_tipo_maquinaria AS ttm ';
+		$strQuery.= 'ON tmv.id_tipo_maquinaria = ttm.id_tipo_maquinaria ';
+		$strQuery.= 'WHERE tmv.fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY tmv.fecha_registro DESC, tmv.id_maquinaria_vehiculo DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA GUARDAR UN NUEVO VEHÍCULO/MAQUINARIA
+	public function guardaMaquinaria($marca, $modelo, $idTipoMaq, $numEcon, $numSerie, $placas, $peso, $archSeguro, $archFactura, $fecha){
+		$strQuery = 'INSERT INTO tblc_maquinaria_vehiculo ';
+		$strQuery.= '(marca, modelo, id_tipo_maquinaria, numero_economico, numero_serie, placas, peso, archivo_seguro, archivo_factura, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$marca.'", "'.$modelo.'", '.$idTipoMaq.', "'.$numEcon.'", "'.$numSerie.'", "'.$placas.'", '.$peso.', NULLIF("'.$archSeguro.'",""), NULLIF("'.$archFactura.'",""), "'.$fecha.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR LOS DATOS DE UN VEHÍCULO/MAQUINARIA
+	public function actualizaMaquinaria($id, $marca, $modelo, $idTipoMaq, $numEcon, $numSerie, $placas, $peso, $archSeguro, $archFactura){
+		$strQuery = 'UPDATE tblc_maquinaria_vehiculo ';
+		$strQuery.= 'SET marca = "'.$marca.'", modelo = "'.$modelo.'", id_tipo_maquinaria = '.$idTipoMaq.', numero_economico = "'.$numEcon.'", numero_serie = "'.$numSerie.'", placas = "'.$placas.'", peso = '.$peso.', archivo_seguro = NULLIF("'.$archSeguro.'",""), archivo_factura = NULLIF("'.$archFactura.'","") ';
+		$strQuery.= 'WHERE id_maquinaria_vehiculo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR EL KILOMETRAJE DE UN VEHÍCULO
+	public function actualizaKms($id, $kms){
+		$strQuery = 'UPDATE tblc_maquinaria_vehiculo ';
+		$strQuery.= 'SET kilometraje = '.$kms.' ';
+		$strQuery.= 'WHERE id_maquinaria_vehiculo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATÁGLO DE MAQUINARIA/VEHÍCULOS
+	public function eliminaMaquinaria($id, $fecha){
+		$strQuery = 'UPDATE tblc_maquinaria_vehiculo ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_maquinaria_vehiculo = '.$id;
+
+		return $strQuery;
+	}
+
+	//CATÁLOGO DE TIPO DE MAQUINARIA
+	public function listadoTipoMaq($id = ''){
+		$cond = ($id != '')? ' AND id_tipo_maquinaria = '.$id.' ':' ';
+
+		$strQuery = 'SELECT id_tipo_maquinaria, nombre, fecha_registro ';
+		$strQuery.= 'FROM tblc_tipo_maquinaria ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_tipo_maquinaria DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN NUEVO REGISTRO AL CATÁLOGO DE TIPO DE MAQUINARIA
+	public function addTipoMaquinaria($nombre, $fecha){
+		$strQuery = 'INSERT INTO tblc_tipo_maquinaria ';
+		$strQuery.= '(nombre, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", "'.$fecha.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR UN REGISTRO DEL CATÁLOGO DE TIPO DE MAQUINARIA
+	public function actualizaTipoMaquinaria($id, $nombre){
+		$strQuery = 'UPDATE tblc_tipo_maquinaria ';
+		$strQuery.= 'SET nombre = "'.$nombre.'" ';
+		$strQuery.= 'WHERE id_tipo_maquinaria = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATÁLOGO DE TIPO DE MAQUINARIA
+	public function eliminaTipoMaquinaria($id, $fecha){
+		$strQuery = 'UPDATE tblc_tipo_maquinaria ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_tipo_maquinaria = '.$id;
+
+		return $strQuery;
+	}
+
+	//REGUARDO DE VEHÍCULOS
+	public function vehiculosResgListado($id = '', $opt, $busqueda, $fechaIni, $fechaHasta, $estatus){
+		$cond = ($id != '')? ' AND treg.id_resguardo = '.$id.' ':' ';
+		switch ($opt) {
+			case 1:
+				$cond.= ($busqueda != '') ? ' AND CONCAT(tmv.marca," ",tmv.modelo) LIKE "%'.$busqueda.'%" ':' ';			
+			break;
+			
+			case 2:
+				$cond.= ($busqueda != '')? ' AND treg.usuario LIKE "%'.$busqueda.'%" ':' ';
+			break;
+		}
+		$cond.= ($fechaIni != '' && $fechaHasta != '')? ' AND fecha_asignacion BETWEEN "'.$fechaIni.'" AND "'.$fechaHasta.'" ':' ';
+		$cond.= ($estatus > -1)? ' AND estatus = '.$estatus.' ':' ';
+
+		$strQuery = 'SELECT treg.id_resguardo, treg.usuario, treg.id_maquinaria, CONCAT(tmv.marca," ",tmv.modelo) AS vehiculo, treg.neumaticos_entrega, treg.cristales_entrega, treg.carroceria_entrega, treg.neumaticos_recibe, treg.cristales_recibe, treg.carroceria_recibe, treg.poliza, treg.tarjeta_circulacion, treg.factura, treg.fecha_asignacion, fecha_conclusion, treg.observaciones, treg.estatus, treg.fecha_registro ';
+		$strQuery.= 'FROM tbl_resguardo AS treg ';
+		$strQuery.= 'INNER JOIN tblc_maquinaria_vehiculo tmv ';
+		$strQuery.= 'ON treg.id_maquinaria = tmv.id_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE treg.fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY treg.fecha_registro DESC, treg.id_resguardo DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA CARGAR EL COMBO DE VEHÍCULOS PARA EL FORMULARIO DE REGISTR DE RESGUARDOS
+	public function loadCboVehiculos(){
+		$strQuery = 'SELECT tmv.id_maquinaria_vehiculo AS id, CONCAT(tmv.marca," ",tmv.modelo) AS valor, IF(tr.estatus = 1, 1, 0) AS habilitado ';
+		$strQuery.= 'FROM tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'LEFT JOIN tbl_resguardo AS tr ';
+		$strQuery.= 'ON tmv.id_maquinaria_vehiculo = tr.id_maquinaria ';
+		$strQuery.= 'WHERE tmv.fecha_eliminado IS NULL AND tr.fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY valor ASC';
+
+		return $strQuery;
+	}
+
+	public function loadCboMaquinaria(){
+		$strQuery = 'SELECT id_maquinaria_vehiculo AS id, CONCAT(marca," ",modelo) AS valor ';
+		$strQuery.= 'FROM tblc_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY valor ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA REGISTRAR UN NUEVO RESGUARDO
+	public function addResguardoMaq($idMaquinaria, $usuario, $neumaticosEnt, $cristalesEnt, $carroceriaEnt, $poliza, $tarjeta, $factura, $observaciones, $fechaAsignacion, $fechaRegistro){
+		$strQuery = 'INSERT INTO tbl_resguardo ';
+		$strQuery.= '(id_maquinaria, usuario, neumaticos_entrega, cristales_entrega, carroceria_entrega, poliza, tarjeta_circulacion, factura, observaciones, estatus, fecha_asignacion, fecha_registro) ';
+		$strQuery.= 'VALUES('.$idMaquinaria.', "'.$usuario.'", '.$neumaticosEnt.', '.$cristalesEnt.', '.$carroceriaEnt.', '.$poliza.', '.$tarjeta.', '.$factura.', NULLIF("'.$observaciones.'",""), 1, "'.$fechaAsignacion.'", "'.$fechaRegistro.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR UN REGISTRO DE UN RESGUARDO
+	public function actualizaResguardo($id, $idMaquinaria, $usuario, $neumaticosEnt, $cristalesEnt, $carroceriaEnt, $neumaticosRec, $cristalesRec, $carroceriaRec, $poliza, $tarjeta, $factura, $observaciones, $fechaAsignacion){
+		$strQuery = 'UPDATE tbl_resguardo ';
+		$strQuery.= 'SET id_maquinaria = '.$idMaquinaria.', usuario = "'.$usuario.'", neumaticos_entrega = '.$neumaticosEnt.', cristales_entrega = '.$cristalesEnt.', carroceria_entrega = '.$carroceriaEnt.', neumaticos_recibe = '.$neumaticosRec.', cristales_recibe = '.$cristalesRec.' , carroceria_recibe = '.$carroceriaRec.', poliza = '.$poliza.', tarjeta_circulacion = '.$tarjeta.', factura = '.$factura.', observaciones = NULLIF("'.$observaciones.'",""), fecha_asignacion = "'.$fechaAsignacion.'" ';
+		$strQuery.= 'WHERE id_resguardo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO CONCLUIDO EL RESGUARDO DE UN VEHÍCULO/MAQUINARIA
+	public function concluirResguardo($id, $fecha){
+		$strQuery = 'UPDATE tbl_resguardo ';
+		$strQuery.= 'SET estatus = 0, fecha_conclusion = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_resguardo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL RESGUARDO DE MAQUINARIA/VEHÍCULOS
+	public function eliminaResguardo($id, $fecha){
+		$strQuery = 'UPDATE tbl_resguardo ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_resguardo = '.$id;
+
+		return $strQuery;
+	}
+
+	//CATÁLOGO TIPO DE MANTENIMIENTO ---------------------------------------------
+	//QUERY PARA CARGAR EL COMBO DE TIPO DE MTTO
+	public function loadCboTpoMtto(){
+		$strQuery = 'SELECT id_tipo_mtto AS id, nombre AS valor ';
+		$strQuery.= 'FROM tblc_tipo_mtto ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY nombre ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL LISTADO/INFORMACIÓN DEL TIPO DE MANTENIMIENTO
+	public function getInfoTipoMtto($id = ''){
+		$cond = ($id != '')? ' AND id_tipo_mtto = '.$id.' ':' ';
+
+		$strQuery = 'SELECT id_tipo_mtto, nombre, descripcion, kilometraje, dias_espera, fecha_registro ';
+		$strQuery.= 'FROM tblc_tipo_mtto ';
+		$strQuery.= 'WHERE fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY fecha_registro DESC, id_tipo_mtto DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN NUEVO REGISTRO AL CATÁLOGO DE TIPO DE MANTENIMIENTO
+	public function addTipoMtto($nombre, $kilometraje, $dias, $descripcion, $fecha){
+		$strQuery = 'INSERT INTO tblc_tipo_mtto ';
+		$strQuery.= '(nombre, kilometraje, dias_espera, descripcion, fecha_registro) ';
+		$strQuery.= 'VALUES("'.$nombre.'", '.$kilometraje.', '.$dias.', NULLIF("'.$descripcion.'",""), "'.$fecha.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR UN REGISTRO DEL CATÁLOGO DE TIPO DE MANTENIMIENTO
+	public function actualizaTipoMtto($id, $nombre, $kilometraje, $dias, $descripcion){
+		$strQuery = 'UPDATE tblc_tipo_mtto ';
+		$strQuery.= 'SET nombre = "'.$nombre.'", kilometraje = '.$kilometraje.', dias_espera = '.$dias.', descripcion = "'.$descripcion.'" ';
+		$strQuery.= 'WHERE id_tipo_mtto = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATÁLOGO DE TIPO DE MANTINIMIENTO
+	public function eliminaTipoMtto($id, $fecha){
+		$strQuery = 'UPDATE tblc_tipo_mtto ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_tipo_mtto = '.$id;
+
+		return $strQuery;
+	}
+
+	//MÓDULO DE MANTENIMENTO DE MAQUINARIA/VEHÍCULOS
+	//QUERY PARA CARGAR EL COMBO DE VEHÍCULOS PARA EL FORMULARIO DE REGISTR DE RESGUARDOS
+	public function loadCboVehiculosMtto(){
+		$strQuery = 'SELECT tmv.id_maquinaria_vehiculo AS id, CONCAT(tmv.marca," ",tmv.modelo) AS valor, IF(tmm.estatus = 1 || tmm.estatus = 2, 1, 0) AS habilitado ';
+		$strQuery.= 'FROM tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'LEFT JOIN tbl_maquinaria_mantenimiento AS tmm ';
+		$strQuery.= 'ON tmv.id_maquinaria_vehiculo = tmm.id_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE tmv.fecha_eliminado IS NULL AND tmv.fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY valor ASC';
+
+		return $strQuery;
+	}
+
+	public function getDataMttoMaqVeh($idMaMtto = ''){
+		$cond = ($idMaMtto != '')? ' AND tmm.id_maquinaria_mantenimiento = '.$idMaMtto.' ':' ';
+
+		$strQuery = 'SELECT tmm.id_maquinaria_mantenimiento, tmm.id_maquinaria_vehiculo, tmv.marca, tmv.modelo, tmv.placas, tmv.kilometraje, tmm.id_tipo_mantenimiento, ctm.nombre AS tpoMtto, tmm.fecha_registro, tmm.estatus, tmm.observaciones ';
+		$strQuery.= 'FROM tbl_maquinaria_mantenimiento AS tmm ';
+		$strQuery.= 'INNER JOIN tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'ON tmm.id_maquinaria_vehiculo = tmv.id_maquinaria_vehiculo ';
+		$strQuery.= 'INNER JOIN tblc_tipo_mtto AS ctm ';
+		$strQuery.= 'ON tmm.id_tipo_mantenimiento = ctm.id_tipo_mtto ';
+		$strQuery.= 'WHERE tmm.fecha_eliminado IS NULL'.$cond;
+		$strQuery.= 'ORDER BY tmm.fecha_registro ASC, tmm.id_maquinaria_mantenimiento ASC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN REGISTRO A LA TABLA DE MANTENIMIENTO DE MAQUINARIA
+	public function addMaqMtto($idTpoMtto, $idMaqVeh, $estatus, $observaciones, $fechaR){
+		$strQuery = 'INSERT INTO tbl_maquinaria_mantenimiento ';
+		$strQuery.= '(id_tipo_mantenimiento, id_maquinaria_vehiculo, estatus, observaciones, fecha_registro) ';
+		$strQuery.= 'VALUES('.$idTpoMtto.', '.$idMaqVeh.', '.$estatus.', NULLIF("'.$observaciones.'",""), "'.$fechaR.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR LOS DATOS DE UN REGISTRO DE MANTENIMIENTO DE UN VEHÍCULO/MAQUINARIA
+	public function actualizarMaqMtto($idMtto, $idTpoMtto, $idMaqVeh, $estatus, $observaciones){
+		$strQuery = 'UPDATE tbl_maquinaria_mantenimiento ';
+		$strQuery.= 'SET id_tipo_mantenimiento = '.$idTpoMtto.', id_maquinaria_vehiculo = '.$idMaqVeh.', estatus = '.$estatus.', observaciones = NULLIF("'.$observaciones.'","") ';
+		$strQuery.= 'WHERE id_maquinaria_mantenimiento = '.$idMtto;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE LA TABLA tbl_maquinaria_mantenimiento
+	public function eliminaMaqMtto($id, $fecha){
+		$strQuery = 'UPDATE tbl_maquinaria_mantenimiento ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_maquinaria_mantenimiento = '.$id;
+
+		return $strQuery;
+	}
+
+	//MÓDULO DE ACARREOS------------------------------------------------------
+
+	//QUERY PARA OBTENER EL LISTADO O DATOS DE ACARREOS
+	public function getDataAcarreos($id = ''){
+		$strQuery = 'SELECT ta.*, CONCAT(tmv.marca," ",tmv.modelo) AS vehiculoTransportador ';
+		$strQuery.= 'FROM tbl_acarreo AS ta ';
+		$strQuery.= 'INNER JOIN tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'ON ta.id_vehiculo_transportador = tmv.id_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE ta.fecha_eliminado IS NULL ';
+		$strQuery.= 'ORDER BY ta.fecha_registro DESC, ta.id_acarreo DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER LA OBRA A TRAVÉS DE SU ID
+	public function getObra($id){
+		$strQuery = 'SELECT nombre FROM tbl_obras ';
+		$strQuery.= 'WHERE id_obras = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN NUEVO REGISTRO A LA TABLA DE ACARREO
+	public function addAcarreo($origen, $origenOtro, $destino, $destinoOtro, $idVehiculoTransp, $combustible, $fechaMovimiento, $fechaLlegada, $estatus, $tarifaAlimentacion, $diasAlimentacion, $tarifaHospedaje, $diasHospedaje, $gastosAdicionales, $total, $observaciones, $fechaRegistro){
+		$strQuery = 'INSERT INTO tbl_acarreo ';
+		$strQuery.= '(origen, origen_otro, destino, destino_otro, id_vehiculo_transportador, combustible, fecha_movimiento, fecha_llegada, estatus, tarifa_alimentacion, dias_alimentacion, tarifa_hospedaje, dias_hospedaje, gastos_adicionales, total, observaciones, fecha_registro) ';
+		$strQuery.= 'VALUES('.$origen.', NULLIF("'.$origenOtro.'",""), '.$destino.', NULLIF("'.$destinoOtro.'",""), '.$idVehiculoTransp.', "'.$combustible.'", "'.$fechaMovimiento.'", "'.$fechaLlegada.'", '.$estatus.', '.$tarifaAlimentacion.', '.$diasAlimentacion.', '.$tarifaHospedaje.', '.$diasHospedaje.', '.$gastosAdicionales.', '.$total.', NULLIF("'.$observaciones.'",""), "'.$fechaRegistro.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ACTUALIZAR UN REGISTRO DE LA TABLA DE ACARREOS
+	public function actualizaAcarreo($id, $origen, $origenOtro, $destino, $destinoOtro, $idVehiculoTransp, $combustible, $fechaMovimiento, $fechaLlegada, $estatus, $tarifaAlimentacion, $diasAlimentacion, $tarifaHospedaje, $diasHospedaje, $gastosAdicionales, $total, $observaciones){
+		$strQuery = 'UPDATE tbl_acarreo ';
+		$strQuery.= 'SET origen = '.$origen.', origen_otro = NULLIF("'.$origenOtro.'",""), destino = '.$destino.', destino_otro = NULLIF("'.$destinoOtro.'",""), id_vehiculo_transportador = '.$idVehiculoTransp.', combustible = "'.$combustible.'", fecha_movimiento = "'.$fechaMovimiento.'", fecha_llegada = "'.$fechaLlegada.'", estatus = '.$estatus.', tarifa_alimentacion = '.$tarifaAlimentacion.', dias_alimentacion = '.$diasAlimentacion.', tarifa_hospedaje = '.$tarifaHospedaje.', dias_hospedaje = '.$diasHospedaje.', gastos_adicionales = '.$gastosAdicionales.', total = '.$total.', observaciones = NULLIF("'.$observaciones.'","") ';
+		$strQuery.= 'WHERE id_acarreo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE LA TABLA ACARREO
+	public function eliminarAcarreo($id,  $fecha){
+		$strQuery = 'UPDATE tbl_acarreo ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_acarreo = '.$id;
+
+		return $strQuery;
+	}
+
+	//QUERYS PARA OBTENER LOS DATOS/LISTADO DE LA MAQUINARIA/VEHÍCULOS DE UN ACARREO
+	public function getMaquinariaAcarreoListado($idAcarreo, $id = ''){
+		$cond = ($id != '')? ' AND tam.id_maquinaria = '.$id.' ':' ';
+
+		$strQuery = 'SELECT tam.id_maquinaria, tam.id_acarreo, CONCAT(tmv.marca," ",tmv.modelo) AS maquinaria, tmv.numero_economico, tmv.numero_serie, tmv.placas, tmv.peso, tam.fecha_registro ';
+		$strQuery.= 'FROM tbl_acarreo_maquinaria AS tam ';
+		$strQuery.= 'INNER JOIN tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'ON tam.id_maquinaria = tmv.id_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE tam.fecha_eliminado IS NULL AND tam.id_acarreo = '.$idAcarreo.$cond;
+		$strQuery.= 'ORDER BY tam.fecha_registro DESC';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA OBTENER EL RENDIMIENTO DEL VEHÍCULO DE TRANSPORTE DE MAQUINARIA EN EL ACARREO
+	public function getRendimientoMaqAcarreo($idAcarreo){
+		$strQuery = 'SELECT SUM(tmv.peso) AS totPesoMaq, IF(SUM(tmv.peso) <= 20, "1.5", "1.0") AS rendimiento ';
+		$strQuery.= 'FROM tbl_acarreo_maquinaria AS tam ';
+		$strQuery.= 'INNER JOIN tblc_maquinaria_vehiculo AS tmv ';
+		$strQuery.= 'ON tam.id_maquinaria = tmv.id_maquinaria_vehiculo ';
+		$strQuery.= 'WHERE tam.fecha_eliminado IS NULL AND tam.id_acarreo = '.$idAcarreo;
+
+		return $strQuery;
+	}
+
+	//QUERY PARA AGREGAR UN REGISTRO A LA TABLA DE tbl_acarreo_maquinaria
+	public function addAcarreoMaqVeh($idAcarreo, $idMaquinaria, $fecha){
+		$strQuery = 'INSERT INTO tbl_acarreo_maquinaria ';
+		$strQuery.= '(id_acarreo, id_maquinaria, fecha_registro) ';
+		$strQuery.= 'VALUES('.$idAcarreo.', '.$idMaquinaria.', "'.$fecha.'")';
+
+		return $strQuery;
+	}
+
+	//QUERY PARA ELIMINAR EL REGISTRO DE UNA MAQUINARIA DE LA TABLA tbl_acarreo_maquinaria
+	public function eliminaAcarreoMaqVeh($idAcarreo, $idMaquinaria, $fecha){
+		$strQuery = 'UPDATE tbl_acarreo_maquinaria ';
+		$strQuery.= 'SET fecha_eliminado = "'.$fecha.'" ';
+		$strQuery.= 'WHERE id_acarreo = '.$idAcarreo.' AND id_maquinaria = '.$idMaquinaria;
 
 		return $strQuery;
 	}

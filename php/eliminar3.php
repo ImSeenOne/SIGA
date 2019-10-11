@@ -14,7 +14,8 @@
 	require ("clase_querys3.php");
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	$funciones = new Funciones(1);
-	$conexion  = new DB_mysql(1);
+	$idConexion = $_SESSION["idConexion"];
+	$conexion  = new DB_MySql($idConexion);
 	$querys    = new Querys3();
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	$datos       = array(); $jsondata = array();

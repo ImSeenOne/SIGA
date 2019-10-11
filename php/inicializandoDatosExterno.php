@@ -11,7 +11,8 @@
 	include_once("../php/clase_funciones.php");
 	include_once("../php/clase_paginador.php");
 	//--------------------------------------------------
-	$conexion  = new DB_MySql(1);
+	$idConexion = $_SESSION["idConexion"];
+	$conexion  = new DB_MySql($idConexion);
 	$funciones = new Funciones();
 	$querys    = new Querys();
 	$querys3   = new Querys3();

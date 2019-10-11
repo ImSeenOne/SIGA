@@ -146,8 +146,8 @@
         <!--icheck-->
         <script src="plugins/iCheck/icheck.min.js"></script>
         <!-- Validación Formularios-->
-        <!-- <script type="text/javascript" src="plugins/mdbB/js/popper.min.js"></script>
-        <script type="text/javascript" src="plugins/mdbB/js/mdb.min.js"></script> -->
+        <script type="text/javascript" src="plugins/mdbB/js/popper.min.js"></script>
+        <script type="text/javascript" src="plugins/mdbB/js/mdb.min.js"></script>
         <!-- funciones -->
         <script src="js/sweetalert.min.js"></script>
         <script src="js/simply-toast.js"></script>

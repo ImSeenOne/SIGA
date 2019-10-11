@@ -120,10 +120,23 @@
             </div>
           </div>
 
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="work">Obra</label>
+              <select required class="form-control" name="work" id="work">
+                <option value="0">Selecciona una opción...</option>
+                <?php
+                  $combo = @$conexion->obtenerlista($querys3->getListadoObras());
+                  $funciones->llenarCombo($combo);
+                ?>
+              </select>
+            </div>
+          </div>
+
           <input type="hidden" name="opcion" value="27">
           <input type="hidden" id="id" name="id">
 
-          <div class="form-group col-lg-8 col-md-12 col-sm-12 col-xs-12 mt-2em pull-right">
+          <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-2em pull-right">
             <div class="col-sm-12 col-lg-6 col-md-6">
               <button class="btn btn-primary btn-block" type="submit">Agregar</button>
               &nbsp;

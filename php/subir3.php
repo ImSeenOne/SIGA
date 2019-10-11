@@ -13,7 +13,8 @@ include_once("clase_upload.php");
 //$push = new PushNotifications();
 $funciones = new Funciones();
 //LLAMAMOS A LA CLASE CONEXION
-$conexion = new DB_mysql(1);
+$idConexion = $_SESSION["idConexion"];
+$conexion  = new DB_MySql($idConexion);
 //llamamos a la clase upload para cargar archivos
 $querys    = new Querys3();
 $upload    = new upload();
@@ -922,6 +923,8 @@ break;
 		$magnaLiters = $funciones->limpia($_POST['magnaLts']);
 		$premiumLiters = $funciones->limpia($_POST['premiumLts']);
 		$dieselLiters = $funciones->limpia($_POST['dieselLts']);
+
+		$work = $funciones->limpia($_POST['work']);
 
 		$finishDate = date('Y-m-d', strtotime($initDate.' + 7 days' ));
 

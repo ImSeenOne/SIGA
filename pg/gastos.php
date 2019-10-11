@@ -35,7 +35,7 @@
 
       <form id="frmNewExpense" autocomplete="off" class="row cntntFrm mt-1em" style="display:none;">
         <input autocomplete="false" name="hidden" type="text" style="display:none;">
-        <h3 class="ml-1em mt-0">Nuevo gasto</h3><br>
+        <h3 class="ml-1em mt-0">Nuevo Gasto</h3><br>
         <div class="col-lg-12">
           <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="form-group">

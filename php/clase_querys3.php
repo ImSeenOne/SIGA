@@ -48,8 +48,8 @@ class Querys3 {
 
 	//QUERY PARA AGREGAR UNA OBRA
 		public function addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $fechaRegistro){
-			$factorImpregnacion = $workArea * 1.2;
-			$factorLiga = $workArea * 0.8;;
+			@$factorImpregnacion = str_replace(",", "", $workArea) * 1.2;
+			@$factorLiga = str_replace(",", "", $workArea) * 0.8;
 			$strQuery = 'INSERT INTO tbl_obras ';
 			$strQuery.= '(nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro,factor_impregnacion,factor_liga) ';
 			$strQuery.= 'VALUES("'.$name.'", "'.$type.'", "'.$dependency.'", "'.$amount.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$folderVol.'", "'.$addedType.'", "'.$concreteVol.'", "'.$workArea.'", "'.$fechaRegistro.'",'.$factorImpregnacion.','.$factorLiga.')';
@@ -679,12 +679,12 @@ public function getContracts($id = 0){
 
 	function addInsFuelExp($dateS, $dateF, $magnaLiters, $premiumLiters,
 													$dieselLiters, $magnaPrice, $premiumPrice, $dieselPrice,
-													$status, $amount, $date){
+													$status, $amount, $date, $work){
 		$strQuery = 'INSERT INTO tbl_gasolina_interna ';
-		$strQuery.= '(fecha_inicio, fecha_final, litros_magna, litros_premium,
+		$strQuery.= '(fecha_inicio, fecha_final, id_obra, litros_magna, litros_premium,
 									litros_diesel, precio_magna, precio_premium, precio_diesel, status, monto,
 									fecha_registro) ';
-		$strQuery.= 'VALUES (\''.$dateS.'\', \''.$dateF.'\',
+		$strQuery.= 'VALUES (\''.$dateS.'\', \''.$dateF.'\', '.$work.',
 									'.$magnaLiters.', '.$premiumLiters.', '.$dieselLiters.',
 									'.$magnaPrice.', '.$premiumPrice.', '.$dieselPrice.', '.$status.',
 									'.$amount.', \''.$date.'\')';

@@ -34,7 +34,7 @@
               <div class="col-lg-3">
                 <div class="form-group">
                   <label for="txtName">Nombre de la obra</label>
-                  <input required type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="45">
+                  <input required type="text" id="txtName" name="txtName" class="form-control" placeholder="Nombre" maxlength="100">
                   <div id="reqTxtName" class="text-danger"></div>
                 </div>
               </div>
@@ -118,6 +118,9 @@
                     <div id="reqWorkArea" class="text-danger"></div>
                   </div>
                 </div>
+              </div>
+              <div id="alert" class="alert alert-success" style="display: none;" role="alert">
+
               </div>
               <div class="row col-lg-12">
                 <div class="form-group text-right text-bottom">

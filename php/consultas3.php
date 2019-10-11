@@ -1,6 +1,9 @@
 <?php
 require 'inicializandoDatosExterno.php';
 
+$idConexion = $_SESSION["idConexion"];
+$conexion  = new DB_MySql($idConexion);
+
 $datos = array(); $jsondata = array();
 
 switch($_POST['opt']){

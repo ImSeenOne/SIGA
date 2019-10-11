@@ -181,6 +181,7 @@ $('#btnNewWork').click(function(){
   $('#frmWork').slideToggle();
   $('#btnNewWork	').slideToggle();
   $('#txtName').focus();
+  ocultarBotonesObra(1);
 });
 
 $('#btnCancelWork').click(function(){
@@ -188,7 +189,31 @@ $('#btnCancelWork').click(function(){
   $('#btnNewWork').slideToggle();
 	$('#opcion').val(3);
   resetForm('frmWork');
+  ocultarBotonesObra(1);
 });
+
+
+function ocultarBotonesObra(flag){
+	console.log($("#btnSaveGeo").hasClass('hidden'));
+	switch(flag){
+		case 1:
+			if(!$("#btnSaveGeo").hasClass('hidden')){
+				$("#btnSaveGeo").addClass('hidden');
+				$("#btnSavePO").addClass('hidden');
+				$("#btnSaveEI").addClass('hidden');
+				$("#btnSaveMO").addClass('hidden');
+			}
+			break;
+		case 2:
+				if($("#btnSaveGeo").hasClass('hidden')){
+					$("#btnSaveGeo").removeClass('hidden');
+					$("#btnSavePO").removeClass('hidden');
+					$("#btnSaveEI").removeClass('hidden');
+					$("#btnSaveMO").removeClass('hidden');
+				}
+			break;
+	}
+}
 
 
 function work_list(){
@@ -211,14 +236,35 @@ function work_list(){
 
 //ESTA FUNCIÓN AGREGA UNA NUEVA OBRA
 $('#btnSaveWork').on('click',function(){
-	let validity = false;
-	validity = ($('#txtName').checkValidity()) ? true : false;
-	validity = ($('#inputType').checkValidity()) ? true : false;
-	validity = ($('#txtDependency').checkValidity()) ? true : false;
-	validity = ($('#inputAmount').checkValidity()) ? true : false;
-	validity = ($('#date1').checkValidity()) ? true : false;
-	validity = ($('#date2').checkValidity()) ? true : false;
-	validity = ($('#txtName').checkValidity()) ? true : false;
+	let validity = true;
+	if($('#txtName').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#inputType').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#txtDependency').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#inputAmount').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#date1').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#date2').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
+	if($('#txtName').val().length < 1){
+		$('#alert').html('Faltan campos por completar');
+		validity = false;
+	}
 
 
     let formData = new FormData(document.getElementById('frmWork'));
@@ -238,13 +284,9 @@ $('#btnSaveWork').on('click',function(){
 					console.log(resp);
 	          $('#respServer').empty();
 	          if(resp.resp == 1){
-							$('#frmWork').slideToggle();
-						  $('#btnNewWork').slideToggle();
-							if(!$('#btnNewWork').hasClass('hide')){
-								$('#btnSavePO').addClass('hide');
-								$('#btnSaveEI').addClass('hide');
-								$('#btnSaveMO').addClass('hide');
-							}
+				$('#frmWork').slideToggle();
+				$('#btnNewWork').slideToggle();
+				ocultarBotonesObra(1);
 	            work_list();
 	            $('#opcion').val(3);
 	            resetForm('frmWork');
@@ -303,6 +345,7 @@ function editarRegObra(id){
 			let srcPO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=1';
 			let srcEI = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=2';
 			let srcMO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=3';
+			let srcGEO = 'pg/modal_geolocalizar_obra.php?id='+resp.id_obra+'&flag=1';
             $('#respServer').empty('');
             $('#txtName').val(resp.nombre);
 			$('#inputType').val(resp.tipo);
@@ -318,12 +361,8 @@ function editarRegObra(id){
 			$('#btnSavePO').data('src',srcPO);
 			$('#btnSaveEI').data('src',srcEI);
 			$('#btnSaveMO').data('src',srcMO);
-			if($('#btnSavePO').hasClass('hidden')){
-
-				$('#btnSavePO').removeClass('hidden');
-				$('#btnSaveEI').removeClass('hidden');
-				$('#btnSaveMO').removeClass('hidden');
-			}
+			$('#btnSaveGeo').data('src',srcGEO);
+			ocultarBotonesObra(2);
 			$('#opcion').val('9');
       }
   });
