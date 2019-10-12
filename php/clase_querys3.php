@@ -752,7 +752,6 @@ public function getContracts($id = 0){
 	/****************************************************************************/
 
 
-
 	public function fillSelectInsFuelExpStatus($results){
 		foreach ($results as $result) {
 			echo '<option value ="'.$result->id_status.'">'.$result->nombre.'</option>';
@@ -824,6 +823,11 @@ public function getContracts($id = 0){
 		 $strQuery .= "FROM tblc_propiedades t , (SELECT @rownum:=0) r " . $sentencia;
 		 $strQuery .= " ORDER BY t.id_propiedad DESC;";
 
+		 return $strQuery;
+	 }
+
+	 function getDetailedPropiedades($id = ''){
+		 $strQuery = ' SELECT * FROM tblc_propiedades WHERE fecha_eliminado IS NULL';
 		 return $strQuery;
 	 }
 
