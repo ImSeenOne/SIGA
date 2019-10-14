@@ -43,16 +43,24 @@
               <select id="property" name="property" class="form-control select2" style="width: 100%;">
                 <option value="0" selected="selected">Seleccionar...</option>
                 <?php
-                  $combo = @$conexion->obtenerlista($querys3->getPropiedades());
-                  $funciones->llenarCombo($combo);
+                  $combo = @$conexion->obtenerlista($querys3->getDetailedPropiedades());
+                  foreach ($combo as $key) {
+                    $des = @$conexion->fetch_array($querys3->getListadoDesarrollo($key->desarrollo));
+                    $build = $key->numero_edificio;
+                    $level = @$conexion->fetch_array($querys3->getLevels($key->numero_nivel));
+                    $dep = $key->numero_departamento;
+                    echo '
+             			 <option value="'.$key->id_propiedad.'" name="'.$des['nombre'].', '.$build.', '.$level['nombre'].', '.$dep.''.'">'.$des['nombre'].', '.$build.', '.$level['nombre'].', '.$dep.'</option>';
+                  }
                 ?>
+
               </select>
             </div>
           </div>
 
           <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="form-group">
-              <label for="type">Tipo de gasto</label>
+              <label for="type">Tipo de Gasto</label>
               <select class="form-control" id="type" name="typeExpense" style="width: 100%;">
                 <option>Seleccionar...</option>
                 <?php
@@ -123,7 +131,7 @@
         </div>
 
         <div class="col-lg-3 col-md-3 col-sm-12">
-          <label>Tipo de gasto</label>
+          <label>Tipo de Gasto</label>
               <select id="searchExpenseType" class="form-control select2" style="width: 100%;">
                 <option value='0' selected="selected">Cualquiera</option>
                 <?php
