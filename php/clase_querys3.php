@@ -4,20 +4,20 @@ class Querys3 {
 	//*********************INICIA QUERYS PARA INICIO DE SESIÓN ******************************
 
 	//QUERY PARA OBTENER EL LISTADO DEL CATÁLOGO DE DESARROLLO
-	public function getListadoDesarrollo($id = ''){
-		$cond = ' ';
+		public function getListadoDesarrollo($id = ''){
+			$cond = ' ';
 
-		if($id != '') {
-			$cond = ' AND id_desarrollo = '.$id.' ';
+			if($id != '') {
+				$cond = ' AND id_desarrollo = '.$id.' ';
+			}
+
+			$strQuery = 'SELECT id_desarrollo, nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro, coordenadas ';
+			$strQuery.= 'FROM tblc_desarrollo ';
+			$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
+			$strQuery.= 'ORDER BY fecha_registro DESC, id_desarrollo DESC';
+
+			return $strQuery;
 		}
-
-		$strQuery = 'SELECT id_desarrollo, nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro ';
-		$strQuery.= 'FROM tblc_desarrollo ';
-		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
-		$strQuery.= 'ORDER BY fecha_registro DESC, id_desarrollo DESC';
-
-		return $strQuery;
-	}
 
 	//QUERY PARA AGREGAR UN REGISTRO AL CATÁLOGO DE DESARROLLO
 		public function addCatDesarrollo($nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono, $fechaRegistro,$latitud,$longitud){
