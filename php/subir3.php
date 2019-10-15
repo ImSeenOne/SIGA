@@ -31,6 +31,8 @@ switch($_POST['opcion']){
 		$alias = $funciones->limpia($_POST['txtAlias']);
 		$numero_etapa_oferta = $funciones->limpia($_POST['txtNumeroOferta']);
 		$cp = $funciones->limpia($_POST['txtCp']);
+		$latitud = $funciones->limpia($_POST['latitud']);
+		$longitud = $funciones->limpia($_POST['longitud']);
 
 		if(isset($_FILES["flIcono"]["tmp_name"]) and $_FILES["flIcono"]["tmp_name"] != ""){
 				if($upload->load("flIcono") === false){
@@ -52,7 +54,7 @@ switch($_POST['opcion']){
 				$datos['flIcono'] = null;
 		}
 
-		if($conexion->consulta($querys->addCatDesarrollo($nombre,$alias, $numero_etapa_oferta, $cp, $datos['flIcono'], $datos['fecha_actual'])) == 0){
+		if($conexion->consulta($querys->addCatDesarrollo($nombre,$alias, $numero_etapa_oferta, $cp, $datos['flIcono'], $datos['fecha_actual'],$latitud,$longitud)) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{
@@ -69,6 +71,8 @@ case 2:
 	$numero_etapa_oferta = $funciones->limpia($_POST['txtNumeroOferta']);
 	$alias = $funciones->limpia($_POST['txtAlias']);
 	$cp = $funciones->limpia($_POST['txtCp']);
+	$latitud = $funciones->limpia($_POST['latitud']);
+	$longitud = $funciones->limpia($_POST['longitud']);
 
 	if(isset($_FILES["flIcono"]["tmp_name"]) and $_FILES["flIcono"]["tmp_name"] != ""){
 			if($upload->load("flIcono") === false){
@@ -90,7 +94,7 @@ case 2:
 					$datos['flIcono'] = $_POST['hdFlIcono'];
 			}
 
-			if($conexion->consulta($querys->updateCatDesarrollo($id, $nombre, $alias, $numero_etapa_oferta, $cp, $datos['flIcono'])) == 0){
+			if($conexion->consulta($querys->updateCatDesarrollo($id, $nombre, $alias, $numero_etapa_oferta, $cp, $datos['flIcono'],$latitud,$longitud)) == 0){
 				$jsondata['resp'] = 0;
 			}else{
 				$jsondata['resp'] = 1;
