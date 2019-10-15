@@ -26,6 +26,7 @@ switch($_POST['opt']){
 
 		$fechaini = explode("-",$resp['fecha_inicio']);
 		$fechafin = explode("-",$resp['fecha_finalizacion']);
+		$coordenadas = explode(",",$resp["coordenadas"]);
 
 		$jsondata['id_obra'] = $resp['id_obras'];
 		$jsondata['nombre'] = $resp['nombre'];
@@ -38,6 +39,10 @@ switch($_POST['opt']){
 		$jsondata['tipo_agregado'] = $resp['tipo_agregado'];
 		$jsondata['volumen_concreto'] = $resp['volumen_concreto'];
 		$jsondata['area_obra'] = $resp['area_obra'];
+		$jsondata['latitud'] = $coordenadas[0];
+		$jsondata['longitud'] = $coordenadas[1];
+		$jsondata['direccion'] = $resp['direccion'];;
+
 	break;
 	//OBTIENE LOS DATOS DE UN LISTADO DE SEGUIMIENTO PARA SER EDITADOS
 	case 3:
@@ -250,17 +255,17 @@ switch($_POST['opt']){
 	break;
 
 	//FUNCION PARA OBTENER LAS PROPIEDADES QUE LE INTERESAN AL CLIENTE
-	case 24:
-		$idClient = $funciones->limpia($_POST['idClient']);
-		$resp = @$conexion->obtenerlista('SELECT * FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL AND id_cliente = '.$idClient);
-		foreach ($resp as $key) {
-			$respC = @$conexion->fetch_array($querys3->getPropiedades($key->id_propiedad));
-			//print_r($respC);
-			$datos[] = array('id_property' => $key->id_propiedad, 'name'=>$respC['valor'], 'amount' => $key->monto, 'development'=>$respC['id_desarrollo'],
-							'owner' => $respC['propietario'],'type' => $respC['id_tipo']);
-		}
-		$jsondata['properties'] = $datos;
-	break;
+		case 24:
+			$idClient = $funciones->limpia($_POST['idClient']);
+			$resp = @$conexion->obtenerlista('SELECT * FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL AND id_cliente = '.$idClient);
+			foreach ($resp as $key) {
+				$respC = @$conexion->fetch_array($querys3->getPropiedades($key->id_propiedad));
+				$datos[] = array('id_property' => $key->id_propiedad, 'name'=>$respC['folio'], 'amount' => $key->monto, 'development'=>$respC['id_desarrollo'],
+								'owner' => $respC['propietario'],'type' => $respC['id_tipo'],'edificio'=>$respC['numero_edificio'],
+								'departamento'=>$respC['numero_departamento'],'nivel'=>$respC['numero_nivel'],'direccion'=>$respC['direccion']);
+			}
+			$jsondata['properties'] = $datos;
+		break;
 
 }
 

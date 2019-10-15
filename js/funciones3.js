@@ -342,10 +342,11 @@ function editarRegObra(id){
         data:    params,
         dataType: 'json',
         success: function(resp){
-			let srcPO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=1';
+			console.log(resp);
+			let srcPO = 'pg/modal_geolocalizar_obra.php?id='+resp.id_obra+'&flag=1';
 			let srcEI = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=2';
 			let srcMO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=3';
-			let srcGEO = 'pg/modal_geolocalizar_obra.php?id='+resp.id_obra+'&flag=1';
+
             $('#respServer').empty('');
             $('#txtName').val(resp.nombre);
 			$('#inputType').val(resp.tipo);
@@ -353,15 +354,15 @@ function editarRegObra(id){
             $('#inputAmount').val(resp.monto);
             $('#date1').val(resp.fecha_inicio);
             $('#date2').val(resp.fecha_finalizacion);
-			//$('#txtFolderVol').val(resp.volumenes_carpeta);
 			$('#addedType').val(resp.tipo_agregado);
-			//$('#txtConcreteVol').val(resp.volumen_concreto);
 			$('#txtWorkArea').val(resp.area_obra);
 			$('#idWork').val(resp.id_obra);
 			$('#btnSavePO').data('src',srcPO);
 			$('#btnSaveEI').data('src',srcEI);
 			$('#btnSaveMO').data('src',srcMO);
-			$('#btnSaveGeo').data('src',srcGEO);
+			$('#txtDireccion').val(resp.direccion);
+			$('#latitud').val(resp.latitud);
+			$('#longitud').val(resp.longitud);
 			ocultarBotonesObra(2);
 			$('#opcion').val('9');
       }

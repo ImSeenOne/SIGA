@@ -59,20 +59,20 @@ class Querys3 {
 	}
 
 	//QUERY PARA OBTENER LISTADO OBRAS
-	public function getListadoObras($id = ''){
-		$cond = ' ';
+		public function getListadoObras($id = ''){
+			$cond = ' ';
 
-		if($id != '') {
-			$cond.= 'AND id_obras = '.$id.' ';
+			if($id != '') {
+				$cond.= 'AND id_obras = '.$id.' ';
+			}
+
+			$strQuery = 'SELECT id_obras, id_obras AS id, nombre, nombre AS valor, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro, direccion, coordenadas ';
+			$strQuery.= 'FROM tbl_obras ';
+			$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
+			$strQuery.= 'ORDER BY fecha_registro DESC, id_obras	 DESC';
+
+			return $strQuery;
 		}
-
-		$strQuery = 'SELECT id_obras, id_obras AS id, nombre, nombre AS valor, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro ';
-		$strQuery.= 'FROM tbl_obras ';
-		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
-		$strQuery.= 'ORDER BY fecha_registro DESC, id_obras	 DESC';
-
-		return $strQuery;
-	}
 
 	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DE UNA OBRA
 	public function eliminarRegObra($id, $fecha){
@@ -83,25 +83,28 @@ class Querys3 {
 		return $strQuery;
 	}
 
-	public function updateObra($id, $name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea) {
-			$factorImpregnacion = $workArea * 1.2;
-			$factorLiga = $workArea * 0.8;
-		  $strQuery = 'UPDATE tbl_obras SET nombre = "'.$name.'"';
-		  $strQuery .= ',tipo = "'.$type.'"';
-		  $strQuery .= ',dependencia = "'.$dependency.'"';
-		  $strQuery .= ',monto = "'.$amount.'",';
-		  $strQuery .= 'fecha_inicio = "'.$dateStart.'",';
-		  $strQuery .= 'fecha_finalizacion = "'.$dateFinish.'",';
-		  $strQuery .= 'volumenes_carpeta = "'.$folderVol.'",';
-		  $strQuery .= 'tipo_agregado = "'.$addedType.'",';
-		  $strQuery .= 'volumen_concreto = "'.$concreteVol.'",';
-		  $strQuery .= 'area_obra = "'.$workArea.'", ';
-		  $strQuery .= 'factor_impregnacion = "'.$factorImpregnacion.'", ';
-		  $strQuery .= 'factor_liga = "'.$factorLiga.'" ';
-		  $strQuery .= 'WHERE id_obras = "'.$id.'";';
+	public function updateObra($id, $name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea,$direccion,$latitud,$longitud) {
+				$factorImpregnacion = $workArea * 1.2;
+				$factorLiga = $workArea * 0.8;
+				$coordenadas = $latitud.",".$longitud;
+			  $strQuery = 'UPDATE tbl_obras SET nombre = "'.$name.'"';
+			  $strQuery .= ',tipo = "'.$type.'"';
+			  $strQuery .= ',dependencia = "'.$dependency.'"';
+			  $strQuery .= ',monto = "'.$amount.'",';
+			  $strQuery .= 'fecha_inicio = "'.$dateStart.'",';
+			  $strQuery .= 'fecha_finalizacion = "'.$dateFinish.'",';
+			  $strQuery .= 'volumenes_carpeta = "'.$folderVol.'",';
+			  $strQuery .= 'tipo_agregado = "'.$addedType.'",';
+			  $strQuery .= 'volumen_concreto = "'.$concreteVol.'",';
+			  $strQuery .= 'area_obra = "'.$workArea.'", ';
+			  $strQuery .= 'direccion = "'.$direccion.'", ';
+			  $strQuery .= 'coordenadas = "'.$coordenadas.'", ';
+			  $strQuery .= 'factor_impregnacion = "'.$factorImpregnacion.'", ';
+			  $strQuery .= 'factor_liga = "'.$factorLiga.'" ';
+			  $strQuery .= 'WHERE id_obras = "'.$id.'";';
 
-			return $strQuery;
-		}
+				return $strQuery;
+			}
 
 	//QUERY PARA OBTENER LISTADO SEGUIMIENTO
 	public function getListadoSeguimiento($id = ''){
@@ -788,35 +791,36 @@ public function getContracts($id = 0){
 			}
 		}
 
-	public function listClientes($id = '',$nombre='', $rfc='', $tipoCte='',$interes=0){
-		$cond = '';
+		public function listClientes($id = '',$nombre='', $rfc='', $tipoCte='',$interes=0){
+				$cond = '';
 
-		$cond = ($id != '')? ' AND id_cliente = '.$id.' ':'';
-		$cond.= ($nombre != '')? ' AND CONCAT(nombre," ",apellido_p," ", apellido_m) LIKE "%'.$nombre.'%" ':' ';
-		$cond.= ($rfc != '')? ' AND rfc LIKE "%'.$rfc.'%" ':' ';
-		$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
+				$cond = ($id != '')? ' AND id_cliente = '.$id.' ':'';
+				$cond.= ($nombre != '')? ' AND CONCAT(nombre," ",apellido_p," ", apellido_m) LIKE "%'.$nombre.'%" ':' ';
+				$cond.= ($rfc != '')? ' AND rfc LIKE "%'.$rfc.'%" ':' ';
+				$cond.= ($tipoCte != 0)? ' AND id_tipo = '.$tipoCte.' ':' ';
 
-		$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
-		$strQuery.= 'FROM tblc_clientes ';
-		$strQuery.= 'WHERE fecha_eliminado IS NULL ';
-		if($interes != 0)
-		$strQuery.= 'AND id_cliente IN (SELECT id_cliente FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL) ';
-		$strQuery.= $cond.'ORDER BY fecha_registro DESC, id_cliente DESC';
+				$strQuery = 'SELECT id_cliente, id_cliente AS id, rfc, nombre, apellido_p, apellido_m, CONCAT(nombre," ",apellido_p," ",apellido_m) AS valor, correo, telefono, celular, estado_civil, domicilio, id_tipo, fecha_registro, observaciones ';
+				$strQuery.= 'FROM tblc_clientes ';
+				$strQuery.= 'WHERE fecha_eliminado IS NULL ';
+				if($interes != 0)
+				$strQuery.= 'AND id_cliente IN (SELECT id_cliente FROM tbl_interes_cliente WHERE fecha_eliminado IS NULL) ';
+				//$strQuery.= $cond.'ORDER BY fecha_registro DESC, id_cliente DESC';
+				$strQuery.= $cond.'ORDER BY valor';
 
-		return $strQuery;
-	}
+				return $strQuery;
+			}
 
 
-	 public function getListadoPropietarios($id = ''){
-	   $sentencia = ($id != '')? ' WHERE id_propietario = ' . $id:'';
+		public function getListadoPropietarios($id = ''){
+			$sentencia = ($id != '')? ' WHERE id_propietario = ' . $id:'';
 
-	   $strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_propietario id, t.nombre valor,";
-	   $strQuery .= "t.nombre, t.fecha_registro ";
-	   $strQuery .= "FROM vw_catPropietarios t , (SELECT @rownum:=0) r " . $sentencia;
-	   $strQuery .= " ORDER BY numero;";
+			$strQuery = "SELECT @rownum:=@rownum+1 numero, t.id_propietario id, t.nombre valor,";
+			$strQuery .= "t.nombre, t.fecha_registro ";
+			$strQuery .= "FROM vw_catPropietarios t , (SELECT @rownum:=0) r " . $sentencia;
+			$strQuery .= " ORDER BY valor;";
 
-	   return $strQuery;
-	 }
+			return $strQuery;
+		}
 
 	 function getPropiedades($id = ''){
 		 $sentencia = ($id != '')? ' WHERE id_propiedad = ' . $id . ' AND fecha_eliminado IS NULL':' WHERE fecha_eliminado IS NULL';

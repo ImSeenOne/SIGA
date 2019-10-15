@@ -315,6 +315,9 @@ case 2:
 		$id = $funciones->limpia($_POST['idWork']);
 		$name = $funciones->limpia($_POST['txtName']);
 		$type = $funciones->limpia($_POST['inputType']);
+		$txtDireccion = $funciones->limpia($_POST['txtDireccion']);
+		$latitud = $funciones->limpia($_POST['latitud']);
+		$longitud = $funciones->limpia($_POST['longitud']);
 		$dependency = $funciones->limpia($_POST['txtDependency']);
 		$amount = $funciones->limpia($_POST['inputAmount']);
 		$dateStartT = $funciones->limpia($_POST['date1']);
@@ -324,10 +327,11 @@ case 2:
 		$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
 		$workArea = $funciones->limpia($_POST['txtWorkArea']);
 		$amount = str_replace(",","",$amount);
-		$dateStart = explode("-", $dateStartT);
-		$dateFinish = explode("-", $dateFinishT);
+		//$dateStart = explode("-", $dateStartT);
+		//$dateFinish = explode("-", $dateFinishT);
+
 		// exit($id.$name.$type.$dependency.$amount. $dateStart[2]."-".$dateStart[1]."-".$dateStart[0]. $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0]. $folderVol. $addedType. $concreteVol. $workArea);
-		if($conexion->consulta($querys->updateObra($id, $name, $type, $dependency, $amount, $dateStart[2]."-".$dateStart[1]."-".$dateStart[0], $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0], $folderVol, $addedType, $concreteVol, $workArea)) == 0){
+		if($conexion->consulta($querys->updateObra($id, $name, $type, $dependency, $amount, $dateStartT, $dateFinishT, $folderVol, $addedType, $concreteVol, $workArea,$txtDireccion,$latitud,$longitud)) == 0){
 		$jsondata['resp'] = 0;
 		$jsondata['msg'] = 0;
 		}else{
