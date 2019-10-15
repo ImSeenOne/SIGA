@@ -29,14 +29,15 @@ class Querys3 {
 			return $strQuery;
 		}
 
-	//QUERY PARA EDITAR UN REGISTRO DEL CATÁLOGO DESARROLLO
-	public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono){
-		$strQuery = 'UPDATE tblc_desarrollo ';
-		$strQuery.= 'SET nombre = "'.$nombre.'", alias = "'.$alias.'", numero_etapa_oferta = "'.$numero_etapa_oferta.'", codigo_postal = "'.$codigo_postal.'", icono = "'.$icono.'" ';
-		$strQuery.= 'WHERE id_desarrollo = '.$idDesarrollo;
+		//QUERY PARA EDITAR UN REGISTRO DEL CATÁLOGO DESARROLLO
+			public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono, $latitud, $longitud){
+				$coordenadas = $latitud.",".$longitud;
+				$strQuery = 'UPDATE tblc_desarrollo ';
+				$strQuery.= 'SET nombre = "'.$nombre.'", alias = "'.$alias.'", numero_etapa_oferta = "'.$numero_etapa_oferta.'", codigo_postal = "'.$codigo_postal.'", icono = "'.$icono.'", coordenadas= "' . $coordenadas . '" ';
+				$strQuery.= 'WHERE id_desarrollo = '.$idDesarrollo;
 
-		return $strQuery;
-	}
+				return $strQuery;
+			}
 
 	//QUERY PARA MARCAR CÓMO ELIMINADO UN REGISTRO DEL CATALOGO DESARROLLO
 	public function eliminaRegCatDesarrollo($id, $fecha){
