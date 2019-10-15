@@ -47,15 +47,16 @@ class Querys3 {
 	}
 
 	//QUERY PARA AGREGAR UNA OBRA
-		public function addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $fechaRegistro){
-			@$factorImpregnacion = str_replace(",", "", $workArea) * 1.2;
-			@$factorLiga = str_replace(",", "", $workArea) * 0.8;
-			$strQuery = 'INSERT INTO tbl_obras ';
-			$strQuery.= '(nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro,factor_impregnacion,factor_liga) ';
-			$strQuery.= 'VALUES("'.$name.'", "'.$type.'", "'.$dependency.'", "'.$amount.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$folderVol.'", "'.$addedType.'", "'.$concreteVol.'", "'.$workArea.'", "'.$fechaRegistro.'",'.$factorImpregnacion.','.$factorLiga.')';
+	public function addObra($name, $type, $dependency, $amount, $dateStart, $dateFinish, $folderVol, $addedType, $concreteVol, $workArea, $fechaRegistro,$txtDireccion,$latitud,$longitud){
+		$factorImpregnacion = $workArea * 1.2;
+		$factorLiga = $workArea * 0.8;
+		$coordenadas= $latitud . "," . $longitud;
+		$strQuery = 'INSERT INTO tbl_obras ';
+		$strQuery.= '(nombre, tipo, dependencia, monto, fecha_inicio, fecha_finalizacion, volumenes_carpeta, tipo_agregado, volumen_concreto, area_obra,  fecha_registro,factor_impregnacion,factor_liga,direccion,coordenadas) ';
+		$strQuery.= 'VALUES("'.$name.'", "'.$type.'", "'.$dependency.'", "'.$amount.'", "'.$dateStart.'", "'.$dateFinish.'", "'.$folderVol.'", "'.$addedType.'", "'.$concreteVol.'", "'.$workArea.'", "'.$fechaRegistro.'",'.$factorImpregnacion.','.$factorLiga.',"'.$txtDireccion.'","'. $coordenadas .'")';
 
-			return $strQuery;
-		}
+		return $strQuery;
+	}
 
 	//QUERY PARA OBTENER LISTADO OBRAS
 	public function getListadoObras($id = ''){

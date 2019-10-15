@@ -330,4 +330,22 @@
     }
     $('#dateFinish').val(day+'/'+month+'/'+year);
   }
+
+  function sumTotal(){
+    let magnaPrice = ($('#magna').val()) ? parseFloat($('#magna').val().replace("$", "").replace(",","")) : 0;
+    console.log('Precio Magna: '+magnaPrice);
+    let premiumPrice = ($('#premium').val()) ? parseFloat($('#premium').val().replace("$", "").replace(",","")) : 0;
+    console.log('Precio Premium: '+premiumPrice);
+    let dieselPrice = ($('#diesel').val()) ? parseFloat($('#diesel').val().replace("$", "").replace(",","")) : 0;
+    console.log('Precio Diesel: '+dieselPrice);
+
+    let quantMagna = ($('#magnaLts').val()) ? parseFloat($('#magnaLts').val().replace(',','')) : 0;
+    let quantPremium = ($('#premiumLts').val()) ? parseFloat($('#premiumLts').val()) : 0;
+    let quantDiesel = ($('#dieselLts').val()) ? parseFloat($('#dieselLts').val()) : 0;
+    let total = (parseFloat(magnaPrice) * parseFloat(quantMagna)) + (parseFloat(premiumPrice) * parseFloat(quantPremium)) + (parseFloat(dieselPrice) * parseFloat(quantDiesel));
+    console.log('Total: '+total);
+
+    $('#totalAmount').val(total);
+    $('#totalAmount').trigger('keyup');
+  }
 </script>

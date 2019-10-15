@@ -101,35 +101,38 @@ case 2:
 	break;
 
 	//AGREGAR UNA OBRA
-	case 3:
-		$name = $funciones->limpia($_POST['txtName']);
-		$type = $funciones->limpia($_POST['inputType']);
-		$dependency = $funciones->limpia($_POST['txtDependency']);
-		$amount = $funciones->limpia($_POST['inputAmount']);
-		$dateStartTmp = $funciones->limpia($_POST['date1']);
-		$dateFinishTmp = $funciones->limpia($_POST['date2']);
-		$folderVol = (isset($_POST['txtFolderVol']))?$funciones->limpia($_POST['txtFolderVol']):0;
-		$addedType = $funciones->limpia($_POST['addedType']);
-		$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
-		$workArea = $funciones->limpia($_POST['txtWorkArea']);
+		case 3:
+			$name = $funciones->limpia($_POST['txtName']);
+			$txtDireccion = $funciones->limpia($_POST['txtDireccion']);
+			$latitud = $funciones->limpia($_POST['latitud']);
+			$longitud = $funciones->limpia($_POST['longitud']);
+			$type = $funciones->limpia($_POST['inputType']);
+			$dependency = $funciones->limpia($_POST['txtDependency']);
+			$amount = $funciones->limpia($_POST['inputAmount']);
+			$dateStartTmp = $funciones->limpia($_POST['date1']);
+			$dateFinishTmp = $funciones->limpia($_POST['date2']);
+			$folderVol = (isset($_POST['txtFolderVol']))?$funciones->limpia($_POST['txtFolderVol']):0;
+			$addedType = $funciones->limpia($_POST['addedType']);
+			$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
+			$workArea = $funciones->limpia($_POST['txtWorkArea']);
 
-		$dateStart = strtotime($dateStartTmp);
-		$dateFinish = strtotime($dateFinishTmp);
-
-
-		$amount = str_replace(",","",$amount);
-
-		if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, date('Y-m-d',$dateStart), date('Y-m-d',$dateFinish), $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'])) == 0){
-			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 0;
-		}else{
-			$jsondata['resp'] = 1;
-		}
+			$dateStart = strtotime($dateStartTmp);
+			$dateFinish = strtotime($dateFinishTmp);
 
 
-		header('Content-type: application/json; charset=utf-8');
-		echo json_encode($jsondata);
-	break;
+			$amount = str_replace(",","",$amount);
+
+			if($conexion->consulta($querys->addObra($name, $type, $dependency, $amount, date('Y-m-d',$dateStart), date('Y-m-d',$dateFinish), $folderVol, $addedType, $concreteVol, $workArea, $datos['fecha_actual'],$txtDireccion,$latitud,$longitud)) == 0){
+				$jsondata['resp'] = 0;
+				$jsondata['msg'] = 0;
+			}else{
+				$jsondata['resp'] = 1;
+			}
+
+
+			header('Content-type: application/json; charset=utf-8');
+			echo json_encode($jsondata);
+		break;
 
 	//AGREGA UN NUEVO SEGUIMIENTO DE ESTIMACIONES
 	case 4:
@@ -926,13 +929,13 @@ break;
 
 		$work = $funciones->limpia($_POST['work']);
 
-		$finishDate = date('Y-m-d', strtotime($initDate.' + 7 days' ));
+		$finishDate = date('Y-m-d', strtotime($initDate));
 
 		$amount = ($magnaPrice * $magnaLiters) + ($premiumPrice * $premiumLiters) + ($dieselPrice * $dieselLiters);
 
 		if(@$conexion->consulta($querys->addInsFuelExp($initDate, $finishDate, $magnaLiters, $premiumLiters,
 														$dieselLiters, $magnaPrice, $premiumPrice, $dieselPrice,
-														$status, $amount, $datos['fecha_actual'])) == 0){
+														$status, $amount, $datos['fecha_actual'], $work)) == 0){
 															$jsondata['resp'] = 0;
 															$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
 														} else {

@@ -18,7 +18,7 @@
       <th style="width: 13%">Fecha Final</th>
 
       <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
-      <th style="width: 13%">Acciones</th>
+      <th style="width: 15%">Acciones</th>
       <?php } ?>
     </tr>
   </thead>
