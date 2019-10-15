@@ -20,13 +20,14 @@ class Querys3 {
 	}
 
 	//QUERY PARA AGREGAR UN REGISTRO AL CATÁLOGO DE DESARROLLO
-	public function addCatDesarrollo($nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono, $fechaRegistro){
-		$strQuery = 'INSERT INTO tblc_desarrollo ';
-		$strQuery.= '(nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro) ';
-		$strQuery.= 'VALUES("'.$nombre.'", "'.$alias.'", "'.$numero_etapa_oferta.'", "'.$codigo_postal.'", "'.$icono.'", "'.$fechaRegistro.'")';
+		public function addCatDesarrollo($nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono, $fechaRegistro,$latitud,$longitud){
+			$coordenadas = $latitud.",".$longitud;
+			$strQuery = 'INSERT INTO tblc_desarrollo ';
+			$strQuery.= '(nombre, alias, numero_etapa_oferta, codigo_postal, icono, fecha_registro,coordenadas) ';
+			$strQuery.= 'VALUES("'.$nombre.'", "'.$alias.'", "'.$numero_etapa_oferta.'", "'.$codigo_postal.'", "'.$icono.'", "'.$fechaRegistro.'", "'.$coordenadas.'")';
 
-		return $strQuery;
-	}
+			return $strQuery;
+		}
 
 	//QUERY PARA EDITAR UN REGISTRO DEL CATÁLOGO DESARROLLO
 	public function updateCatDesarrollo($idDesarrollo, $nombre, $alias, $numero_etapa_oferta, $codigo_postal, $icono){
