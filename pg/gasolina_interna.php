@@ -54,7 +54,7 @@
           <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="form-group">
               <label for="dateStart">Fecha final</label>
-              <input required class="form-control text-center" type="text" name="dateFinish" id="dateFinish">
+              <input required class="form-control text-center" type="text" name="dateFinish" id="dateFinish" onchange="verifyMinorDate()">
             </div>
           </div>
 
@@ -94,21 +94,21 @@
 
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="form-group">
-              <label for="magnaLts">Litros gastados en Magna</label>
+              <label for="magnaLts">Litros en Magna</label>
               <input required class="form-control" type="number" step =".01" id="magnaLts" name="magnaLts" onkeyup="sumTotal()">
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="form-group">
-              <label for="premiumLts">Litros gastados en Premium</label>
+              <label for="premiumLts">Litros en Premium</label>
               <input required class="form-control" type="number" step =".01" id="premiumLts" name="premiumLts" onkeyup="sumTotal()">
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="form-group">
-              <label for="dieselLts">Litros gastados en Diesel</label>
+              <label for="dieselLts">Litros en Diesel</label>
               <input required class="form-control" type="number" step =".01" id="dieselLts" name="dieselLts" onkeyup="sumTotal()">
             </div>
           </div>
@@ -171,6 +171,7 @@
     $('#assignExpenseModal').on('shown.bs.modal', function () {
       $('#modalUser').trigger('focus');
     });
+    loadDataTable('listInsFuelExp',true);
   }
 
   function setWeek(){
@@ -329,6 +330,7 @@
       month = '0'+month;
     }
     $('#dateFinish').val(day+'/'+month+'/'+year);
+    verifyMinorDate();
   }
 
   function sumTotal(){
@@ -347,5 +349,22 @@
 
     $('#totalAmount').val(total);
     $('#totalAmount').trigger('keyup');
+  }
+
+  function verifyMinorDate(){
+    let descomponeFecha1 = $('#dateStart').val().split("/");
+    let fecha1 = new Date(descomponeFecha1[2],descomponeFecha1[1],descomponeFecha1[0]);
+    let descomponeFecha2 = $('#dateFinish').val().split("/");
+    let fecha2 = new Date(descomponeFecha2[2],descomponeFecha2[1],descomponeFecha2[0]);
+
+    if(fecha1 > fecha2){
+      let opciones = {
+  			appendTo:'#frmNewInsFuelExp',
+  			minWidth:300,
+  			maxWidth: 350,
+  		};
+  		parent.mensaje("La fecha inicial debe ser menor que la final",'warning',opciones);
+      $('#dateFinish').val($('#dateStart').val());
+    }
   }
 </script>

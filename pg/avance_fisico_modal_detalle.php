@@ -18,7 +18,8 @@
                 <th style="width:4%" scope="col">ID</th>
                 <th style="width:8%" scope="col">Código</th>
                 <th scope="col">Concepto</th>
-                <th style="width:23%" scope="col">Cantidad</th>
+                <th style="width:8%" scope="col">Cantidad</th>
+                <th style="width: 4%" scope="col">Unidad</th>
               </thead>
               <tbody>
               </tbody>
@@ -26,8 +27,9 @@
             <div id="respServerModalDetail">
             </div>
         </div>
+        <br><br><br><br><br>
       </div>
-      <br><br><br><br><br>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
       </div>

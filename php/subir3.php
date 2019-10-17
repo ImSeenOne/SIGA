@@ -703,7 +703,7 @@ break;
 						$transactions = false;
 					}
 				} else {
-					@$conexion->consulta($querys->updatePPConcept($concepts[$i], $quantities[$i]));
+					@$conexion->consulta($querys->updatePPConcept($r_concepts[$i], $quantities[$i]));
 				}
 			}
 			$jsondata['resp'] = 1;
@@ -948,7 +948,7 @@ break;
 															$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
 														} else {
 															$current = $conexion->ultimoid();
-															$folio = 'GI-'.str_pad($current, 4, '0', STR_PAD_LEFT);
+															$folio = 'GI'.str_pad($current, 5, '0', STR_PAD_LEFT);
 															if($conexion->consulta($querys->addInsFuelExpFolio($current, $folio)) == 0){
 																$jsondata['msg'] = 'folio no guardado';
 															} else {

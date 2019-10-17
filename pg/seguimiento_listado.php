@@ -4,7 +4,7 @@
   $totRegs = $conexion->numregistros();
    if($totRegs > 0){
 ?>
-<br><div class="container">
+<br><div class="">
   <table id="listEstimations" class="table table-bordered table-striped table-hover">
     <thead>
       <tr>
@@ -14,14 +14,18 @@
         <th style="width:16%;">Período</th>
         <th style="width:10%;">Monto</th>
         <th>Imagen</th>
-        <th style="width:10%;">Acción</th>
+        <th style="width:12%;">Acción</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach ($listado as $key) { ?>
       <tr>
         <td><?= $key->id_seg_est ?></td>
-        <td><?= $key->nombre_obra  ?></td>
+        <td><?php
+              $resp = @$conexion->fetch_array($querys3->getListadoObras($key->nombre_obra));
+              echo $resp['nombre'];
+            ?>
+        </td>
         <td><?php switch ($key->status) {
           case 1:
             echo "Elaboración";
@@ -35,12 +39,12 @@
             echo "Terminada";
           break;
         } ?></td>
-        <td>de <?= $key->fecha_inicio ?> a
+        <td>de <?= date('d/m/Y', strtotime($key->fecha_inicio)) ?> a
           <?php
             if($key->fecha_finalizacion == "0000-00-00"){
               echo "la fecha";
             } else {
-              echo $key->fecha_finalizacion;
+              echo date('d/m/Y', strtotime($key->fecha_finalizacion));
             }
            ?>
         </td>

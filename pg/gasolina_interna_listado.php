@@ -6,7 +6,7 @@
 
   if($totRegs > 0){
  ?>
-<table class="table table-bordered table-striped">
+<table id="listInsFuelExp" class="table table-bordered table-striped">
   <thead>
     <tr>
       <th>Folio</th>

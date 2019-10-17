@@ -130,9 +130,12 @@ function editarRegDesarrollo(id){
             $('#hdFlIcono').val(resp.icono);
             $('#idDesarrollo').val(resp.id_desarrollo);
             $('#opcion').val(2);
-						$('#frmDesarrollo').slideToggle();
-					  $('#btnNvoDesarrollo').slideToggle();
-					  $('#txtNombre').focus();
+            $('#latitud').val(resp.latitud);
+            $('#longitud').val(resp.longitud);
+			$('#frmDesarrollo').slideToggle();
+			$('#btnNvoDesarrollo').slideToggle();
+			$('#txtNombre').focus();
+			mapa_formregistro()
         }
   });
 }
@@ -351,11 +354,13 @@ function editarRegObra(id){
             $('#txtName').val(resp.nombre);
 			$('#inputType').val(resp.tipo);
 			$('#txtDependency').val(resp.dependencia);
-            $('#inputAmount').val(resp.monto);
+			$('#inputAmount').val(resp.monto);
+			$('#inputAmount').keyup();
             $('#date1').val(resp.fecha_inicio);
             $('#date2').val(resp.fecha_finalizacion);
 			$('#addedType').val(resp.tipo_agregado);
 			$('#txtWorkArea').val(resp.area_obra);
+			$('#txtWorkArea').keyup();
 			$('#idWork').val(resp.id_obra);
 			$('#btnSavePO').data('src',srcPO);
 			$('#btnSaveEI').data('src',srcEI);
@@ -364,6 +369,7 @@ function editarRegObra(id){
 			$('#latitud').val(resp.latitud);
 			$('#longitud').val(resp.longitud);
 			ocultarBotonesObra(2);
+			mapa_formregistro()
 			$('#opcion').val('9');
       }
   });
@@ -1439,7 +1445,7 @@ $('#addToTable').click(function(){
 			'<td >'+id+'</td>'+
 			'<td >'+code+'</td>'+
 			'<td >'+concept+'</td>'+
-			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control"style="display: block;" min="1" > </td>'+
+			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control"style="display: block;" min="0.01" step="0.01"> </td>'+
 			'<td> <button type="button" name="button" class="btn btn-danger " onclick="deleteTR(\''+id+'\')" onmousedown="deletePPConcept(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
 			cond+
 			'</tr>');
@@ -1661,6 +1667,7 @@ function lookDetails(id){
 								'<td>'+y['codigo']+'</td>'+
 								'<td>'+y['concepto']+'</td>'+
 								'<td>'+y['cantidad']+'</td>'+
+								'<td>'+y['unidad']+'</td>'+
 								'</tr>');
 							}
 						});
@@ -1720,8 +1727,8 @@ function editProgress(id){
 					$('#resident').val(resp.resident);
 					$('#work').val(resp.work);
 					$('#concept').select2();
-					$('#dateStart').val(resp.dateStart);
-					$('#dateFinish').val(resp.dateFinish);
+					$('#dateStart').val(resp.dateStart.split('-')[2]+'/'+resp.dateStart.split('-')[1]+'/'+resp.dateStart.split('-')[0]);
+					$('#dateFinish').val(resp.dateFinish.split('-')[2]+'/'+resp.dateFinish.split('-')[1]+'/'+resp.dateFinish.split('-')[0]);
 					fillConceptsAlt();
 					$.each(resp.concepts,function(i,y){
 						if(parseFloat(y['cantidad'])>0){
@@ -2416,6 +2423,7 @@ $('#btnNewInsFuelExp').click(function(){
 	if($('#frmNewInsFuelExp').is(':hidden')){
 		$('#frmNewInsFuelExp').slideToggle();
 	}
+	$('#status').val(1);
 });
 
 $('#frmNewInsFuelExp').submit(function(event){

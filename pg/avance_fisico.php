@@ -49,11 +49,11 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
               <label class="text-center" for="dateStart">Fecha de inicio</label>
-              <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
+              <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()">
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
               <label class="text-center" for="dateFinish">Fecha de finalización</label>
-              <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
+              <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()">
             </div>
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
@@ -131,5 +131,22 @@
     listPhysProg();
     fillConcepts();
   };
+
+  function verifyMinorDate(){
+    let descomponeFecha1 = $('#dateStart').val().split("/");
+    let fecha1 = new Date(descomponeFecha1[2],descomponeFecha1[1],descomponeFecha1[0]);
+    let descomponeFecha2 = $('#dateFinish').val().split("/");
+    let fecha2 = new Date(descomponeFecha2[2],descomponeFecha2[1],descomponeFecha2[0]);
+
+    if(fecha1 > fecha2){
+      let opciones = {
+  			appendTo:'#newPhysProg',
+  			minWidth:300,
+  			maxWidth: 350,
+  		};
+  		parent.mensaje("La fecha inicial debe ser menor que la final",'warning',opciones);
+      $('#dateFinish').val($('#dateStart').val());
+    }
+  }
 
 </script>

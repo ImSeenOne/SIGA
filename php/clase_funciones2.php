@@ -1,39 +1,66 @@
 <?php
+require_once("clase_variables.php");
+require_once("clase_mysql.php");
 class FuncionesB{
+	var $conexion = 0;
 	public function rutaAbsoluta(){
 		return 'http://demosistemas.com/siga';
 	}
 
 	public function llenarcombo($resultados,$id) {
 		// mostrarmos los registros
+		 echo '<option data-id="0;0" value="">Seleccionar...</option>';
 		foreach($resultados as $resultado){
-			if($id == $resultado->id) {
-				echo '<option data-id="' . $resultado->dataId .
-						 '" value="'.$resultado->id.'" selected="selected">'.
-						 $this->cdetectUtf8($resultado->valor).'</option>';
+			$dataId = (isset($resultado->dataId))?'data-id="'.$resultado->dataId.'"':'';
+			if($id == $resultado->id) {				 
+				echo '<option ' . $dataId .
+						 ' value="'.$resultado->id.'" selected="selected">'.
+						 $this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
 			}
 			else{
-				echo '<option data-id="' . $resultado->dataId .
-						'" value="'.$resultado->id.'">'.
-						$this->cdetectUtf8($resultado->valor).'</option>';
+				echo '<option ' . $dataId .
+						' value="'.$resultado->id.'">'.
+						$this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
 			}
 		}
 	}
 	public function llenarcomboM($resultados,$id) {
 		$porciones = explode(",", $id);
 		// mostrarmos los registros
+		echo '<option data-id="0;0" value="">Seleccionar...</option>';
 		foreach($resultados as $resultado){
 			if(in_array($resultado->id,$porciones)) {
 				echo '<option data-id="' . $resultado->dataId .
 						 '" value="'.$resultado->id.'" selected="selected">'.
-						 $this->cdetectUtf8($resultado->valor).'</option>';
+						 $this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
 			}
 			else{
 				echo '<option data-id="' . $resultado->dataId .
 						'" value="'.$resultado->id.'">'.
-						$this->cdetectUtf8($resultado->valor).'</option>';
+						$this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
 			}
 		}
+	}
+
+	public function llenarcomboMJson($resultados,$id) {
+		$porciones = explode(",", $id);
+		// mostrarmos los registros
+		$combo = array();
+		foreach($resultados as $resultado){
+			if(in_array($resultado->id,$porciones)) {
+				$valor = '<option data-id="' . $resultado->dataId .
+				'" value="'.$resultado->id.'" selected="selected">'.
+				$this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
+				array_push($combo,$valor); 
+			}
+			else{
+				$valor = '<option data-id="' . $resultado->dataId .
+						'" value="'.$resultado->id.'">'.
+						$this->cdetectUtf8($this->MayusMin($resultado->valor)).'</option>';
+				array_push($combo,$valor);
+			}
+		}
+		return $combo;
 	}
 
 	function cdetectUtf8($str){
@@ -122,6 +149,38 @@ class FuncionesB{
 		return $string;
 	}
 
+	//funcion para dar formato de mayusculas y minusculas
+	public function MayusMin($cadena){
+		$excepciones1 = array('de','para','en','y','con');
+		$excepciones2 = array('DE','PARA','EN','Y','CON');
+		$cadenaArray = explode(' ',$cadena);
+		$nuevaCadena = "";
+		$contador = 0;
+		foreach($cadenaArray as $item){
+			if ((!in_array($item, $excepciones1) && !in_array($item, $excepciones2)) || $contador==0) {
+				$primerLetra = substr($item,0,1);
+				$primerLetra = strtoupper($primerLetra);
+				$caracteresFaltantes = substr($item,1);
+				$caracteresFaltantes = strtolower($caracteresFaltantes);
+				$caracteresFaltantes = str_replace(
+					array('Á', 'É', 'Í', 'Ó', 'Ú','Ñ'),
+					array('á', 'é', 'í', 'ó', 'ú','ñ'),
+					$caracteresFaltantes
+				);
+				$nuevaCadena .= $primerLetra.$caracteresFaltantes.' ';
+			}
+			else{
+				$item =str_replace(
+					array('Á', 'É', 'Í', 'Ó', 'Ú','Ñ'),
+					array('á', 'é', 'í', 'ó', 'ú','ñ'),
+					$item
+				);
+				$nuevaCadena .= strtolower($item).' ';
+			}
+			$contador += 1;
+		}
+		return substr($nuevaCadena,0,-1);
+	}
 
 
 	public function mes_nombre($mes){
@@ -194,7 +253,7 @@ class FuncionesB{
     
     //Obtiene la ip real
     function getRealIP() {
-		if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+		/*if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip=$this->limpia($_SERVER['HTTP_CLIENT_IP']);
 			}
 		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -202,6 +261,30 @@ class FuncionesB{
 			}
 		else {
 			$ip=$this->limpia($_SERVER['REMOTE_ADDR']);
+		}*/
+		if (isset($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip=$this->limpia($_SERVER["HTTP_CLIENT_IP"]);
+		}
+		elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip=$this->limpia($_SERVER["HTTP_X_FORWARDED_FOR"]);
+		}
+		elseif (isset($_SERVER["HTTP_X_FORWARDED"]))
+		{
+			$ip=$this->limpia($_SERVER["HTTP_X_FORWARDED"]);
+		}
+		elseif (isset($_SERVER["HTTP_FORWARDED_FOR"]))
+		{
+			$ip=$this->limpia($_SERVER["HTTP_FORWARDED_FOR"]);
+		}
+		elseif (isset($_SERVER["HTTP_FORWARDED"]))
+		{
+			$ip=$this->limpia($_SERVER["HTTP_FORWARDED"]);
+		}
+		else
+		{
+			$ip=$this->limpia($_SERVER["REMOTE_ADDR"]);
 		}
 		
 		return $ip;
@@ -249,6 +332,7 @@ class FuncionesB{
 		$user_agent= strtolower($_SERVER['HTTP_USER_AGENT']);
 
 		$plataformas = array(
+			'/windows nt 10.0/i'	=>	'Windows 10',
 		  	'/windows nt 6.3/i'     =>  'Windows 8.1',
 			'/windows nt 6.2/i'     =>  'Windows 8',
 			'/windows nt 6.1/i'     =>  'Windows 7',
@@ -281,10 +365,59 @@ class FuncionesB{
 		    }
 		}   
 
-	   return 'Sistema Operativo Desconocido';
+	   return 'sistema operativo desconocido';
 	}
 
-
+	function llenaMenu($id,$permisos){
+		$this->conexion = new DB_mysql(1);
+        foreach($permisos as $list2){
+			if($list2->hijo > 0){
+				$query = 'CALL sp_UsuariosPermisos('.$id.','.$list2->id_permiso.');';
+				$permisosPUH =  $this->conexion->obtenerlista($query);
+				$this->llenaSMenuC($list2);
+				$this->llenaMenu($id,$permisosPUH);
+			}
+			else{
+				$htmlM = '<div class="col-xs-3 form-group">';
+				$htmlM .= '<div class="classCheck icheck">';
+				$htmlM .= '<label>';
+				$htmlM .= '<input id="' . $list2->id_permiso .';';
+				$htmlM .=  $list2->id_padre . '" name="';
+				$htmlM .=  $list2->id_permiso . ';';
+				$htmlM .=  $list2->id_padre . '" type="checkbox" ';
+				$htmlM .= ($list2->id_usuario>0)?'checked':'';
+				$htmlM .= '/>';
+				$htmlM .= ' ' . $list2->nombre;
+				$htmlM .= '</label>';
+				$htmlM .= '</div>';
+				$htmlM .= '</div>';
+				echo $htmlM;
+			}
+			$this->conexion->liberarResultados();
+            unset($permisosPUH);
+		}
+		//$this->conexion->cerrarconexion();
+        $htmlM = '</div>';
+        $htmlM .= '</div>';
+		echo $htmlM;
+	}
+	
+	function llenaMenuC($list){
+		$htmlM = '<div class="row">';
+		$htmlM .= '<div class="col-xs-12 box box-success">';
+        $htmlM .= '<div class="box-header">';
+        $htmlM .= '<h3 class="box-title"><b>'. $list->nombre. '</b></h3>';
+        $htmlM .= '</div>';
+		echo $htmlM;
+	}
+	function llenaSMenuC($list){
+		$htmlM = '<div class="row">';
+		$htmlM .= '<div class="col-xs-12">';
+        $htmlM .= '<div class="box-header">';
+        $htmlM .= '<h3 class="box-title">   '. $list->nombre. '</h3>';
+        $htmlM .= '</div>';
+        echo $htmlM;
+	}
 } //fin de la Clse Funciones
 
 ?>

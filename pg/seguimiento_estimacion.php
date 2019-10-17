@@ -33,7 +33,13 @@
       <form id="frmEstTrack" class="mt-1em" style="display:none;">
         <div class="form-group col-md-6 col-lg-4">
           <label for="inputTrackEst">Obra</label>
-          <input type="email" class="form-control" id="inputTrackEst" name="inputTrackEst" placeholder="Nombre de la obra">
+          <select class="form-control" id="inputTrackEst" name="inputTrackEst">
+            <option value="0">Seleccionar...</option>
+            <?php
+              $combo = @$conexion->obtenerlista($querys3->getListadoObras());
+              $funciones->llenarcombo($combo);
+             ?>
+          </select>
           <div id="reqInputTrackEst" class="text-danger"></div>
         </div>
         <div class="form-group col-md-6 col-lg-4">

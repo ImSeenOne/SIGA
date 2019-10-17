@@ -239,7 +239,7 @@ class Querys3 {
 		$strQuery = 'SELECT id_empleado, id_empleado AS id,  nombre, CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) AS valor, categoria AS category, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
 		$strQuery.= 'FROM tbl_empleados ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
-		$strQuery.= 'ORDER BY fecha_registro DESC, id_empleado DESC';
+		$strQuery.= 'ORDER BY CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) ASC';
 
 		return $strQuery;
 	}
@@ -462,7 +462,7 @@ public function getContracts($id = 0){
 	}
 
 	public function getConceptFromBudget($id_budget){
-		$strQuery = 'SELECT id_presupuesto_obra as id, codigo, concepto FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_presupuesto_obra = '.$id_budget.';';
+		$strQuery = 'SELECT id_presupuesto_obra as id, codigo, concepto, unidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_presupuesto_obra = '.$id_budget.';';
 		return $strQuery;
 	}
 
@@ -673,7 +673,7 @@ public function getContracts($id = 0){
 		if($id != ''){
 			$cond = ' AND id_gas_int = '.$id;
 		}
-		$strQuery = 'SELECT * FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL'.$cond;
+		$strQuery = 'SELECT * FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
 
 		return $strQuery;
 	}
@@ -760,7 +760,7 @@ public function getContracts($id = 0){
 
 	public function fillSelectInsFuelExpStatus($results){
 		foreach ($results as $result) {
-			echo '<option value ="'.$result->id_status.'">'.$result->nombre.'</option>';
+			echo '<option value ="'.$result->id_status.'">'.$this->cdetectUtf8($result->nombre).'</option>';
 		}
 	}
 
@@ -775,7 +775,7 @@ public function getContracts($id = 0){
 
 	public function fillSelectMachineryTypes($results){
 		foreach($results as $result){
-			echo '<option value="'.$result->id.'">'.$result->nombre.'</option>';
+			echo '<option value="'.$result->id.'">'.$this->cdetectUtf8($result->nombre).'</option>';
 		}
 	}
 
@@ -862,6 +862,11 @@ public function getContracts($id = 0){
 				 return $str;
 				 }
 
+			 }
+
+			 public function listMachineryAndVehicles(){
+				 $strQuery = 'SELECT id_tipo_maquinaria as id, CONCAT(modelo, ", ", marca, ", ", placas) as valor FROM tblc_maquinaria_vehiculo WHERE fecha_eliminado IS NULL';
+				 return $strQuery;
 			 }
 }
 ?>

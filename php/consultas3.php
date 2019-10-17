@@ -8,17 +8,45 @@ $datos = array(); $jsondata = array();
 
 switch($_POST['opt']){
 	//OBTIENE LOS DATOS DE UN DESARROLLO PARA SER EDITADOS
-	case 1:
-		$id = $funciones->limpia($_POST['id']);
-		$resp = @$conexion->fetch_array($querys3->getListadoDesarrollo($id));
+		case 1:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->getListadoDesarrollo($id));
+			$coordenadas = explode(",",$resp['coordenadas']);
+			$jsondata['id_desarrollo'] = $resp['id_desarrollo'];
+			$jsondata['nombre'] = $funcionesB->MayusMin($resp['nombre']);
+			$jsondata['alias'] = $resp['alias'];
+			$jsondata['numero_etapa_oferta'] = $resp['numero_etapa_oferta'];
+			$jsondata['codigo_postal'] = $resp['codigo_postal'];
+			$jsondata['icono']  = $resp['icono'];
+			$jsondata['latitud'] = (isset($coordenadas[0]))?$coordenadas[0]:'';
+			$jsondata['longitud'] = (isset($coordenadas[1]))?$coordenadas[1]:'';
 
-		$jsondata['id_desarrollo'] = $resp['id_desarrollo'];
-		$jsondata['nombre'] = $resp['nombre'];
-		$jsondata['alias'] = $resp['alias'];
-		$jsondata['numero_etapa_oferta'] = $resp['numero_etapa_oferta'];
-		$jsondata['codigo_postal'] = $resp['codigo_postal'];
-		$jsondata['icono']  = $resp['icono'];
-	break;
+		break;
+		//OBTIENE TODOS LOS DATOS DE UNA OBRA PARA SER EDITADOS
+		case 2:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->getListadoObras($id));
+
+			$fechaini = explode("-",$resp['fecha_inicio']);
+			$fechafin = explode("-",$resp['fecha_finalizacion']);
+			$coordenadas = explode(",",$resp["coordenadas"]);
+
+			$jsondata['id_obra'] = $resp['id_obras'];
+			$jsondata['nombre'] = $funcionesB->MayusMin($resp['nombre']);
+			$jsondata['tipo'] = $resp['tipo'];
+			$jsondata['dependencia'] = $resp['dependencia'];
+			$jsondata['monto'] = $resp['monto'];
+			$jsondata['fecha_inicio'] = $resp['fecha_inicio'];//$fechaini[2]."-".$fechaini[1]."-".$fechaini[0];
+			$jsondata['fecha_finalizacion'] = $resp['fecha_finalizacion'];//$fechafin[2]."-".$fechafin[1]."-".$fechafin[0];
+			$jsondata['volumenes_carpeta'] = $resp['volumenes_carpeta'];
+			$jsondata['tipo_agregado'] = $resp['tipo_agregado'];
+			$jsondata['volumen_concreto'] = $resp['volumen_concreto'];
+			$jsondata['area_obra'] = $resp['area_obra'];
+			$jsondata['latitud'] = (isset($coordenadas[0]))?$coordenadas[0]:'';
+			$jsondata['longitud'] = (isset($coordenadas[1]))?$coordenadas[1]:'';
+			$jsondata['direccion'] = $resp['direccion'];;
+
+		break;
 	//OBTIENE TODOS LOS DATOS DE UNA OBRA PARA SER EDITADOS
 	case 2:
 		$id = $funciones->limpia($_POST['id']);
@@ -242,7 +270,7 @@ switch($_POST['opt']){
 
 		foreach ($resp as $key) {
 			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
-			$datos[] = array('id' => $respC['id'], 'concepto' => $respC['concepto'], 'codigo' => $respC['codigo'], 'cantidad' => $key->cantidad);
+			$datos[] = array('id' => $respC['id'], 'concepto' => $respC['concepto'], 'codigo' => $respC['codigo'], 'cantidad' => $key->cantidad, 'unidad' => $respC['unidad']);
 		}
 
 		$resp = @$conexion->fetch_array($querys3->getPhysProg($physprog));

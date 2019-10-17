@@ -51,12 +51,14 @@
 
           <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
-              <label for="machineryModal">Tipo de vehículo</label>
+              <label for="machineryModal">Vehículo</label>
               <select required class="form-control" name="machineryModal" id="machineryModal" style="display: block;">
                 <option value="0">Selecciona una opción...</option>
                 <?php
-                $combo = @$conexion->obtenerlista($querys3->listMachineryTypes());
-                $querys3->fillSelectMachineryTypes($combo);
+                $results = @$conexion->obtenerlista($querys3->listMachineryAndVehicles());
+                foreach ($results as $result) {
+                  echo '<option value="'.$result->id.'">'.strtoupper($result->valor).'</option>';
+                }
                 ?>
               </select>
             </div>

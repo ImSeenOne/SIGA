@@ -11,7 +11,7 @@
     <th>Litros</th>
     <th>Tipo de combustible</th>
     <th>Ubicación</th>
-    <th>Tipo de vehículo</th>
+    <th>Vehículo</th>
   </thead>
   <tbody>
     <?php foreach ($listado as $key) {
@@ -50,8 +50,8 @@
       </td>
       <td>
         <?php
-          $resp = @$conexion->fetch_array($querys3->listMachineryTypes($key->tipo_vehiculo));
-          echo $resp['nombre'];
+          $resp = @$conexion->fetch_array($querys3->listMachineryAndVehicles($key->tipo_vehiculo));
+          echo $resp['valor'];
         ?>
       </td>
     </tr>
