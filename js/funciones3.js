@@ -1568,7 +1568,7 @@ function addConcepts(id){
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
 								'<td>'+y['id']+'</td>'+
-								'<td>'+y['code']+'</td>'+
+								'<td>'+y['code'].substring(0, 100)+'</td>'+
 								'<td>'+y['concept']+'</td>'+
 								'<td>'+y['used_quantity']+'</td>'+
 								'<td>'+y['unit']+'</td>'+

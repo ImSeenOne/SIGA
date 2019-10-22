@@ -48,7 +48,7 @@
 
             <td class="text-center">
               <div class="row">
-                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modalPhysProgDetails" onclick="lookDetails(<?= $key->id ?>);"><i class="fa fa-eye"></i></button>
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modalPhysProgDetails" onclick="addConcepts(<?= $key->id ?>);"><i class="fa fa-plus"></i></button>
                 <!-- <button type="button" class="btn btn-info btn-sm" onclick="lookDetails(<?= $key->id ?>)"><i class="fa fa-eye"></i></button> -->
                 <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
                   <button type="button" class="btn btn-success btn-sm" onclick="editProgress(<?= $key->id ?>);"><i class="fa fa-edit"></i></button>

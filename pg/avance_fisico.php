@@ -42,11 +42,6 @@
                 ?>
               </select>
             </div>
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
-                <hr>
-              </div>
-            </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
               <label class="text-center" for="dateStart">Fecha de inicio</label>
               <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()">
@@ -55,37 +50,6 @@
               <label class="text-center" for="dateFinish">Fecha de finalización</label>
               <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()">
             </div>
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
-                <hr>
-              </div>
-            </div>
-            <div class="form-group col-lg-6 col-md-12 col-sm-12">
-                <label for="concept" style="display: block;">Concepto</label>
-                <div id="waitingConcepts">
-                </div>
-                <select name="concept" id="concept" class="form-control" style="width: 100%;">
-                </select>
-            </div>
-            <div class="form-group col-lg-6 col-md-12 col-sm-12 mt-2em">
-              <div class="col-sm-12 col-lg-6 col-md-12">
-                <button class="btn btn-success btn-block" id="addToTable" type="button">Agregar</button>
-              </div>
-              <div class="col-sm-12 col-lg-6 col-md-12">
-                <button class="btn btn-danger btn-block" id="cancelAllConcepts" type="button">Cancelar</button>
-              </div>
-            </div>
-              <table id="listConcepts" class="table table-striped table-hover">
-                <thead>
-                  <th style="width:4%" scope="col" class="text-center">ID</th>
-                  <th style="width:8%" scope="col" class="text-center">Código</th>
-                  <th scope="col" class="text-center">Concepto</th>
-                  <th style="width:23%" scope="col" class="text-center">Cantidad</th>
-                  <th style="width:10%" scope="col" class="text-cneter">Acción</th>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
               <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <div id="respServer">
@@ -94,23 +58,21 @@
               </div>
               <input type="hidden" name="opcion" id="opcion" value="15">
               <input type="hidden" name="id" id="id" value="">
-              <div class="form-group col-lg-3 col-md-12 col-sm-12 pull-right">
-                <div class="col-sm-12 col-lg-12 col-md-12">
-                  <button style="display: none;" class="btn btn-primary btn-block" id="saveConcepts" type="submit">Agregar conceptos</button>
+              <div class="form-group col-lg-6 col-md-12 col-sm-12 pull-right">
+                <div class="col-sm-12 col-lg-6 col-md-6">
+                  <button class="btn btn-primary btn-block" id="saveConcepts" type="submit">Guardar registro</button>
+                </div>
+                <div class="col-sm-12 col-lg-6 col-md-6">
+                  <button class="btn btn-danger btn-block" id="cancelAllConcepts" type="button">Cancelar</button>
                 </div>
               </div>
           </form>
-          <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xl-12">
-              <hr>
-            </div>
-          </div>
+          <br><br><br>
           <div class="row">
             <div id="cntnListProgress" class="col-lg-12 col-md-12 col-sm-12">
             </div>
           </div>
         </div>
-
       </div>
   </section>
 </div>
@@ -121,15 +83,9 @@
   window.onload = function() {
     dateControl('dateStart');
     dateControl('dateFinish');
-
-    var tbody = $("#listConcepts tbody");
-    if (tbody.children().length == 0) {
-        $("#listConcepts").slideToggle();
-    }
-
-    $('#concept').select2();
     listPhysProg();
     fillConcepts();
+    $('#concepts').select2();
   };
 
   function verifyMinorDate(){
