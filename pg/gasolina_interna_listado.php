@@ -88,8 +88,8 @@
 
           <td>
             <button type="button" class="btn btn-primary btn-sm"title="Asignar gastos de gasolina" name="button" data-toggle="modal" data-target="#assignExpenseModal" onclick="listFuelExpAssEmployees(<?= $key->id_gas_int ?>)"><i class="fa fa-user"></i></button>
-            <button type="button" class="btn btn-success btn-sm" name="button" onclick=""><i class="fa fa-edit"></i></button>
-            <button type="button" class="btn btn-danger btn-sm" name="button"  onclick=""><i class="fa fa-trash"></i></button>
+            <button type="button" class="btn btn-success btn-sm" name="button" onclick="editInsFuelExp(<?= $key->id_gas_int ?>)"><i class="fa fa-edit"></i></button>
+            <button type="button" class="btn btn-danger btn-sm" name="button"  onclick="deleteInsFuelExp(<?= $key->id_gas_int ?>, '<?= $key->folio ?>')"><i class="fa fa-trash"></i></button>
           </td>
         </tr>
     <?php

@@ -646,10 +646,6 @@ break;
 
 		$resident = $funciones->limpia($_POST['resident']);
 
-		$quantities = json_decode($funciones->limpia($_POST['quantities']),true);
-
-		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
-
 		if(@$conexion->consulta($querys->addNewPhysProg($work, $resident, $dateStart, $dateFinish, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
@@ -657,17 +653,7 @@ break;
 			$current = $conexion->ultimoid();
 			$folio = 'RA'.str_pad($current, 5, '0', STR_PAD_LEFT);
 			@$conexion->consulta($querys->addFolioToNewPhysProg($current, $folio));
-
-			$transactions = true;
-			for ($i=0; $i < sizeof($concepts); $i++) {
-				if(@$conexion->consulta($querys->addPPConcept($current, $concepts[$i], $quantities[$i])) == 0){
-					$transactions = false;
-				}
-			}
 			$jsondata['resp'] = 1;
-			if(!$transactions){
-				$jsondata['msg'] = 'No se pudo agregar uno o más conceptos, verifique el listado para ver cuáles no se agregaron';
-			}
 		}
 
 		header('Content-type: application/json; charset=utf-8');
@@ -684,32 +670,11 @@ break;
 
 		$resident = $funciones->limpia($_POST['resident']);
 
-		$quantities = json_decode($funciones->limpia($_POST['quantities']),true);
-
-		$concepts = json_decode($funciones->limpia($_POST['concepts']),true);
-
-		$r_concepts = json_decode($funciones->limpia($_POST['r_concepts']),true);
-
 		if(@$conexion->consulta($querys->updatePhysProg($id, $work, $resident, $dateStart, $dateFinish)) == 0){
 			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
 		} else {
-			$transactions = true;
-			for ($i=0; $i < sizeof($concepts); $i++) {
-				$respC = @$conexion->obtenerlista('SELECT id_concepto FROM tbl_avance_fisico_conceptos WHERE id_concepto = '.$concepts[$i].' AND id_avance_fisico = '.$id);
-				$totRegs = $conexion->numregistros();
-				if($totRegs == 0 && !is_null($r_concepts[$i])){
-					if(@$conexion->consulta($querys->addPPConcept($id, $concepts[$i], $quantities[$i])) == 0){
-						$transactions = false;
-					}
-				} else {
-					@$conexion->consulta($querys->updatePPConcept($r_concepts[$i], $quantities[$i]));
-				}
-			}
 			$jsondata['resp'] = 1;
-			if(!$transactions){
-				$jsondata['msg'] = 'No se pudo agregar uno o más conceptos, verifique el listado para ver cuáles no se agregaron';
-			}
 		}
 
 		header('Content-type: application/json; charset=utf-8');
@@ -937,7 +902,7 @@ break;
 
 		$work = $funciones->limpia($_POST['work']);
 
-		$finishDate = date('Y-m-d', strtotime($initDate));
+		$finishDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['dateFinish']) ) ) );
 
 		$amount = ($magnaPrice * $magnaLiters) + ($premiumPrice * $premiumLiters) + ($dieselPrice * $dieselLiters);
 
@@ -961,12 +926,14 @@ break;
 	break;
 	//ASIGNA UN GASTO DE COMBUSTIBLE A UN EMPLEADO
 	case 28:
-		$id = $funciones->limpia($_POST['idModal']);
+		$id = $funciones->limpia($_POST['idInsFuelExpModal']);
 		$employee = $funciones->limpia($_POST['employeeModal']);
 		$liters = floatval($funciones->limpia($_POST['litersModal']));
 		$type = intval($funciones->limpia($_POST['fuelTypeModal']));
 		$location = $funciones->limpia($_POST['locationModal']);
 		$machineryType = $funciones->limpia($_POST['machineryModal']);
+		$dateAss = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['dateAss']))));
+		$kilometers = $funciones->limpia($_POST['kilometers']);
 
 		$amount = 0;
 
@@ -987,7 +954,7 @@ break;
 
 		//echo $querys->addAssignedFuelExpEmployee($employee, $id, $liters, $amount, $type, $machineryType, $location);
 
-		if($conexion->consulta($querys->addAssignedFuelExpEmployee($employee, $id, $liters, $amount, $type, $machineryType, $location)) == 0){
+		if($conexion->consulta($querys->addAssignedFuelExpEmployee($employee, $id, $liters, $amount, $type, $machineryType, $location, $dateAss, $kilometers)) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
 		} else {
@@ -998,7 +965,7 @@ break;
 		echo json_encode($jsondata);
 
 	break;
-
+	//AGREGA UNA CATEGORÍA DE EMPLEADO
 	case 29:
 		$name = $funciones->limpia($_POST['name']);
 		$workDays = $funciones->limpia($_POST['workDays']);
@@ -1053,6 +1020,57 @@ break;
 	}
 	header('Content-type: application/json; charset=utf-8');
 	echo json_encode($jsondata);
+	break;
+	//AGREGA UN CONCEPTO A UN AVANCE FÍSICO
+	case 33:
+		$concept = $funciones->limpia($_POST['concepts']);
+		$physProg = $funciones->limpia($_POST['physProgId']);
+		$quantity = $funciones->limpia($_POST['quantity']);
+		if(!@$conexion->consulta($querys->addPPConcept($physProg, $concept, $quantity))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN REGISTRO DE COMBUSTIBLE
+	case 34:
+		$id = $funciones->limpia($_POST['id']);
+		$initDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['dateStart']) ) ) );
+
+		$status = $funciones->limpia($_POST['status']);
+
+		$magnaPrice = $funciones->limpia($_POST['magna']);
+		$magnaPrice = str_replace(",", "", $magnaPrice);
+
+		$premiumPrice = $funciones->limpia($_POST['premium']);
+		$premiumPrice = str_replace(",", "", $premiumPrice);
+
+		$dieselPrice = $funciones->limpia($_POST['diesel']);
+		$dieselPrice = str_replace(",", "", $dieselPrice);
+
+		$magnaLiters = $funciones->limpia($_POST['magnaLts']);
+		$premiumLiters = $funciones->limpia($_POST['premiumLts']);
+		$dieselLiters = $funciones->limpia($_POST['dieselLts']);
+
+		$work = $funciones->limpia($_POST['work']);
+
+		$finishDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['dateFinish']) ) ) );
+
+		$amount = ($magnaPrice * $magnaLiters) + ($premiumPrice * $premiumLiters) + ($dieselPrice * $dieselLiters);
+
+		if(@$conexion->consulta($querys->updateInsFuelExp($id, $initDate, $finishDate, $magnaLiters, $premiumLiters,
+														$dieselLiters, $magnaPrice, $premiumPrice, $dieselPrice,
+														$status, $amount, $work)) == 0){
+															$jsondata['resp'] = 0;
+															$jsondata['msg'] = 'Ocurrió un error al intentar almacenar en la base de datos';
+														} else {
+															$jsondata['resp'] = 1;
+														}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
 	break;
 }
 ?>

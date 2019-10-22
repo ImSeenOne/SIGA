@@ -133,8 +133,12 @@
             </div>
           </div>
 
-          <input type="hidden" name="opcion" value="27">
+          <input type="hidden" name="opcion" id="opcion" value="27">
           <input type="hidden" id="id" name="id">
+
+          <div id="respServer">
+
+          </div>
 
           <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-2em pull-right">
             <div class="col-sm-12 col-lg-6 col-md-6">
@@ -168,6 +172,7 @@
     listInsFuelExps();
     dateControl('dateStart');
     dateControl('dateFinish');
+    dateControl('dateAss');
     $('#assignExpenseModal').on('shown.bs.modal', function () {
       $('#modalUser').trigger('focus');
     });
@@ -335,17 +340,17 @@
 
   function sumTotal(){
     let magnaPrice = ($('#magna').val()) ? parseFloat($('#magna').val().replace("$", "").replace(",","")) : 0;
-    console.log('Precio Magna: '+magnaPrice);
+
     let premiumPrice = ($('#premium').val()) ? parseFloat($('#premium').val().replace("$", "").replace(",","")) : 0;
-    console.log('Precio Premium: '+premiumPrice);
+
     let dieselPrice = ($('#diesel').val()) ? parseFloat($('#diesel').val().replace("$", "").replace(",","")) : 0;
-    console.log('Precio Diesel: '+dieselPrice);
+
 
     let quantMagna = ($('#magnaLts').val()) ? parseFloat($('#magnaLts').val().replace(',','')) : 0;
     let quantPremium = ($('#premiumLts').val()) ? parseFloat($('#premiumLts').val()) : 0;
     let quantDiesel = ($('#dieselLts').val()) ? parseFloat($('#dieselLts').val()) : 0;
     let total = (parseFloat(magnaPrice) * parseFloat(quantMagna)) + (parseFloat(premiumPrice) * parseFloat(quantPremium)) + (parseFloat(dieselPrice) * parseFloat(quantDiesel));
-    console.log('Total: '+total);
+
 
     $('#totalAmount').val(total);
     $('#totalAmount').trigger('keyup');

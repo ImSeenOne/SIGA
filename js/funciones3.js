@@ -1409,142 +1409,38 @@ $('#frmAdmPayment').submit(function(event){
 /*******************************************************************************/
 /*******************************************************************************/
 
-$('#addToTable').click(function(){
-	let id = $('#concept').val();
-	let concept = $('#concept option:selected').text();
-	let code = $('#concept').find(":selected").data("code");
-	let quant = $('#concept').find(":selected").data("quant");
-	let used = '';
-	var tbody = $("#listConcepts tbody");
-
-	if($('#concept').val() != 0){
-		if (tbody.children().length == 0) {
-				$("#listConcepts").slideToggle();
-				$('#saveConcepts').slideToggle();
-		}
-		let params = {'id':id, 'opt':22}
-		$.ajax({
-				type:    'POST',
-				url:     urlConsultas3,
-				data:    params,
-				dataType: 'json',
-				success: function(resp){
-					$('#input'+id).attr("max", parseFloat(quant) - parseFloat(resp.used));
-				}
-		});
-		let cond = '';
-		if($('#opcion').val() == '16'){
-			cond = '<td id="sillyColumn'+id+'" style="display: none;">1</td>'
-		} else {
-			cond = '<td id="sillyColumn'+id+'" style="display: none;"> </td>';
-		}
-
-		if(!$('#'+id).length){
-			$('#listConcepts tbody').append(
-			'<tr id="'+id+'">'+
-			'<td >'+id+'</td>'+
-			'<td >'+code+'</td>'+
-			'<td >'+concept+'</td>'+
-			'<td> <input id="input'+id+'" type="number" step="0.001" required onkeypress="return isNumberKey(event)" class="form-control"style="display: block;" min="0.01" step="0.01"> </td>'+
-			'<td> <button type="button" name="button" class="btn btn-danger " onclick="deleteTR(\''+id+'\')" onmousedown="deletePPConcept(\''+id+'\')"> <i class="fa fa-trash"></i> </button> </td>'+
-			cond+
-			'</tr>');
-		} else {
-			swal({
-			  type: 'warning',
-			  title: 'El concepto que deseas agregar ya se encuentra en la lista, quizá quieras editar la cantidad',
-			  showConfirmButton: false,
-			  timer: 2500
-			});
-		}
-
-	}
-	});
-
-	function deleteTR(code){
-		var tbody = $("#listConcepts tbody");
-		$('#'+code).remove();
-
-		if (tbody.children().length == 0) {
-				$("#listConcepts").slideToggle();
-				$('#saveConcepts').slideToggle();
-		}
-	}
-
 	//AGREGA UN NUEVO AVANCE FÍSICO
 	$('#newPhysProg').submit(function(event){
 		event.preventDefault();
 
 		let formData = new FormData($(this)[0]);
 
-		let idConcept = [];
-		let quantConcept = [];
-		let idRConcept = [];
-		$("#listConcepts tbody tr").each(function (index) {
-	    $(this).children("td").each(function (index2) {
-	      switch (index2) {
-	        case 0:
-					idConcept.push($(this).text());
-	        break;
-
-	        case 3:
-					quantConcept.push($(this).children().val());
-					break;
-
-					case 5:
-					console.log($(this).html());
-					idRConcept.push($(this).html());
-					break;
-	      }
-	    });
-  	});
-
-		$('#respServer').html(cargando);
-
-		let id = $('#id').val();
-
-		let resident = $('#resident').val();
-		let work = $('#work').val();
-
-		let dateStart = $('#dateStart').val();
-		let dateFinish = $('#dateFinish').val();
-
-		let opcion = $('#opcion').val();
-
-		let concepts = JSON.stringify(idConcept);
-
-		let quantities = JSON.stringify(quantConcept);
-
-		let r_concepts = JSON.stringify(idRConcept);
-
-		let params = {
-									'id':id,
-									'resident':resident,
-									'work':work,
-									'dateStart':dateStart,
-									'dateFinish':dateFinish,
-									'opcion':opcion,
-									'r_concepts': r_concepts,
-									'concepts':concepts,
-									'quantities':quantities}
 
 		$.ajax({
+				beforeSend: function(){
+					$('#respServer').html(cargando);
+				},
 				type:    'POST',
 				url:     urlSubir3,
-				data:    params,
+				data:    formData,
 				dataType: 'json',
 				success: function(resp){
 					if(resp.resp == 1){
 						$('#respServer').html("");
+
 						resetForm('newPhysProg');
+
 						listPhysProg();
-						$('#newPhysProg').slideToggle();
-						$('#btnNewPhysProg').slideToggle();
-						$("#listConcepts tbody tr").each(function (index) {
-							deleteTR($(this).attr('id'));
-						});
+
+						if($('#newPhysProg').is(':visible')){
+							$('#newPhysProg').slideToggle();
+						}
+
+						if($('#btnNewPhysProg').is(':hidden')){
+							$('#btnNewPhysProg').slideToggle();
+						}
+
 						$('#opcion').val("15");
-						fillConcepts();
 				} else {
 					$("#respServer").html(resp.msg);
 				}
@@ -1552,58 +1448,6 @@ $('#addToTable').click(function(){
 				}
 		});
 	});
-
-	function fillConcepts(){
-		$('#waitingConcepts').html(cargando);
-		$('#concept').hide();
-		var work = $('#work').val();
-		let params = {'work': work, 'opt': 21}
-		let element = '';
-    $.ajax({
-        type:    'POST',
-        url:     urlConsultas3,
-        data:    params,
-        dataType: 'json',
-        success: function(resp){
-					$("#listConcepts tbody tr").each(function (index) {
-						deleteTR($(this).attr('id'));
-					});
-            element+= '<option value="0">Seleccionar...</option>';
-            $.each(resp.conceptos,function(i,y){
-                element+= '<option value="' + y['id'] + '"data-quant="'+y['cantidad']+'" data-code="'+y['codigo']+'">' + y['concepto'] + '</option>';
-            });
-						$("#concept").empty();
-            $('#concept').append(element);
-						$('#concept').show();
-						$('#waitingConcepts').html("");
-        }
-    });
-	}
-
-	function fillConceptsAlt(){
-		$('#waitingConcepts').html(cargando);
-		$('#concept').slideToggle();
-		var work = $('#work').val();
-		let params = {'work': work, 'opt': 21}
-		let element = '';
-		$.ajax({
-				async: false,
-				type:    'POST',
-				url:     urlConsultas3,
-				data:    params,
-				dataType: 'json',
-				success: function(resp){
-						element+= '<option value="0">Seleccionar...</option>';
-						$.each(resp.conceptos,function(i,y){
-								element+= '<option value="' + y['id'] + '"data-quant="'+y['cantidad']+'" data-code="'+y['codigo']+'">' + y['concepto'] + '</option>';
-						});
-						$("#concept").empty();
-						$('#concept').append(element);
-						$('#concept').slideToggle();
-						$('#waitingConcepts').html("");
-				}
-		});
-	}
 
 $('#btnNewPhysProg').click(function(){
   $('#newPhysProg').slideToggle();
@@ -1628,9 +1472,6 @@ function listPhysProg(){
 }
 
 $('#cancelAllConcepts').click(function(){
-	$("#listConcepts tbody tr").each(function(index) {
-		deleteTR($(this).attr('id'));
-	});
 	$('#opcion').val("15");
 	$('#id').html("");
 	resetForm('newPhysProg');
@@ -1642,14 +1483,75 @@ $('#cancelAllConcepts').click(function(){
 	}
 });
 
-function lookDetails(id){
-	$("#listConceptsDetail tbody tr").each(function (index) {
-		$(this).remove();
-	});
-	$('#folioModal').html('Cargando...');
-	$('#residentModal').html('Cargando...');
-	$('#workModal').html('Cargando...');
+function setConceptData(){
+	let id = $('#concepts').val();
+	let unit = $('#concepts').find(':selected').data('unit'+id);
+	let maxQuant = parseFloat($('#concepts').find(':selected').data('quant'+id));
+	let totalQuant = $('#concepts').find(':selected').data('total'+id);
+	$('#quantity').attr({'max': maxQuant});
+	$('#unit').val(''+unit+'');
+	$('#totalQuant').val(''+maxQuant+'');
+}
 
+function fillConcepts(){
+		$('#waitingConcepts').html(cargando);
+		$('#concepts').slideToggle();
+		var work = $('#workConcepts').val();
+		let params = {'work': work, 'opt': 21}
+		let element = '';
+    $.ajax({
+        type:    'POST',
+        url:     urlConsultas3,
+        data:    params,
+        dataType: 'json',
+        success: function(resp){
+            element+= '<option value="0">Seleccionar...</option>';
+            $.each(resp.concepts,function(i,y){
+							console.log('ID: '+y['id']+'::MQ: '+y['max_quantity']);
+							if(y['max_quantity']>0){
+								element+= '<option value="' + y['id'] + '" data-quant'+y['id']+'="'+y['max_quantity']+'" data-code'+y['id']+'="'+y['code']+'" data-unit'+y['id']+'="'+y['unit']+'" data-used'+y['id']+'="'+y['used_quantity']+'" data-total'+y['id']+'="'+y['quantity']+'">' + y['concept'] + '</option>';
+							}
+            });
+						$("#concepts").empty();
+            $('#concepts').append(element);
+						$('#concepts').slideToggle();
+						$('#waitingConcepts').html("");
+        }
+    });
+	}
+//
+// function listUsedConcepts(id){
+// 	$.ajax({
+// 		beforeSend: function(){
+// 			$('#listConceptsDetail').hide();
+// 			$('#respServerModalDetail').html(cargando);
+// 		},
+// 		type: 'POST',
+// 		params: {'id': id, 'opt': 23},
+// 		dataType: 'JSON',
+// 		success: function(resp){
+// 			if(resp.resp == 1){
+// 				$('#listConceptsDetail').show();
+// 				$.each(resp.concepts,function(i,y){
+// 					if(y['used_quantity'] > 0){
+// 						$('#listConceptsDetail tbody').append(
+// 						'<tr>'+
+// 						'<td>'+y['id']+'</td>'+
+// 						'<td>'+y['code']+'</td>'+
+// 						'<td>'+y['concept']+'</td>'+
+// 						'<td>'+y['used_quantity']+'</td>'+
+// 						'<td>'+y['unit']+'</td>'+
+// 						'</tr>');
+// 					}
+// 				});
+// 				$('#listConceptsDetail tbody').append()
+// 			}
+// 		}
+// 	});
+// }
+
+function addConcepts(id){
+	$("#respServerModalDetail").html(cargando);
 	$.ajax({
 				beforeSend: function(){
 						$("#respServerModalDetail").html(cargando);
@@ -1659,25 +1561,68 @@ function lookDetails(id){
 				data: {'id':id, 'opt':23},
 				dataType: 'json',
 				success: function(resp){
+						let  fine = false;
 						$.each(resp.concepts,function(i,y){
-							if(y['cantidad'] > 0){
+							if(y['used_quantity'] > 0){
+								fine = true;
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
 								'<td>'+y['id']+'</td>'+
-								'<td>'+y['codigo']+'</td>'+
-								'<td>'+y['concepto']+'</td>'+
-								'<td>'+y['cantidad']+'</td>'+
-								'<td>'+y['unidad']+'</td>'+
+								'<td>'+y['code']+'</td>'+
+								'<td>'+y['concept']+'</td>'+
+								'<td>'+y['used_quantity']+'</td>'+
+								'<td>'+y['unit']+'</td>'+
 								'</tr>');
+								$('#respServerModalDetail').html('');
 							}
 						});
-						$('#respServerModalDetail').html("");
-						$('#folioModal').html('Folio: <b>'+resp.folio+'</b>');
-						$('#residentModal').html('Residente: <b>'+resp.resident+'</b>');
-						$('#workModal').html('Obra: <b>'+resp.work+'</b>');
+						if(!fine){
+							$('#listConceptsDetail').slideToggle();
+							$('#respServerModalDetail').html('<center><h4>¡No hay conceptos usados para éste avance!</h4></center>');
+						}
+						$('#folioModal').html(resp.folio);
+						$('#residentModal').html(resp.resident);
+						$('#workModal').html(resp.work);
+						$('#workConcepts').val(resp.work_id);
+						$('#physProgId').val(id);
+						fillConcepts();
 				}
 	});
 }
+
+$('#saveConcept').click(function(){
+
+	let formData = new FormData(document.getElementById('frmConcept'));
+	if(parseFloat($('#quantity').attr('max'))>=parseFloat($('#quantity').val())){
+		$.ajax({
+			beforeSend: function(){
+				$('#respServerModalDetail').html(cargando);
+			},
+			url: urlSubir3,
+			type: 'POST',
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			dataType: 'JSON',
+			success: function(resp){
+				if(resp.resp == 1){
+					$('#quantity').val('');
+					$('#totalQuant').val('');
+					addConcepts($('#physProgId').val());
+				}
+			}
+		});
+	} else {
+		let opciones = {
+			appendTo:'#frmConcept',
+			minWidth:300,
+			maxWidth: 350,
+		};
+		parent.mensaje("Debes utilizar una cantidad menor a la cantidad restante",'warning',opciones);
+	}
+
+});
 
 function deleteProgress(id){
 	swal({
@@ -1729,15 +1674,6 @@ function editProgress(id){
 					$('#concept').select2();
 					$('#dateStart').val(resp.dateStart.split('-')[2]+'/'+resp.dateStart.split('-')[1]+'/'+resp.dateStart.split('-')[0]);
 					$('#dateFinish').val(resp.dateFinish.split('-')[2]+'/'+resp.dateFinish.split('-')[1]+'/'+resp.dateFinish.split('-')[0]);
-					fillConceptsAlt();
-					$.each(resp.concepts,function(i,y){
-						if(parseFloat(y['cantidad'])>0){
-							$('#concept').val(y['id']);
-							$('#addToTable').trigger("click");
-							$('#input'+y['id']).val(y['cantidad']);
-							$('#sillyColumn'+y['id']).text(y['rId']);
-						}
-					});
 					if($('#newPhysProg').is(':hidden')){
 						$('#newPhysProg').slideToggle();
 					}
@@ -1748,19 +1684,6 @@ function editProgress(id){
 					$('#id').val(resp.id);
 					$("#respServer").html("");
 				}
-	});
-}
-
-function deletePPConcept(id_concept){
-	console.log($('#sillyColumn'+id_concept).text());
-	let id_r = $('#sillyColumn'+id_concept).text();
-	$.ajax({
-		type: 'POST',
-		data: {opt: 20, id_r_concept: id_r},
-		url: urlEliminar3,
-		dataType: 'JSON',
-		success: function(resp){
-		}
 	});
 }
 
@@ -2413,6 +2336,7 @@ $('#btnCancelInsFuelExp').click(function(){
 		$('#frmNewInsFuelExp').slideToggle();
 	}
 	resetForm('frmNewInsFuelExp');
+	$('#opcion').val('27');
 });
 
 $('#btnNewInsFuelExp').click(function(){
@@ -2424,6 +2348,7 @@ $('#btnNewInsFuelExp').click(function(){
 		$('#frmNewInsFuelExp').slideToggle();
 	}
 	$('#status').val(1);
+	$('#opcion').val('27');
 });
 
 $('#frmNewInsFuelExp').submit(function(event){
@@ -2463,8 +2388,34 @@ $('#frmNewInsFuelExp').submit(function(event){
 	});
 });
 
+function setGasMax(){
+	if($('#fuelTypeModal').val() > 0){
+		let fuelType = $('#fuelTypeModal').val();
+		let id = $('#idInsFuelExpModal').val();
+		$.ajax({
+			beforeSend: function(){
+				$('#waitGasResponse').html(cargando);
+			},
+			type: 'POST',
+			data: {'id': id, 'fuelType': fuelType,'opt': 25},
+			url: urlConsultas3,
+			dataType: 'JSON',
+			success: function(resp){
+				$('#waitGasResponse').html('');
+
+				if(parseFloat(resp.max_liters) > 0){
+					$('#litersModal').removeAttr('disabled');
+					$('#litersModal').attr({'max': resp.max_liters});
+				}
+			}
+		});
+	} else {
+		$('#litersModal').prop('disabled', true);
+	}
+}
+
 function listFuelExpAssEmployees(id){
-	$('#idModal').val(id);
+	$('#idInsFuelExpModal').val(id);
 	$.ajax({
 		beforeSend: function(){
 			$('#cntnListAssignedFuelExpenses').html(cargando);
@@ -2484,31 +2435,142 @@ $('#frmAssignExpense').submit(function(event){
 	event.preventDefault();
 
 	let formData = new FormData($(this)[0]);
+	if($('#employeeModal').val() > 0){
+		$.ajax({
+			beforeSend: function(){
+				$('#respServerAssFuelExp').html(cargando);
+			},
+			url: urlSubir3,
+			type: 'POST',
+			data: formData,
+			dataType: 'JSON',
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(resp){
+				if(resp.resp == 1){
+					$('#respServerAssFuelExp').html('');
+					listFuelExpAssEmployees($('#idInsFuelExpModal').val());
+					resetForm('frmAssignExpense');
+					$('#respServerAssFuelExp').html('');
+					$('#litersModal').prop('disabled', true);
+					$('#litersModal').val('');
+				} else {
+					$('#respServerAssFuelExp').html(resp.msg);
+				}
+			}
+		});
+	} else {
+		swal({
+     title: "Debes seleccionar un empleado",
+     type: "warning",
+     timer: 1500
+     });
+	}
 
+});
+
+function editInsFuelExp(id){
 	$.ajax({
 		beforeSend: function(){
-			$('#respServerAssFuelExp').html(cargando);
+			$('#respServer').html(cargando);
 		},
-		url: urlSubir3,
 		type: 'POST',
-		data: formData,
+		data: {id: id, opt: 15},
 		dataType: 'JSON',
-		data: formData,
-		cache: false,
-		contentType: false,
-		processData: false,
+		url: urlConsultas3,
 		success: function(resp){
-			if(resp.resp == 1){
-				$('#respServerAssFuelExp').html('');
-				listFuelExpAssEmployees($('#idModal').val());
-				resetForm('frmAssignExpense');
-				$('#respServerAssFuelExp').html('');
-			} else {
-				$('#respServerAssFuelExp').html(resp.msg);
+			console.log(resp);
+			if($('#btnNewInsFuelExp').is(':visible')){
+				$('#btnNewInsFuelExp').slideToggle();
 			}
+
+			if($('#frmNewInsFuelExp').is(':hidden')){
+				$('#frmNewInsFuelExp').slideToggle();
+			}
+			$('#folio').val(resp.folio);
+			$('#dateStart').val(resp.dateStart);
+			$('#dateFinish').val(resp.dateFinish);
+			$('#status').val(resp.status);
+			$('#magna').val(resp.priceMagna);
+			$('#magna').trigger('blur');
+			$('#premium').val(resp.pricePremium);
+			$('#premium').trigger('blur');
+			$('#diesel').val(resp.priceDiesel);
+			$('#diesel').trigger('blur');
+			$('#magnaLts').val(resp.magna);
+			$('#premiumLts').val(resp.premium);
+			$('#dieselLts').val(resp.diesel);
+			$('#diesel').trigger('keyup');
+			$('#work').val(resp.work);
+			$('#id').val(resp.id);
+			$('#opcion').val(34);
+			$('#respServer').html('');
 		}
+	})
+}
+
+function deleteInsFuelExp(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se cancelará el registro <strong>#' + id + '</strong>: \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 15};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listInsFuelExps();
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+							}
+					});
 	});
-});
+}
+
+function deleteInsFuelExpEmp(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se borrará el registro <strong>#' + id + '</strong> del empleado + name +',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 16};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listFuelExpAssEmployees($('#idInsFuelExpModal').val());
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+							}
+					});
+	});
+}
 
 /*******************************************************************************/
 /*******************************************************************************/

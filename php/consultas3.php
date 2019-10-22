@@ -224,6 +224,24 @@ switch($_POST['opt']){
 		$jsondata['id'] = $resp['id_status'];
 		$jsondata['name'] = $resp['nombre'];
 	break;
+	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DE GASOLINA INTERNA
+	case 15:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listInsFuelExp($id));
+		$jsondata['id'] = $resp['id_gas_int'];
+		$jsondata['folio'] = $resp['folio'];
+		$jsondata['dateStart'] = explode('-',$resp['fecha_inicio'])[2].'/'.explode('-',$resp['fecha_inicio'])[1].'/'.explode('-',$resp['fecha_inicio'])[0];
+		$jsondata['dateFinish'] = explode('-',$resp['fecha_final'])[2].'/'.explode('-',$resp['fecha_final'])[1].'/'.explode('-',$resp['fecha_final'])[0];
+		$jsondata['work'] = $resp['id_obra'];
+		$jsondata['magna'] = $resp['litros_magna'];
+		$jsondata['premium'] = $resp['litros_premium'];
+		$jsondata['diesel'] = $resp['litros_diesel'];
+		$jsondata['priceMagna'] = $resp['precio_magna'];
+		$jsondata['pricePremium'] = $resp['precio_premium'];
+		$jsondata['priceDiesel'] = $resp['precio_diesel'];
+		$jsondata['status'] = $resp['status'];
+		$jsondata['amount'] = $resp['monto'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:
@@ -239,16 +257,26 @@ switch($_POST['opt']){
 	//FUNCIÓN PARA LLENAR EL COMBOBOX (SELECT) DE LOS CONCEPTOS PERTENECIENTES A UNA OBRA EN ESPECÍFICO
 	case 21:
 		$work = $funciones->limpia($_POST['work']);
-		$strQuery = 'SELECT concepto, id_presupuesto_obra as id, codigo, cantidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_obra = '.$work;
+		$strQuery = 'SELECT concepto, id_presupuesto_obra as id, codigo, cantidad, unidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_obra = '.$work;
 
 		$resp = @$conexion->obtenerlista($strQuery);
 		$totRegs = $conexion->numregistros();
 
 		foreach ($resp as $key) {
-			$datos[] = array('id' => $key->id, 'concepto' => $key->concepto, 'codigo' => $key->codigo, 'cantidad' => $key->cantidad);
+			$respC = @$conexion->fetch_array($querys3->getAddedConcept($key->id));
+			$datos[] = array(
+			'id' => $key->id,
+			'concept' => $key->concepto,
+			'code' => $key->codigo,
+			'quantity' => $key->cantidad,
+			'max_quantity' => floatval($key->cantidad)-floatval((isset($respC['quantity_used'])) ? $respC['quantity_used'] : 0),
+			'used_quantity' => (isset($respC['quantity_used'])) ? $respC['quantity_used'] : 0,
+			'unit' => $key->unidad);
 		}
 
-		$jsondata['conceptos'] = $datos;
+		// var_dump($datos);
+
+		$jsondata['concepts'] = $datos;
 		$jsondata['total']     = $totRegs;
 	break;
 
@@ -270,7 +298,7 @@ switch($_POST['opt']){
 
 		foreach ($resp as $key) {
 			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
-			$datos[] = array('id' => $respC['id'], 'concepto' => $respC['concepto'], 'codigo' => $respC['codigo'], 'cantidad' => $key->cantidad, 'unidad' => $respC['unidad']);
+			$datos[] = array('id' => $respC['id'], 'concept' => $respC['concepto'], 'code' => $respC['codigo'], 'used_quantity' => $key->cantidad, 'unit' => $respC['unidad'], 'total_quantity' => $respC['cantidad']);
 		}
 
 		$resp = @$conexion->fetch_array($querys3->getPhysProg($physprog));
@@ -279,6 +307,7 @@ switch($_POST['opt']){
 		$jsondata['resident'] = $resp['residente'];
 		$jsondata['folio'] = $resp['folio'];
 		$jsondata['work'] = $work['nombre'];
+		$jsondata['work_id'] = $work['id_obras'];
 		$jsondata['concepts'] = $datos;
 	break;
 
@@ -293,6 +322,23 @@ switch($_POST['opt']){
 								'departamento'=>$respC['numero_departamento'],'nivel'=>$respC['numero_nivel'],'direccion'=>$respC['direccion']);
 			}
 			$jsondata['properties'] = $datos;
+		break;
+		//FUNCION PARA OBTENER Y LISTAR LAS ASIGNACIONES DE GASOLINA
+		case 25:
+			$idInsFuelExp = $funciones->limpia($_POST['id']);
+			$fuelType = $funciones->limpia($_POST['fuelType']); //1: Magna, 2: Premium, 3: Diesel
+			$totalLiters = @$conexion->fetch_array($querys3->getTotalLitersByType($fuelType, $idInsFuelExp))['total'];
+			$usedLiters = @$conexion->obtenerlista($querys3->getUsedLitersByType($fuelType, $idInsFuelExp));
+			$total = 0;
+			foreach ($usedLiters as $used) {
+				$total += $used->litros;
+			}
+
+			if(!($total > 0)){
+				$jsondata['max_liters'] = $totalLiters;
+			} else {
+				$jsondata['max_liters'] = $totalLiters - $total;
+			}
 		break;
 
 }

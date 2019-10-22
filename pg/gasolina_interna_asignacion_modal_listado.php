@@ -12,6 +12,9 @@
     <th>Tipo de combustible</th>
     <th>Ubicación</th>
     <th>Vehículo</th>
+    <th>Fecha Asignación</th>
+    <th>Kilometraje</th>
+    <th>Acción</th>
   </thead>
   <tbody>
     <?php foreach ($listado as $key) {
@@ -54,6 +57,9 @@
           echo $resp['valor'];
         ?>
       </td>
+      <td><?= date('d/m/Y', strtotime($key->fecha_asignacion)) ?></td>
+      <td><?= number_format($key->kilometraje, 0) ?></td>
+      <td> <button type="button" class="btn btn-danger btn-sm" onclick="deleteInsFuelExpEmp(<?= $key->id_gas_int_empl ?>, '<?= $nombre.' '.$apellidos ?>')"> <i class="fa fa-trash"></i> </button> </td>
     </tr>
     <?php
     } ?>

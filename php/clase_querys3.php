@@ -416,8 +416,8 @@ public function getContracts($id = 0){
 	}
 	//AGREGA UN CONCEPTO Y LA CANTIDAD USADA, QUE PERTENECEN A UN AVANCE FÍSICO
 	public function addPPConcept($physprog, $concept, $quantity){
-		$strQuery = 'INSERT INTO tbl_avance_fisico_conceptos (id_avance_fisico, id_concepto, cantidad) ';
-		$strQuery.= 'VALUES ('.$physprog.', "'.$concept.'", \''.$quantity.'\');';
+		$strQuery = "INSERT INTO tbl_avance_fisico_conceptos(id_avance_fisico, id_concepto, cantidad) ";
+		$strQuery.= "VALUES (".$physprog.", ".$concept.", ".$quantity.");";
 		return $strQuery;
 	}
 	//OBTIENE UN AVANCE FÍSICO POR ID, O POR ID DE LA OBRA A LA QUE PERTENECE
@@ -462,7 +462,7 @@ public function getContracts($id = 0){
 	}
 
 	public function getConceptFromBudget($id_budget){
-		$strQuery = 'SELECT id_presupuesto_obra as id, codigo, concepto, unidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_presupuesto_obra = '.$id_budget.';';
+		$strQuery = 'SELECT id_presupuesto_obra as id, codigo, concepto, unidad, cantidad FROM tbl_presupuesto_obra WHERE fecha_eliminado IS NULL AND id_presupuesto_obra = '.$id_budget.';';
 		return $strQuery;
 	}
 
@@ -710,10 +710,49 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 
-	function addAssignedFuelExpEmployee($idEmployee, $idInsFuelExp, $liters, $amount, $fuelType, $machineryType, $location){
+	function addAssignedFuelExpEmployee($idEmployee, $idInsFuelExp, $liters, $amount, $fuelType, $machineryType, $location, $date, $kilometers){
 		$strQuery = 'INSERT INTO `demosystem_siga`.`tbl_gas_int_empleados`
-									(id_empleado, id_gas_int, litros, monto_asignado, tipo_combustible, tipo_vehiculo, ubicacion)
-									VALUES ('.$idEmployee.', '.$idInsFuelExp.', '.$liters.', '.$amount.', '.$fuelType.', '.$machineryType.', \''.$location.'\')';
+									(id_empleado, id_gas_int, litros, monto_asignado, tipo_combustible, tipo_vehiculo, ubicacion, fecha_asignacion, kilometraje)
+									VALUES ('.$idEmployee.', '.$idInsFuelExp.', '.$liters.', '.$amount.', '.$fuelType.', '.$machineryType.', \''.$location.'\', \''.$date.'\', '.$kilometers.')';
+		return $strQuery;
+	}
+
+	function getTotalLitersByType($fuelType, $insFuelExp){
+		switch ($fuelType) {
+			case 1:
+				$strQuery = 'SELECT litros_magna as total FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL AND id_gas_int = '.$insFuelExp;
+			break;
+			case 2:
+				$strQuery = 'SELECT litros_premium as total FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL AND id_gas_int = '.$insFuelExp;
+			break;
+			case 3:
+				$strQuery = 'SELECT litros_diesel as total FROM tbl_gasolina_interna WHERE fecha_eliminado IS NULL AND id_gas_int = '.$insFuelExp;
+			break;
+		}
+		return $strQuery;
+	}
+
+	function getUsedLitersByType($fuelType, $insFuelExp){
+		$strQuery = 'SELECT * FROM tbl_gas_int_empleados WHERE fecha_eliminado IS NULL AND tipo_combustible = '.$fuelType.' AND id_gas_int = '.$insFuelExp;
+		return $strQuery;
+	}
+
+	function updateInsFuelExp($id, $initDate, $finishDate, $magnaLiters, $premiumLiters,
+													$dieselLiters, $magnaPrice, $premiumPrice, $dieselPrice,
+													$status, $amount, $work){
+		$strQuery = 'UPDATE tbl_gasolina_interna SET fecha_inicio = \''.$initDate.'\', fecha_final = \''.$finishDate.'\', id_obra = '.$work.', litros_magna = '.$magnaLiters.', litros_premium = '.$premiumLiters.', litros_diesel = '.$dieselLiters.', precio_magna = '.$magnaPrice.', precio_premium = '.$premiumPrice.', precio_diesel = '.$dieselPrice.', status = '.$status.', monto = '.$amount.' WHERE (id_gas_int = '.$id.');';
+		return $strQuery;
+	}
+
+	function deleteInsFuelExp($id, $date){
+		$strQuery = 'UPDATE tbl_gasolina_interna SET fecha_eliminado = \''.$date.'\' WHERE (id_gas_int = '.$id.')';
+		return $strQuery;
+	}
+
+	function deleteInsFuelExpEmpl($id, $date){
+
+		$strQuery = 'UPDATE tbl_gas_int_empleados SET fecha_eliminado = \''.$date.'\' WHERE (id_gas_int_empl = '.$id.')';
+
 		return $strQuery;
 	}
 
@@ -865,7 +904,7 @@ public function getContracts($id = 0){
 			 }
 
 			 public function listMachineryAndVehicles(){
-				 $strQuery = 'SELECT id_tipo_maquinaria as id, CONCAT(modelo, ", ", marca, ", ", placas) as valor FROM tblc_maquinaria_vehiculo WHERE fecha_eliminado IS NULL';
+				 $strQuery = 'SELECT id_tipo_maquinaria as id, CONCAT(marca, ", ", modelo, ", ", numero_economico) as valor FROM tblc_maquinaria_vehiculo WHERE fecha_eliminado IS NULL ORDER BY valor ASC';
 				 return $strQuery;
 			 }
 }
