@@ -2445,6 +2445,7 @@ function setGasMax(){
 
 function listFuelExpAssEmployees(id){
 	$('#idInsFuelExpModal').val(id);
+	$('#btnCancelInsFuelExp').trigger('click');
 	$.ajax({
 		beforeSend: function(){
 			$('#cntnListAssignedFuelExpenses').html(cargando);
