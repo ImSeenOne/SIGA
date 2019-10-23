@@ -203,10 +203,12 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
-	case 20:
-		$idR = $funciones->limpia($_POST['id_r_concept']);
-		if(@$conexion->consulta($querys->deletePPConcept($idR)) == 0){
+	case 50:
+		$idConcept = $funciones->limpia($_POST['id']);
+
+		if(!$conexion->consulta($querys->deleteConcept($idConcept))){
 			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al realizar la consulta';
 		} else {
 			$jsondata['resp'] = 1;
 		}

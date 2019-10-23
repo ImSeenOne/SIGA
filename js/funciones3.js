@@ -1565,6 +1565,7 @@ function addConcepts(id){
 						$.each(resp.concepts,function(i,y){
 							if(y['used_quantity'] > 0){
 								fine = true;
+								$('#listConceptsDetail tr').remove();
 								$('#listConceptsDetail tbody').append(
 								'<tr>'+
 								'<td>'+y['id']+'</td>'+
@@ -1572,6 +1573,7 @@ function addConcepts(id){
 								'<td>'+y['concept']+'</td>'+
 								'<td>'+y['used_quantity']+'</td>'+
 								'<td>'+y['unit']+'</td>'+
+								'<td><button type="button" id="deleteConcept" class="btn btn-danger" onclick="deleteConcept('+y['realID']+')"><i class="fa fa-trash"></i></button></td>'+
 								'</tr>');
 								$('#respServerModalDetail').html('');
 							}
@@ -1687,6 +1689,30 @@ function editProgress(id){
 	});
 }
 
+function deleteConcept(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#listConceptsDetail tbody').empty();
+			$('#respServerModalDetail').html(cargando);
+		},
+		data: {id: id, opt: 50},
+		type: 'POST',
+		url: urlEliminar3,
+		dataType: 'JSON',
+		success: function(resp){
+			if(resp.resp == 1){
+				addConcepts($('#physProgId').val());
+				fillConcepts();
+			} else {
+				swal({
+		     title: resp.msg,
+		     type: "warning",
+		     timer: 1500
+		     });
+			}
+		}
+	});
+}
 
 /*******************************************************************************/
 /*******************************************************************************/

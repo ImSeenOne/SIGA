@@ -12,6 +12,7 @@
 </section>
 <div class="col-lg-12 col-md-12 col-sm-12">
   <section class="content">
+    
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">Nuevo avance</h3>
@@ -43,11 +44,11 @@
               </select>
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-              <label class="text-center" for="dateStart">Fecha de inicio</label>
+              <label class="text-center" for="dateStart">Fecha Inicio</label>
               <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()">
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-              <label class="text-center" for="dateFinish">Fecha de finalización</label>
+              <label class="text-center" for="dateFinish">Fecha Final</label>
               <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()">
             </div>
               <div class="row">

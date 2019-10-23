@@ -415,9 +415,9 @@ public function getContracts($id = 0){
 		return $strQuery;
 	}
 	//AGREGA UN CONCEPTO Y LA CANTIDAD USADA, QUE PERTENECEN A UN AVANCE FÍSICO
-	public function addPPConcept($physprog, $concept, $quantity){
-		$strQuery = "INSERT INTO tbl_avance_fisico_conceptos(id_avance_fisico, id_concepto, cantidad) ";
-		$strQuery.= "VALUES (".$physprog.", ".$concept.", ".$quantity.");";
+	public function addPPConcept($physprog, $concept, $quantity, $date){
+		$strQuery = "INSERT INTO tbl_avance_fisico_conceptos(id_avance_fisico, id_concepto, cantidad, fecha_registro) ";
+		$strQuery.= "VALUES (".$physprog.", ".$concept.", ".$quantity.", '".$date."');";
 		return $strQuery;
 	}
 	//OBTIENE UN AVANCE FÍSICO POR ID, O POR ID DE LA OBRA A LA QUE PERTENECE
@@ -436,7 +436,12 @@ public function getContracts($id = 0){
 
 	//OBTIENE EL ID DEL CONCEPTO QUE PERTENECE A UN REPORTE DE AVANCE/AVANCE FÍSICO EN ESPECÍFICO
 	public function getUsedConcept($id){
-		$strQuery = 'SELECT id_avance_concepto as id, id_concepto, cantidad FROM tbl_avance_fisico_conceptos WHERE id_avance_fisico = '.$id.';';
+		$strQuery = 'SELECT id_avance_concepto as id, id_concepto, cantidad FROM tbl_avance_fisico_conceptos WHERE id_avance_fisico = '.$id.' ORDER BY fecha_registro DESC;';
+		return $strQuery;
+	}
+
+	public function deleteConcept($id){
+		$strQuery = 'DELETE FROM tbl_avance_fisico_conceptos WHERE id_avance_concepto = '.$id;
 		return $strQuery;
 	}
 
@@ -478,11 +483,6 @@ public function getContracts($id = 0){
 
 	public function updatePPConcept($id, $quantity){
 		$strQuery = "UPDATE tbl_avance_fisico_conceptos SET cantidad = ".$quantity." WHERE id_avance_concepto = ".$id."";
-		return $strQuery;
-	}
-
-	public function deletePPConcept($id){
-		$strQuery = 'UPDATE tbl_avance_fisico_conceptos SET cantidad = 0 WHERE id_avance_concepto = '.$id;
 		return $strQuery;
 	}
 

@@ -1026,7 +1026,8 @@ break;
 		$concept = $funciones->limpia($_POST['concepts']);
 		$physProg = $funciones->limpia($_POST['physProgId']);
 		$quantity = $funciones->limpia($_POST['quantity']);
-		if(!@$conexion->consulta($querys->addPPConcept($physProg, $concept, $quantity))){
+		if(!@$conexion->consulta($querys->addPPConcept($physProg, $concept, $quantity, $datos['fecha_actual']))){
+			echo $querys->addPPConcept($physProg, $concept, $quantity, $datos['fecha_actual']);
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
 		} else {

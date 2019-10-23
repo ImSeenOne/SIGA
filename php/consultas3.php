@@ -298,7 +298,10 @@ switch($_POST['opt']){
 
 		foreach ($resp as $key) {
 			$respC = @$conexion->fetch_array($querys3->getConceptFromBudget($key->id_concepto));
-			$datos[] = array('id' => $respC['id'], 'concept' => $respC['concepto'], 'code' => $respC['codigo'], 'used_quantity' => $key->cantidad, 'unit' => $respC['unidad'], 'total_quantity' => $respC['cantidad']);
+			$datos[] = array('id' => $respC['id'], 'concept' => $respC['concepto'],
+			'code' => $respC['codigo'], 'used_quantity' => $key->cantidad,
+			'unit' => $respC['unidad'], 'total_quantity' => $respC['cantidad'],
+			'realID' => $key->id);
 		}
 
 		$resp = @$conexion->fetch_array($querys3->getPhysProg($physprog));

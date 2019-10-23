@@ -1,5 +1,5 @@
 <div class="modal fade" id="modalPhysProgDetails">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document" style="width:90%">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -58,6 +58,7 @@
                 <th scope="col">Concepto</th>
                 <th style="width:8%" scope="col">Cantidad</th>
                 <th style="width: 4%" scope="col">Unidad</th>
+                <th style="width: 5%" scope="col">Acción</th>
               </thead>
               <tbody>
               </tbody>
@@ -67,7 +68,7 @@
         </div>
       </div>
     </div>
-    <br><br><br><br><br><br><br><br><br><br>
+    <br><br>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           </div>
