@@ -2406,6 +2406,9 @@ $('#frmNewInsFuelExp').submit(function(event){
 								resetForm('frmNewInsFuelExp');
 								$('#respServer').html('');
 								$('#opcion').val('27');
+								$('#magnaLts').removeAttr('min');
+								$('#premiumLts').removeAttr('min');
+								$('#dieselLts').removeAttr('min');
 								listInsFuelExps();
 							}else{
 								$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
@@ -2525,8 +2528,11 @@ function editInsFuelExp(id){
 			$('#diesel').val(resp.priceDiesel);
 			$('#diesel').trigger('blur');
 			$('#magnaLts').val(resp.magna);
+			$('#magnaLts').attr({'min': parseFloat(resp.maxMagna)});
 			$('#premiumLts').val(resp.premium);
+			$('#premiumLts').attr({'min': parseFloat(resp.maxPremium)});
 			$('#dieselLts').val(resp.diesel);
+			$('#dieselLts').attr({'min': parseFloat(resp.maxDiesel)});
 			$('#diesel').trigger('keyup');
 			$('#work').val(resp.work);
 			$('#id').val(resp.id);
@@ -2571,7 +2577,7 @@ function deleteInsFuelExpEmp(id, name){
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se borrará el registro <strong>#' + id + '</strong> del empleado + name +',
+				text: 'Se borrará el registro <strong>#' + id + '</strong> del empleado '+ name +'.',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',

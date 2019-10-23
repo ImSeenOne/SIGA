@@ -228,6 +228,23 @@ switch($_POST['opt']){
 	case 15:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->listInsFuelExp($id));
+
+		$respMagna = @$conexion->obtenerlista($querys3->getUsedLitersByType(1, $id));
+		$respPremium = @$conexion->obtenerlista($querys3->getUsedLitersByType(2, $id));
+		$respDiesel = @$conexion->obtenerlista($querys3->getUsedLitersByType(3, $id));
+		$maxMagna = 0;
+		$maxPremium = 0;
+		$maxDiesel = 0;
+
+		foreach ($respMagna as $key) {
+			$maxMagna += $key->litros;
+		}
+		foreach ($respPremium as $key) {
+			$maxPremium += $key->litros;
+		}
+		foreach ($respDiesel as $key) {
+			$maxDiesel += $key->litros;
+		}
 		$jsondata['id'] = $resp['id_gas_int'];
 		$jsondata['folio'] = $resp['folio'];
 		$jsondata['dateStart'] = explode('-',$resp['fecha_inicio'])[2].'/'.explode('-',$resp['fecha_inicio'])[1].'/'.explode('-',$resp['fecha_inicio'])[0];
@@ -239,6 +256,9 @@ switch($_POST['opt']){
 		$jsondata['priceMagna'] = $resp['precio_magna'];
 		$jsondata['pricePremium'] = $resp['precio_premium'];
 		$jsondata['priceDiesel'] = $resp['precio_diesel'];
+		$jsondata['maxMagna'] = $maxMagna;
+		$jsondata['maxPremium'] = $maxPremium;
+		$jsondata['maxDiesel'] = $maxDiesel;
 		$jsondata['status'] = $resp['status'];
 		$jsondata['amount'] = $resp['monto'];
 	break;

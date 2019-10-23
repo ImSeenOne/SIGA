@@ -58,7 +58,7 @@
         ?>
       </td>
       <td><?= date('d/m/Y', strtotime($key->fecha_asignacion)) ?></td>
-      <td><?= number_format($key->kilometraje, 0) ?></td>
+      <td><?= number_format($key->kilometraje, 2) ?></td>
       <td> <button type="button" class="btn btn-danger btn-sm" onclick="deleteInsFuelExpEmp(<?= $key->id_gas_int_empl ?>, '<?= $nombre.' '.$apellidos ?>')"> <i class="fa fa-trash"></i> </button> </td>
     </tr>
     <?php
