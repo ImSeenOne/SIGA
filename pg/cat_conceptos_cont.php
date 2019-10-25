@@ -3,8 +3,8 @@
   <small>Contabilidad</small>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-home"></i>Inicio</a></li>
-    <li><a href="#">Compras</a></li>
-    <li href="cat_conceptos_cont">Contabilidad</li>
+    <li><a href="#">Contabilidad</a></li>
+    <li href="cat_conceptos_cont">Conceptos</li>
   </ol>
 </section>
 
