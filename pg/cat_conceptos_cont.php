@@ -24,7 +24,7 @@
           <input autocomplete="false" name="hidden" type="text" style="display:none;">
           <div class="form-group">
             <label for="name">Nombre del Concepto</label>
-            <input type="text" id="name" name="name" class="form-control" placeholder="Nombre de la empresa">
+            <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del concepto">
           </div>
           <div id="respServer"></div>
           <div class="form-group">
