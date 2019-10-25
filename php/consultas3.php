@@ -262,6 +262,12 @@ switch($_POST['opt']){
 		$jsondata['status'] = $resp['status'];
 		$jsondata['amount'] = $resp['monto'];
 	break;
+	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DEL CATÁLOGO CONCEPTOS DE CONTABILIDAD
+	case 16:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listConceptsAcc($id));
+		$jsondata['name'] = $resp['nombre'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:

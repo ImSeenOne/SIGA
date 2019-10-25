@@ -790,6 +790,40 @@ public function getContracts($id = 0){
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+	/*********************QUERYS PARA CATÁLOGO CONCEPTOS*************************/
+	/*****************************CONTABILIDAD***********************************/
+	/****************************************************************************/
+	/****************************************************************************/
+
+	public function listConceptsAcc($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' AND id_concepto = '.$id;
+		}
+
+		$strQuery = 'SELECT id_concepto as id, id_concepto, nombre as valor, nombre, fecha_registro FROM tblc_conceptos_cont WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+
+		return $strQuery;
+	}
+
+	public function addConceptAcc($name, $date){
+		$strQuery = 'INSERT INTO tblc_conceptos_cont (nombre, fecha_registro) VALUES (\''.$name.'\', \''.$date.'\')';
+		return $strQuery;
+	}
+
+	public function updateConceptAcc($id, $name){
+		$strQuery = 'UPDATE tblc_conceptos_cont SET nombre = \''.$name.'\' WHERE id_concepto = '.$id;
+		return $strQuery;
+	}
+
+	public function deleteConceptAcc($id, $date){
+		$strQuery = 'UPDATE tblc_conceptos_cont SET fecha_eliminado = \''.$date.'\' WHERE id_concepto = '.$id;
+		return $strQuery;
+	}
+
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/

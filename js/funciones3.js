@@ -2709,6 +2709,105 @@ function deleteInsFuelStatus(id, name) {
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
+/**********************CATÁLOGO CONCEPTOS CONTABILIDAD**************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+$('#cancelConcept').click(function(){
+	$('#opcion').val('35');
+	resetForm('frmConceptAcc');
+});
+
+$('#frmConceptAcc').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		url: urlSubir3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			resetForm('frmConceptAcc');
+			$('#respServer').html('');
+			$('#opcion').val('35');
+			listConceptsAcc();
+		}
+	});
+});
+
+function listConceptsAcc(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListConceptsAcc').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'HTML',
+		url: 'pg/cat_conceptos_cont_listado.php',
+		success: function(resp){
+			$('#cntnListConceptsAcc').html(resp);
+		}
+	});
+}
+
+function editConceptAcc(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: {id: id, opt: 16},
+		success: function(resp){
+			resetForm('frmConceptAcc');
+			$('#respServer').html('');
+			$('#opcion').val('36');
+			$('#name').val(resp.name);
+			$('#id').val(id);
+		}
+	});
+}
+
+function deleteConceptAcc(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se cancelará el concepto <strong>#' + id + '</strong>: \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 17};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listConceptsAcc();
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+							}
+					});
+	});
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
 /**************************FORMAT CURRENCY FUNCTIONS****************************/

@@ -1073,5 +1073,30 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+	//AGREGA UN NUEVO CONCEPTO AL CATÁLOGO DEL MÓDULO CONTABILIDAD
+	case 35:
+		$name = $funciones->limpia($_POST['name']);
+		if($conexion->consulta($querys->addConceptAcc($name, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN CONCEPTO AL CATÁLOGO DEL MÓDULO CONTABILIDAD
+	case 36:
+		$id = $funciones->limpia($_POST['id']);
+		$name = $funciones->limpia($_POST['name']);
+		if($conexion->consulta($querys->updateConceptAcc($id, $name)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
 }
 ?>
