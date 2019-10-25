@@ -1098,5 +1098,30 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+	//AGREGA UN NUEVO PROVEEDOR AL CATÁLOGO DEL MÓDULO CONTABILIDAD
+	case 37:
+		$name = $funciones->limpia($_POST['name']);
+		if($conexion->consulta($querys->addProviderAcc($name, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN PROVEEDOR AL CATÁLOGO DEL MÓDULO CONTABILIDAD
+	case 38:
+		$id = $funciones->limpia($_POST['id']);
+		$name = $funciones->limpia($_POST['name']);
+		if($conexion->consulta($querys->updateProviderAcc($id, $name)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
 }
 ?>

@@ -346,7 +346,7 @@ function editarRegObra(id){
         dataType: 'json',
         success: function(resp){
 			console.log(resp);
-			let srcPO = 'pg/modal_geolocalizar_obra.php?id='+resp.id_obra+'&flag=1';
+			let srcPO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=1';
 			let srcEI = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=2';
 			let srcMO = 'pg/modal_presupuesto_obra_est.php?id='+resp.id_obra+'&flag=3';
 
@@ -2308,7 +2308,7 @@ function cancelExpense(id, name) {
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se cancelará el gasto <strong>#' + id + '</strong>: \''+ name +'\'',
+				text: 'Se eliminará el gasto <strong>#' + id + '</strong>: \''+ name +'\'',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',
@@ -2547,7 +2547,7 @@ function deleteInsFuelExp(id, name){
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se cancelará el registro <strong>#' + id + '</strong>: \''+ name +'\'',
+				text: 'Se eliminará el registro <strong>#' + id + '</strong>: \''+ name +'\'',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',
@@ -2679,7 +2679,7 @@ function deleteInsFuelStatus(id, name) {
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se cancelará el status <strong>#' + id + '</strong>: \''+ name +'\'',
+				text: 'Se eliminará el status <strong>#' + id + '</strong>: \''+ name +'\'',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',
@@ -2778,7 +2778,7 @@ function deleteConceptAcc(id, name){
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se cancelará el concepto <strong>#' + id + '</strong>: \''+ name +'\'',
+				text: 'Se eliminará el concepto <strong>#' + id + '</strong>: \''+ name +'\'',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',
@@ -2797,6 +2797,105 @@ function deleteConceptAcc(id, name){
 							success: function(resp){
 								if(resp.resp == 1){
 										listConceptsAcc();
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+							}
+					});
+	});
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*********************CATÁLOGO PROVEEDORES CONTABILIDAD*************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+$('#cancelProvider').click(function(){
+	$('#opcion').val('37');
+	resetForm('frmProviderAcc');
+});
+
+$('#frmProviderAcc').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		url: urlSubir3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			resetForm('frmProviderAcc');
+			$('#respServer').html('');
+			$('#opcion').val('37');
+			listProvidersAcc();
+		}
+	});
+});
+
+function listProvidersAcc(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListProvidersAcc').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'HTML',
+		url: 'pg/cat_proveedores_cont_listado.php',
+		success: function(resp){
+			$('#cntnListProvidersAcc').html(resp);
+		}
+	});
+}
+
+function editProviderAcc(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: {id: id, opt: 17},
+		success: function(resp){
+			resetForm('frmProviderAcc');
+			$('#respServer').html('');
+			$('#opcion').val('38');
+			$('#name').val(resp.name);
+			$('#id').val(id);
+		}
+	});
+}
+
+function deleteProviderAcc(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el proveedor <strong>#' + id + '</strong>: \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 18};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listProvidersAcc();
 								} else {
 									$('#respServer').html(resp.msg);
 								}
