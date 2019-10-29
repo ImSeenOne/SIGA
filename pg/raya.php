@@ -64,7 +64,7 @@
                     <option value="0">Selecciona una opción...</option>
                     <?php
                     $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados(1));
-                    $funciones->llenarComboEmpleadoCat($combo);
+                    $querys3->llenarComboEmpleadoCat($combo);
                     ?>
                   </select>
               </div>
