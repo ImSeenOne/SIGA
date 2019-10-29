@@ -153,7 +153,7 @@
       </form>
       <hr>
       <div class="row">
-        <div id="cntnListInsFuelExp" class="col-lg-12 col-md-12 col-sm-12">
+        <div id="cntnListInsFuelExp" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
 
         </div>
       </div>

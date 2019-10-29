@@ -101,7 +101,7 @@
         </form>
 
         <div class="row">
-          <div id="cntnListAssignedFuelExpenses" class="col-lg-12 col-md-12 col-sm-12">
+          <div id="cntnListAssignedFuelExpenses" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
 
           </div>
         </div>

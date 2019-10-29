@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="form-group col-lg-3 col-md-6 col-sm-6">
-            <label class="text-center" for="unit">Unidad de medida</label>
+            <label class="text-center" for="unit">Unidad de Medida</label>
             <input disabled type="text" class="form-control" id="unit">
           </div>
           <div class="form-group col-lg-3 col-md-6 col-sm-6">
@@ -33,7 +33,7 @@
             <input required class="form-control" type="number" step="0.01" name="quantity" id="quantity" placeholder="Cantidad" onkeypress="isNumberKey(event)">
           </div>
           <div class="form-group col-lg-3 col-md-6 col-sm-6">
-            <label class="text-center" for="totalQuant">Cantidad restante</label>
+            <label class="text-center" for="totalQuant">Cantidad Restante</label>
             <input disabled type="text" class="form-control" id="totalQuant">
           </div>
           <input type="hidden" name="physProgId" id="physProgId">
@@ -50,7 +50,7 @@
         </form>
         <div class="row">
         <br>
-        <div class="col-lg-12 col-sm-12 col-md-12">
+        <div class="col-lg-12 col-sm-12 col-md-12 table-responsive">
             <table id="listConceptsDetail" class="table table-bordered table-striped table-hover">
               <thead>
                 <th style="width:4%" scope="col">ID</th>

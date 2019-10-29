@@ -12,7 +12,7 @@
 </section>
 <div class="col-lg-12 col-md-12 col-sm-12">
   <section class="content">
-    
+
       <div class="box box-default">
         <div class="box-header with-border">
           <h3 class="box-title">Nuevo avance</h3>
@@ -70,7 +70,7 @@
           </form>
           <br><br><br>
           <div class="row">
-            <div id="cntnListProgress" class="col-lg-12 col-md-12 col-sm-12">
+            <div id="cntnListProgress" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
             </div>
           </div>
         </div>
