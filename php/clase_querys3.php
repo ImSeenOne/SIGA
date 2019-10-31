@@ -236,10 +236,10 @@ class Querys3 {
 			$cond.= 'AND imss LIKE "%'.$imss.'%" ';
 		}
 		//DON'T DELETE DUPLICATED ALIASES; THOSE ARE USED IN RAYAS MODULE
-		$strQuery = 'SELECT id_empleado, id_empleado AS id,  nombre, CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) AS valor, categoria AS category, apellido_paterno, apellido_materno, direccion, rfc, imss, curp, fecha_admision, tipo, estado_civil, genero, categoria, departamento, area, fecha_registro ';
+		$strQuery = 'SELECT *, id_empleado AS id,  nombre, CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) AS valor, categoria AS category ';
 		$strQuery.= 'FROM tbl_empleados ';
 		$strQuery.= 'WHERE fecha_eliminacion IS NULL'.$cond;
-		$strQuery.= 'ORDER BY CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) ASC';
+		$strQuery.= ' ORDER BY CONCAT(nombre, " ",apellido_paterno, " ",apellido_materno) ASC';
 
 		return $strQuery;
 	}
@@ -854,6 +854,55 @@ public function getContracts($id = 0){
 		$strQuery = 'UPDATE tblc_proveedores_cont SET fecha_eliminado = \''.$date.'\' WHERE id_proveedor = '.$id;
 		return $strQuery;
 	}
+
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/**********************QUERYS PARA MÓDULO INGRESOS***************************/
+	/*****************************CONTABILIDAD***********************************/
+	/****************************************************************************/
+	/****************************************************************************/
+
+	public function listIncomes($id = ''){
+		$cond = '';
+
+		if($id != ''){
+			$cond = ' AND id_ingreso = '.$id;
+		}
+
+		$strQuery = 'SELECT * FROM tbl_ingresos WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+
+		return $strQuery;
+	}
+
+	public function addIncome($billNum, $billDate, $chargeDate, $concept, $provider,
+	 $conceptText, $withhold, $repAvance, $repIVA, $date){
+		 $strQuery = 'INSERT INTO tbl_ingresos (numero_factura, fecha_factura,
+			 fecha_cobro, id_tipo_concepto, id_proveedor, concepto, retencion_iva, amort_anticipo,
+			 iva_amort, fecha_registro) VALUES (\''.$billNum.'\', \''.$billDate.'\',
+				 \''.$chargeDate.'\', '.$concept.', '.$provider.', \''.$conceptText.'\',
+				 '.$withhold.', '.$repAvance.', '.$repIVA.', \''.$date.'\')';
+		 return $strQuery;
+	 }
+
+	 public function listAssConceptsAcc($id = '', $idIncome = ''){
+		 $cond = '';
+		 if($id != ''){
+			 $cond.= ' AND id_concepto = '.$id;
+		 }
+		 if($idIncome != ''){
+			 $cond.= ' AND id_ingreso = '.$idIncome;
+		 }
+		 $strQuery = 'SELECT * FROM tbl_conceptos_ingr WHERE fecha_eliminado IS NULL'.$cond;
+		 return $strQuery;
+	 }
+
+	 public function addAssConceptAcc($idIncome, $name, $amount, $date){
+		 $strQuery = 'INSERT INTO tbl_conceptos_ingr
+		 							(id_ingreso, nombre, monto, fecha_registro) VALUES
+									('.$idIncome.', \''.$name.'\', '.$amount.', \''.$date.'\')';
+		return $strQuery;
+	 }
 
 	/****************************************************************************/
 	/****************************************************************************/
