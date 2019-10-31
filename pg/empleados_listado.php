@@ -1,11 +1,11 @@
 <?php
   require '../php/inicializandoDatosExterno.php';
 
-  $nombre = $funciones->limpia($_POST["txtEmployee"]);
-  $rfc = $funciones->limpia($_POST["txtSS"]);
-  $imss = $funciones->limpia($_POST["txtRFC"]);
+  $nombre = (strlen($funciones->limpia($_POST["txtEmployee"])) > 0) ? $funciones->limpia($_POST["txtEmployee"]) : '';;
+  $rfc = (strlen($funciones->limpia($_POST["txtSS"])) > 0) ? $funciones->limpia($_POST["txtSS"]) : '';
+  $imss = (strlen($funciones->limpia($_POST["txtRFC"])) > 0) ? $funciones->limpia($_POST["txtRFC"]) : '';
 
-  $listado = @$conexion->obtenerlista($querys3->getListadoEmpleados($nombre, $rfc, $imss));
+  $listado = @$conexion->obtenerlista($querys3->getListadoEmpleados('',$nombre, $rfc, $imss));
   $totRegs = $conexion->numregistros();
   if($totRegs > 0){
  ?>
