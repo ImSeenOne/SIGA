@@ -245,7 +245,7 @@
         </div>
       </div>
       <div class="box-body">
-        <div class="table"id="cntnListEmployees">
+        <div class="table table-responsive"id="cntnListEmployees">
 
         </div>
       </div>

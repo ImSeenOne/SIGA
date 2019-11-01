@@ -64,7 +64,7 @@
         </div>
             <!-- /.box-header -->
         <div class="box-body">
-            <div class="table"id="cntnListEmpCategory">
+            <div class="table table-responsive"id="cntnListEmpCategory">
 
             </div>
         </div>

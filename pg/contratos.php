@@ -169,7 +169,7 @@
       </div>
       <div class="box-body">
         <div class="row">
-          <div id="cntnListContracts" class="col-lg-12 col-md-12 col-sm-12">
+          <div id="cntnListContracts" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
           </div>
         </div>
       </div>

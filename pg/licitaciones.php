@@ -77,7 +77,7 @@
         </form>
       </div>
       <div class="box-footer">
-        <div class="table"id="cntnListBiddings">
+        <div class="table table-responsive"id="cntnListBiddings">
 
         </div>
        </div>

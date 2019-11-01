@@ -8,21 +8,21 @@
   <table id="listConceptsAcc" class="table table-striped table-bordered">
     <thead>
       <tr>
-        <th class="text-center">Id</th>
-        <th class="text-center">Nombre</th>
-        <th class="text-center">Fecha registro</th>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Fecha Registro</th>
         <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
-        <th class="text-center">Acciones</th>
+        <th>Acciones</th>
         <?php } ?>
       </tr>
     </thead>
     <tbody>
       <?php foreach ($listado as $key) { ?>
       <tr>
-        <td class="text-center"><?= $key->id_concepto ?></td>
-        <td class="text-center"><?= $key->nombre ?></td>
-        <td class="text-center"><?= date('d/m/Y H:i:s', strtotime($key->fecha_registro)) ?></td>
-        <td class="text-center">
+        <td ><?= $key->id_concepto ?></td>
+        <td ><?= $key->nombre ?></td>
+        <td ><?= date('d/m/Y H:i:s', strtotime($key->fecha_registro)) ?></td>
+        <td >
           <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
          	<button type="button" class="btn btn-success btn-sm" onclick="editConceptAcc(<?= $key->id_concepto ?>)"><i class="fa fa-edit"></i></button>
           <?php } ?>
@@ -35,11 +35,11 @@
     </tbody>
     <tfoot>
       <tr>
-        <th class="text-center">Id</th>
-        <th class="text-center">Nombre</th>
-        <th class="text-center">Fecha registro</th>
+        <th >Id</th>
+        <th >Nombre</th>
+        <th >Fecha Registro</th>
         <?php if($_SESSION["dUsuario"]["editar"] == 1 && $_SESSION["dUsuario"]["eliminar"] == 1){?>
-        <th class="text-center">Acciones</th>
+        <th >Acciones</th>
         <?php } ?>
       </tr>
     </tfoot>

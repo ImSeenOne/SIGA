@@ -53,7 +53,7 @@
                     <option value="0">Selecciona una opción...</option>
                     <?php
                     $combo = @$conexion->obtenerlista($querys3->getListadoEmpleados(2));
-                    $funciones->llenarComboEmpleadoCat($combo);
+                    $querys3->llenarComboEmpleadoCat($combo);
                     ?>
                   </select>
               </div>
@@ -63,7 +63,7 @@
                 </select>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="payment">Sueldo<sub>(por día)</sub> </label>
+                <label for="payment">Sueldo (por día) </label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
               </div>
 
@@ -155,7 +155,7 @@
         </div>
 
         <div class="row">
-          <div id="cntnListAdmPayments" class="col-lg-12 col-md-12 col-sm-12">
+          <div id="cntnListAdmPayments" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
           </div>
         </div>
 

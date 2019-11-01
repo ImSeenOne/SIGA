@@ -63,7 +63,7 @@
         </div>
             <!-- /.box-header -->
         <div class="box-body">
-            <div class="table"id="cntnListAntiguedad">
+            <div class="table table-responsive"id="cntnListAntiguedad">
 
             </div>
         </div>

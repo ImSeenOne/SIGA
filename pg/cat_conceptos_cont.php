@@ -49,7 +49,7 @@
       </div>
           <!-- /.box-header -->
       <div class="box-body">
-          <div class="table"id="cntnListConceptsAcc">
+          <div class="table table-responsive"id="cntnListConceptsAcc">
 
           </div>
       </div>
