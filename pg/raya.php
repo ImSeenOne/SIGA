@@ -30,7 +30,7 @@
               if($totRegs > 0){
              ?>
              <button id="btnNewPayment" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
-               Agregar un nuevo pago
+               Agregar un Nuevo Pago
              </button>
            <?php } else {?>
              <p id="noEmployees" class="text-danger">
@@ -39,14 +39,15 @@
            <?php } ?>
           </div>
 
-          <form id="frmPayment" name="frmPayment" style="display:none;">
+          <form id="frmPayment" name="frmPayment" style="display:none;" autocomplete="off">
+            <input autocomplete="false" name="hidden" type="hidden" style="display:none;">
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateStart">Fecha de inicio</label>
-                <input required class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
+                <label for="dateStart">Fecha Inicio</label>
+                <input required class="form-control" type="text" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()" onkeypress="return false">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateFinish">Fecha de finalización</label>
-                <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
+                <label for="dateFinish">Fecha Final</label>
+                <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()" onkeypress="return false">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="work"style="display: block;">Obra</label>
@@ -58,7 +59,7 @@
                   ?>
                 </select>
               </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
+              <div class="form-group col-lg-6 col-md-4 col-sm-6">
                   <label for="employee" style="display: block;">Empleado</label>
                   <select required name="employee" id="employee" class="form-control" onchange="employeeId()" style="width: 100%;">
                     <option value="0">Selecciona una opción...</option>
@@ -68,22 +69,22 @@
                     ?>
                   </select>
               </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
+              <div class="form-group col-lg-6 col-md-4 col-sm-6">
                 <label for="category">Categoría</label>
                 <select required class="form-control" type="text" name="category" id="category" disabled>
                 </select>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="payment">Sueldo(por día) </label>
+                <label for="payment">Sueldo (por día) </label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
               </div>
 
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="workDays">Días de trabajo</label>
-                <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo" readonly>
+                <label for="workDays">Días de Trabajo</label>
+                <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="paymentAmount">Monto</label>
+                <label for="paymentAmount">Salario</label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="paymentAmount" id="paymentAmount" placeholder="Monto a pagar" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
@@ -92,28 +93,15 @@
               </div>
 
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="foodDays">Días de alimentos</label>
+                <label for="foodDays">Días de Alimentos</label>
                 <input required maxlength="2" onkeyup="keyUpFoodDays()" onkeypress="return isNumberKey(event)" class="form-control" name="foodDays" id="foodDays" placeholder="Días de alimentos pagados">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="foodTotalAmount">Monto</label>
+                <label for="foodTotalAmount">Monto Alimentos</label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" placeholder="Monto a pagar" name="foodTotalAmount" id="foodTotalAmount" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="addedActivities">Otras actividades</label>
-                <select class="form-control" id="addedActivities" name="addedActivities" onchange="totalAmountCalc()">
-                  <option value="0">N/A</option>
-                  <option value="1">Percepciones</option>
-                  <option value="2">Deducciones</option>
-                </select>
-              </div>
-
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="addedActAmount">Monto</label>
-                <input onkeyup="keyUpAddedActAmount()" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="addedActAmount" id="addedActAmount" placeholder="Monto de actividades añadidas">
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="totalAmount">Total a pagar</label>
+                <label for="totalAmount">Total a Pagar</label>
                 <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalAmount" id="totalAmount" placeholder="Total de la raya" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
@@ -135,7 +123,7 @@
               &nbsp;
               <div class="form-group col-lg-4 col-md-4 col-sm-12">
                 <div class="col-sm-12 col-lg-6 col-md-6 mt-1">
-                  <button class="btn btn-primary btn-block" id="savePaymentBtn" type="button">Guardar</button>
+                  <button class="btn btn-primary btn-block" id="savePaymentBtn" type="submit">Guardar</button>
                 </div>
                 <div class="col-sm-12 col-lg-6 col-md-6 mt-1">
                   <button class="btn btn-secondary btn-block" id="cancelPaymentBtn" type="button" >Cancelar</button>
@@ -143,7 +131,7 @@
               </div>
           </form>
 
-          <form id="searchPaymentFrm" style="display: none;" method="post">
+          <form id="searchPaymentFrm" style="display: none;">
             <div class="form-group col-lg-3 col-md-4 col-sm-6">
               <label for="">Empleado</label>
               <input type="text" name="employeeSearch" class="form-control" id="employeeSearch" onkeyup="listPayments()">
@@ -168,7 +156,7 @@
         </div>
 
         <div class="row">
-          <div id="cntnListPayments" class="col-lg-12 col-md-12 col-sm-12">
+          <div id="cntnListPayments" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
           </div>
         </div>
 
@@ -176,46 +164,47 @@
   </section>
 </div>
 
+<?php include('raya_modal.php'); ?>
+
 <script type="text/javascript">
   window.onload = function() {
-    activaDatePicker('dateStart');
-    activaDatePicker('dateFinish');
+    dateControl('dateStart');
+    dateControl('dateFinish');
     listPayments();
     $('#employee').select2();
     $('#work').select2();
     $('#foodDays').val("1");
     $('#totalAmount').val("0");
-    if(!parseInt($('#addedActivities').val())){
-      $('#addedActAmount').prop('readonly',true);
+  }
+
+  function verifyMinorDate(){
+    let descomponeFecha1 = $('#dateStart').val().split("/");
+    let fecha1 = new Date(descomponeFecha1[2],descomponeFecha1[1],descomponeFecha1[0]);
+    let descomponeFecha2 = $('#dateFinish').val().split("/");
+    let fecha2 = new Date(descomponeFecha2[2],descomponeFecha2[1],descomponeFecha2[0]);
+
+    if(fecha1 > fecha2){
+      let opciones = {
+  			appendTo:'#frmPayment',
+  			minWidth:300,
+  			maxWidth: 350,
+  		};
+  		parent.mensaje("La fecha inicial debe ser menor que la final",'warning',opciones);
+      $('#dateFinish').val($('#dateStart').val());
+    } else {
+      let date1 = new Date($('#dateStart').val().split('/')[1]+'/'+$('#dateStart').val().split('/')[0]+'/'+$('#dateStart').val().split('/')[2]);
+      let date2 = new Date($('#dateFinish').val().split('/')[1]+'/'+$('#dateFinish').val().split('/')[0]+'/'+$('#dateFinish').val().split('/')[2]);
+      let dif_in_time = date2.getTime() - date1.getTime();
+      let dif_in_days = dif_in_time / (1000 * 3600 * 24);
+      $('#workDays').val(parseInt(dif_in_days));
     }
   }
 
   function totalAmountCalc() {
-    $('#addedActAmount').prop('readonly',false);
 
     let totalFood =($('#foodTotalAmount').val()) ? parseFloat($('#foodTotalAmount').val().replace("$","").replace(",","")) : 0;
     let paymentAmount = ($('#paymentAmount').val()) ? parseFloat($('#paymentAmount').val().replace("$","").replace(",","")) : 0;
-    let addedActAmount = ($('#addedActAmount').val()) ? parseFloat($('#addedActAmount').val().replace("$","").replace(",","")) : 0;
-    let operation = parseInt($('#addedActivities').val());
-
-    switch (operation) {
-      case 0:
-        $('#totalAmount').val(totalFood + paymentAmount);
-        $('#addedActAmount').val("");
-        $('#addedActAmount').prop('readonly',true);
-        break;
-      case 1:
-        $('#addedActAmount').prop('readonly',false);
-        $('#totalAmount').val(totalFood + paymentAmount + addedActAmount);
-      break;
-      case 2:
-      $('#addedActAmount').prop('readonly',false);
-        $('#totalAmount').val(totalFood + paymentAmount - addedActAmount);
-        if(addedActAmount > (totalFood + paymentAmount)){
-          $('#totalAmount').val("0");
-        }
-      break;
-    }
+    $('#totalAmount').val(totalFood + paymentAmount);
     $('#totalAmount').keyup();
   }
 
@@ -261,9 +250,5 @@
     foodCalc();
     $('#foodTotalAmount').keyup();
     $('#foodPieceAmount').focus();
-  }
-
-  function keyUpAddedActAmount(){
-    totalAmountCalc();
   }
 </script>
