@@ -25,7 +25,16 @@
         <tr>
           <td><?= $key->nombre.' '.$key->apellido_paterno.' '.$key->apellido_materno ?></td>
           <td><?= $key->rfc ?></td>
-          <td><?= $key->tipo ?></td>
+          <td><?php
+            switch ($key->tipo) {
+              case 1:
+                echo 'Obra';
+              break;
+              case 2:
+                echo 'Administrativo';
+              break;
+            }
+          ?></td>
           <td><?= $key->imss ?></td>
           <td>
             <?php if($_SESSION["dUsuario"]["editar"] == 1){?>

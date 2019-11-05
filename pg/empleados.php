@@ -73,7 +73,7 @@
 
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
-                <label for="txtLastName">Apellido paterno</label>
+                <label for="txtLastName">Apellido Paterno</label>
                 <input class="form-control" type="text" name="txtLastName" id="txtLastName" placeholder="Apellido paterno">
                 <p class="help-block text-danger" id="reqTxtLastName"></p>
 
@@ -82,7 +82,7 @@
 
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
-                <label for="txtMLastName">Apellido materno</label>
+                <label for="txtMLastName">Apellido Materno</label>
                 <input class="form-control" type="text" name="txtMLastName" id="txtMLastName" placeholder="Apellido materno">
                 <p class="help-block text-danger" id="reqTxtMLastName"></p>
               </div>
@@ -99,7 +99,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtIMSS">IMSS</label>
-                <input class="form-control" type="text" name="txtIMSS" id="txtIMSS" placeholder="Número de seguro social">
+                <input minlength="11" onkeypress="return isNumberKey(event)" class="form-control" type="text" name="txtIMSS" id="txtIMSS" placeholder="Número de seguro social">
               </div>
             </div>
 
@@ -113,15 +113,15 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtCURP">CURP</label>
-                <input type="text" class="form-control" id="txtCURP" name="txtCURP" placeholder="Clave Unica de Registro Poblacional">
+                <input type="text" minlength="18" class="form-control" id="txtCURP" name="txtCURP" placeholder="Clave Unica de Registro Poblacional">
                 <p class="help-block text-danger" id="reqTxtCURP"></p>
               </div>
             </div>
 
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
-                <label for="admissionDate">Fecha de admisión</label>
-                <input type="text" class="form-control" class="admissionDate" name="admissionDate" id="admissionDate" placeholder="Fecha de admisión">
+                <label for="admissionDate">Fecha de Admisión</label>
+                <input type="date" class="form-control" class="admissionDate" name="admissionDate" id="admissionDate" placeholder="Fecha de admisión">
                 <p class="help-block text-danger" id="reqAdmissionDate"></p>
               </div>
             </div>
@@ -151,17 +151,12 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtCategory">Categoría</label>
-                <select class="custom-select form-control" name="txtCategory" id="txtCategory">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+                <select class="custom-select form-control select2" name="txtCategory" id="txtCategory">
+                  <option value="0">Selecciona una opción...</option>
+                  <?php
+                    $resp = @$conexion->obtenerlista($querys3->listEmployeeCategories());
+                    $funciones->llenarcombo($resp);
+                   ?>
                 </select>
                 <p class="help-block text-danger" id="reqTxtCategory"></p>
               </div>
@@ -170,17 +165,12 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtDepartment">Depto</label>
-                <select class="custom-select form-control" name="txtDepartment" id="txtDepartment">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+                <select class="custom-select form-control select2" name="txtDepartment" id="txtDepartment" onchange="departmentChanged()">
+                  <option value="0">Selecciona un depto...</option>
+                  <?php
+                    $resp = @$conexion->obtenerlista($querys3->listDepartments());
+                    $funciones->llenarcombo($resp);
+                   ?>
                 </select>
                 <p class="help-block text-danger" id="reqTxtDepartment"></p>
               </div>
@@ -189,17 +179,10 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="form-group">
                 <label for="txtArea">Area</label>
-                <select class="custom-select form-control" name="txtArea" id="txtArea">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+                <div id="respServerArea">
+                </div>
+                <select disabled class="form-control select2" name="txtArea" id="txtArea">
+                  <option value="0">Selecciona un área...</option>
                 </select>
                 <p class="help-block text-danger" id="reqTxtArea"></p>
               </div>
@@ -218,7 +201,7 @@
 
             <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em">
               <div class="col-sm-12 col-lg-6 col-md-6">
-                <button class="btn btn-primary btn-block" type="button" id="btnAddEmployee" name="btnAddEmployee">Agregar</button>
+                <button class="btn btn-primary btn-block" type="submit" id="btnAddEmployee" name="btnAddEmployee">Agregar</button>
                 &nbsp;
               </div>
               <div class="col-sm-12 col-lg-6 col-md-6">
@@ -255,7 +238,7 @@
 
 <script type="text/javascript">
     window.onload = function() {
-      activaDatePicker("admissionDate");
       employees_list();
+      selectFrm('select2');
     }
 </script>
