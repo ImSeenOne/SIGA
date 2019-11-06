@@ -10,7 +10,7 @@
       <tr>
         <th class="text-center">Id</th>
         <th class="text-center">Nombre</th>
-        <th class="text-center">Fecha registro</th>
+        <th class="text-center">Fecha Registro</th>
         <?php if($_SESSION["dUsuario"]["editar"] == 1 || $_SESSION["dUsuario"]["eliminar"] == 1){?>
         <th class="text-center">Acciones</th>
         <?php } ?>
