@@ -8,6 +8,7 @@ if($totRegs > 0){
 <table class="table table-bordered table-striped">
   <thead>
     <th>Tipo</th>
+    <th>Concepto</th>
     <th>Monto</th>
     <th>Acción</th>
   </thead>
@@ -22,6 +23,7 @@ if($totRegs > 0){
           echo $actAnName;
         ?>
       </td>
+      <td style="display: block; width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?= $key->concepto ?></td>
       <td>$<?= number_format($key->monto, 2) ?></td>
       <td> <button type="button" class="btn btn-danger btn-sm" onclick="deleteAssAddedActivity(<?= $key->id_act_an ?>, '<?= $actAnName ?>', '$ <?= number_format($key->monto, 2) ?>')"> <i class="fa fa-trash"></i> </button></td>
     </tr>

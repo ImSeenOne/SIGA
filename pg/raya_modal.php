@@ -28,7 +28,7 @@
 
           <form id="frmAddActivity" autocomplete="off">
             <input autocomplete="false" type="hidden" style="display:none;">
-            <div class="form-group col-lg-4 col-md-4 col-sm-6">
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
               <label for="addedActivity">Tipo</label>
               <select required class="form-control" name="addedActivity" id="addedActivity">
                 <option value="0">Selecciona una actividad</option>
@@ -38,13 +38,17 @@
                  ?>
               </select>
             </div>
-            <div class="form-group col-lg-4 col-md-4 col-sm-6">
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
+              <label for="nameAddedActivity">Concepto</label>
+              <input required class="form-control" type="text" name="nameAddedActivity" id="nameAddedActivity" placeholder="Concepto...">
+            </div>
+            <div class="form-group col-lg-3 col-md-4 col-sm-6">
               <label for="amountAddedActivity">Monto</label>
               <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" type="text" name="amountAddedActivity" id="amountAddedActivity" placeholder="">
             </div>
             <input type="hidden" name="opcion" value="41">
             <input type="hidden" name="id" id="idModal">
-            <div class="form-group col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right" style="margin-top: 25px;">
+            <div class="form-group col-lg-3 col-md-4 col-sm-6 col-xs-12 pull-right" style="margin-top: 25px;">
               <div class="col-lg-12 col-md-12- col-sm-12 col-xs-12 col-xl-12">
                 <button type="submit" class="btn btn-primary btn-block"> <i class="fa fa-plus"></i> </button>
               </div>
