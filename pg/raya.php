@@ -106,10 +106,10 @@
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="paymentStatus">Status</label>
-                <select class="form-control" name="paymentStatus">
+                <select class="form-control" name="paymentStatus" id="paymentStatus">
                   <option value="3">Cancelado</option>
                   <option value="1">Pagado</option>
-                  <option value="2">Pendiente</option>
+                  <option value="2" selected>Pendiente</option>
                 </select>
               </div>
 
