@@ -376,6 +376,72 @@ switch($_POST['opt']){
 			}
 		break;
 
+		//FUNCION PARA OBTENER INFORMACION DE UNA RAYA
+		case 26:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->searchPayments($id));
+			$employee = @$conexion->fetch_array($querys3->getEmpleadosById($resp['id_empleado']));
+			$jsondata['employee'] = $employee['nombre'].' '.$employee['apellido_paterno'].' '.$employee['apellido_materno'];
+			$jsondata['work'] = @$conexion->fetch_array($querys3->getListadoObras($resp['id_obra']))['nombre'];
+			$jsondata['totalAmount'] = number_format(floatval($resp['total_raya']),2);
+			$jsondata['foodAmount'] = number_format(floatval($resp['alimentos']),2);
+			$jsondata['baseAmount'] = number_format(floatval($resp['sueldo']),2);
+			$jsondata['dateStart'] = date('d/m/Y', strtotime($resp['fecha_inicio']));
+			$jsondata['dateFinish'] = date('d/m/Y', strtotime($resp['fecha_finalizacion']));
+			switch ($resp['status']) {
+				case '1':
+				$jsondata['status'] = '<span class="badge progress-bar-success">Pagado</span>';
+				break;
+				case '2':
+				$jsondata['status'] = '<span class="badge progress-bar-warning">Pendiente</span>';
+				break;
+				case '3':
+				$jsondata['status'] = '<span class="badge progress-bar-danger">Cancelado</span>';
+				break;
+			}
+
+			$jsondata['remarks'] = $resp['observaciones'];
+			$jsondata['registerDate'] = date('d/m/y', strtotime($resp['fecha_registro']));
+		break;
+
+
+		//FUNCIÓN PARA OBTENER LAS ÁREAS DEPENDIENDO DEL ID DEL DEPARTAMENTO AL QUE PERTENECE
+		case 27:
+			$id = $_POST['id'];
+			$resp = @$conexion->obtenerlista($querys3->listAreas('', $id));
+			$select = '';
+			foreach ($resp as $key) {
+				$select.= '<option value="'.$key->id.'">'.$key->valor.'</option>';
+			}
+			$jsondata['htmlcode'] = $select;
+		break;
+		////FUNCION PARA OBTENER INFORMACION DE UN PAGO DE NÓMINA
+		case 28:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->searchAdmPayments($id));
+			$employee = @$conexion->fetch_array($querys3->getEmpleadosById($resp['id_empleado']));
+			$jsondata['employee'] = $employee['nombre'].' '.$employee['apellido_paterno'].' '.$employee['apellido_materno'];
+			$jsondata['totalAmount'] = number_format(floatval($resp['total_nomina']),2);
+			$jsondata['foodAmount'] = number_format(floatval($resp['alimentos']),2);
+			$jsondata['baseAmount'] = number_format(floatval($resp['sueldo']),2);
+			$jsondata['dateStart'] = date('d/m/Y', strtotime($resp['fecha_inicio']));
+			$jsondata['dateFinish'] = date('d/m/Y', strtotime($resp['fecha_finalizacion']));
+			switch ($resp['status']) {
+				case '1':
+				$jsondata['status'] = '<span class="badge progress-bar-success">Pagado</span>';
+				break;
+				case '2':
+				$jsondata['status'] = '<span class="badge progress-bar-warning">Pendiente</span>';
+				break;
+				case '3':
+				$jsondata['status'] = '<span class="badge progress-bar-danger">Cancelado</span>';
+				break;
+			}
+
+			$jsondata['remarks'] = $resp['observaciones'];
+			$jsondata['registerDate'] = date('d/m/y', strtotime($resp['fecha_registro']));
+		break;
+
 }
 
 header('Content-type: application/json; charset=utf-8');

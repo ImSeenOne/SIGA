@@ -254,8 +254,6 @@ case 2:
 	break;
 	//AGREGA UN NUEVO EMPLEADO
 	case 7:
-	$fechaadmi = explode("-", $funciones->limpia($_POST['admissionDate']));
-
 	$nombre = $funciones->limpia($_POST['txtName']);
 	$apellido_paterno = $funciones->limpia($_POST['txtLastName']);
 	$apellido_materno = $funciones->limpia($_POST['txtMLastName']);
@@ -263,7 +261,7 @@ case 2:
 	$imss = $funciones->limpia($_POST['txtIMSS']);
 	$rfc = $funciones->limpia($_POST['txtRFCi']);
 	$curp = $funciones->limpia($_POST['txtCURP']);
-	$fecha_admision = $fechaadmi[2]."-".$fechaadmi[1]."-".$fechaadmi[0];
+	$fecha_admision = date('Y-m-d', strtotime($funciones->limpia($_POST['admissionDate'])));
 	$estado_civil = $funciones->limpia($_POST['txtCivilSts']);
 	$genero = $funciones->limpia($_POST['txtGender']);
 	$categoria = $funciones->limpia($_POST['txtCategory']);
@@ -312,6 +310,8 @@ case 2:
 		}else{
 			$jsondata['resp'] = 1;
 		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
 	break;
 
 	//EDITA UNA OBRA
@@ -331,10 +331,6 @@ case 2:
 		$concreteVol = (isset($_POST['txtConcreteVol']))?$funciones->limpia($_POST['txtConcreteVol']):0;
 		$workArea = $funciones->limpia($_POST['txtWorkArea']);
 		$amount = str_replace(",","",$amount);
-		//$dateStart = explode("-", $dateStartT);
-		//$dateFinish = explode("-", $dateFinishT);
-
-		// exit($id.$name.$type.$dependency.$amount. $dateStart[2]."-".$dateStart[1]."-".$dateStart[0]. $dateFinish[2]."-".$dateFinish[1]."-".$dateFinish[0]. $folderVol. $addedType. $concreteVol. $workArea);
 		if($conexion->consulta($querys->updateObra($id, $name, $type, $dependency, $amount, $dateStartT, $dateFinishT, $folderVol, $addedType, $concreteVol, $workArea,$txtDireccion,$latitud,$longitud)) == 0){
 		$jsondata['resp'] = 0;
 		$jsondata['msg'] = 0;
@@ -395,10 +391,10 @@ break;
 		$dateStartTmp = $funciones->limpia($_POST['dateStart']);
 		$dateFinishTmp = $funciones->limpia($_POST['dateFinish']);
 
-		$dateStart = explode("-", $dateStartTmp);
-		$dateFinish = explode("-", $dateFinishTmp);
+		$dateStart = explode("/", $dateStartTmp);
+		$dateFinish = explode("/", $dateFinishTmp);
 
-		$addedActivities = $funciones->limpia($_POST['addedActivities']);
+		$addedActivities = 0;
 		$employeeSelected = $funciones->limpia($_POST['employeeSelected']);
 		$workSelected = $funciones->limpia($_POST['workSelected']);
 		$paymentStatus = $funciones->limpia($_POST['paymentStatus']);
@@ -406,15 +402,16 @@ break;
 
 		$totalAmountTmp = $funciones->limpia($_POST['totalAmount']);//
 		$totalAmount = str_replace(",", "", $totalAmountTmp);
-		$addedActAmountTmp = $funciones->limpia($_POST['addedActAmount']);//
-		$addedActAmount = str_replace(",", "", $addedActAmountTmp);
+		$addedActAmount = 0;
 		$paymentTmp = $funciones->limpia($_POST['paymentAmount']);//
 		$payment = str_replace(",", "", $paymentTmp);
 		$foodTotalAmountTmp = $funciones->limpia($_POST['foodTotalAmount']);//
 		$foodTotalAmount = str_replace(",", "", $foodTotalAmountTmp);
 		//$ = $funciones->limpia($_POST['']);
 
-		if($conexion->consulta($querys->addPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual'])) == 0){
+		//echo $querys->addPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual']);
+
+		if($conexion->consulta($querys->addPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $totalAmount, $paymentStatus, $observations, $employeeSelected, $workSelected, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 0;
 		}else{
@@ -606,28 +603,22 @@ break;
 
 	//AGREGA UN NUEVO PAGO DE NÓMINA ADMINISTRATIVA
 	case 14:
-	$dateStartTmp = $funciones->limpia($_POST['dateStart']);
-	$dateFinishTmp = $funciones->limpia($_POST['dateFinish']);
+	$dateStart = date('Y-m-d', strtotime(str_replace("/", "-", $funciones->limpia($_POST['dateStart']))));
+	$dateFinish = date('Y-m-d', strtotime(str_replace("/", "-", $funciones->limpia($_POST['dateFinish']))));
 
-	$dateStart = explode("-", $dateStartTmp);
-	$dateFinish = explode("-", $dateFinishTmp);
-
-	$addedActivities = $funciones->limpia($_POST['addedActivities']);
 	$employeeSelected = $funciones->limpia($_POST['employee']);
 	$paymentStatus = $funciones->limpia($_POST['paymentStatus']);
 	$observations = $funciones->limpia($_POST['remarks']);
 
 	$totalAmountTmp = $funciones->limpia($_POST['totalAmount']);//
 	$totalAmount = str_replace(",", "", $totalAmountTmp);
-	$addedActAmountTmp = $funciones->limpia($_POST['addedActAmount']);//
-	$addedActAmount = str_replace(",", "", $addedActAmountTmp);
 	$paymentTmp = $funciones->limpia($_POST['paymentAmount']);//
 	$payment = str_replace(",", "", $paymentTmp);
 	$foodTotalAmountTmp = $funciones->limpia($_POST['foodTotalAmount']);//
 	$foodTotalAmount = str_replace(",", "", $foodTotalAmountTmp);
 	//$ = $funciones->limpia($_POST['']);
 
-	if($conexion->consulta($querys->addAdmPayment($dateStart[2].'-'.$dateStart[1].'-'.$dateStart[0], $dateFinish[2].'-'.$dateFinish[1].'-'.$dateFinish[0], $payment, $foodTotalAmount, $addedActivities, $addedActAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $datos['fecha_actual'])) == 0){
+	if($conexion->consulta($querys->addAdmPayment($dateStart, $dateFinish, $payment, $foodTotalAmount, $totalAmount, $paymentStatus, $observations, $employeeSelected, $datos['fecha_actual'])) == 0){
 		$jsondata['resp'] = 0;
 		$jsondata['msg'] = 0;
 	}else{
@@ -729,6 +720,8 @@ break;
 		} else {
 			$jsondata['resp'] = 1;
 		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
 
 	break;
 	//AGREGA UNA NUEVA LICITACIÓN
@@ -1117,6 +1110,60 @@ break;
 		if($conexion->consulta($querys->updateProviderAcc($id, $name)) == 0){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 'Ocurrió un error al editar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UN NUEVO INGRESO
+	case 39:
+		$billNum = $funciones->limpia($_POST['billNum']);
+		$billDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['billDate']) ) ) );
+		$chargeDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['chargeDate']) ) ) );
+		$concept = $funciones->limpia($_POST['concept']);
+		$provider = $funciones->limpia($_POST['provider']);
+		$conceptText = $funciones->limpia($_POST['conceptText']);
+		$withhold = $funciones->limpia(str_replace(",", "", $_POST['withhold']));
+		$repAdvance = $funciones->limpia(str_replace(",", "", $_POST['repAdvance']));
+		$repIVA = $funciones->limpia(str_replace(",", "", $_POST['repIVA']));
+		if(!@$conexion->consulta($querys->addIncome($billNum, $billDate, $chargeDate, $concept, $provider, $conceptText, $withhold, $repAdvance, $repIVA, $datos['fecha_actual']))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN INGRESO EXISTENTE
+	case 40:
+	break;
+
+	//AGREGA UNA NUEVA ACTIVIDAD AÑADIDA (RAYA)
+	case 41:
+		$idPayment = $funciones->limpia($_POST['id']);
+		$addedAct = $funciones->limpia($_POST['addedActivity']);
+		$name = $funciones->limpia($_POST['nameAddedActivity']);
+		$amount = $funciones->limpia(str_replace(",", "",$_POST['amountAddedActivity']));
+		if(!@$conexion->consulta($querys->assignAddedActivitiesPayment($idPayment, $addedAct, $name, $amount, $datos['fecha_actual']))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UNA NUEVA ACTIVIDAD AÑADIDA (NÓMINA ADMINISTRATIVA)
+	case 42:
+		$idPayment = $funciones->limpia($_POST['id']);
+		$addedAct = $funciones->limpia($_POST['addedActivity']);
+		$name = $funciones->limpia($_POST['nameAdmAddedActivity']);
+		$amount = $funciones->limpia(str_replace(",", "",$_POST['amountAddedActivity']));
+		if(!@$conexion->consulta($querys->assignAdmAddedActivitiesPayment($idPayment, $addedAct, $name, $amount, $datos['fecha_actual']))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
 		} else {
 			$jsondata['resp'] = 1;
 		}

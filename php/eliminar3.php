@@ -231,6 +231,16 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	//ELIMINA UNA ACTIVIDAD ASIGNADA AÑADIDA DE RAYAS
+	case 51:
+		$id = $funciones->limpia($_POST['id']);
+		if(!$conexion->consulta($querys->deleteAddedActivitiesPayment($id, $datos['fecha_actual']))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al realizar la consulta';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
 }
 
 

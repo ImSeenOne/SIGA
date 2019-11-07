@@ -748,89 +748,133 @@ function employees_list(){
 
 //
 $('#btnNewEmployee').click(function(){
-  $('#frmAddEmployee').slideToggle();
-  $('#btnNewEmployee').slideToggle();
-	$('#btnSearchEmployee').slideToggle();
+	if($('#frmAddEmployee').is(':hidden')){
+		$('#frmAddEmployee').slideToggle();
+	}
+  if($('#btnNewEmployee').is(':visible')){
+		$('#btnNewEmployee').slideToggle();
+	}
+	if($('#btnSearchEmployee').is(':visible')){
+		$('#btnSearchEmployee').slideToggle();
+	}
+	if($('#frmSearchEmployee').is(':visible')){
+		$('#frmSearchEmployee').slideToggle();
+	}
   $('#txtName').focus();
 });
 //
 $('#btnSearchEmployee').click(function(){
-	$('#frmSearchEmployee').slideToggle();
-	$('#btnNewEmployee').slideToggle();
-	$('#btnSearchEmployee').slideToggle();
+	if($('#frmAddEmployee').is(':visible')){
+		$('#frmAddEmployee').slideToggle();
+	}
+  if($('#btnNewEmployee').is(':visible')){
+		$('#btnNewEmployee').slideToggle();
+	}
+	if($('#btnSearchEmployee').is(':visible')){
+		$('#btnSearchEmployee').slideToggle();
+	}
+	if($('#frmSearchEmployee').is(':hidden')){
+		$('#frmSearchEmployee').slideToggle();
+	}
 
 	$('#txtEmployee').focus();
 });
 
 
 $('#btnCancelSearch').click(function(){
-  $('#frmSearchEmployee').slideToggle();
-  $('#btnNewEmployee').slideToggle();
-	$('#btnSearchEmployee').slideToggle();
+	if($('#frmAddEmployee').is(':visible')){
+		$('#frmAddEmployee').slideToggle();
+	}
+  if($('#btnNewEmployee').is(':hidden')){
+		$('#btnNewEmployee').slideToggle();
+	}
+	if($('#btnSearchEmployee').is(':hidden')){
+		$('#btnSearchEmployee').slideToggle();
+	}
+	if($('#frmSearchEmployee').is(':visible')){
+		$('#frmSearchEmployee').slideToggle();
+	}
   resetForm('frmSearchEmployee');
 });
 
 $('#btnCancelEmployee').click(function(){
-  $('#frmAddEmployee').slideToggle();
-  $('#btnNewEmployee').slideToggle();
-	$('#btnSearchEmployee').slideToggle();
+	if($('#frmAddEmployee').is(':visible')){
+		$('#frmAddEmployee').slideToggle();
+	}
+  if($('#btnNewEmployee').is(':hidden')){
+		$('#btnNewEmployee').slideToggle();
+	}
+	if($('#btnSearchEmployee').is(':hidden')){
+		$('#btnSearchEmployee').slideToggle();
+	}
+	if($('#frmSearchEmployee').is(':visible')){
+		$('#frmSearchEmployee').slideToggle();
+	}
 	$('#opcion').val(7);
   resetForm('frmAddEmployee');
 });
 
 
 
-$('#btnAddEmployee').click(function(){
+$('#frmAddEmployee').submit(function(event){
+			event.preventDefault();
+	    // if($('#txtName').val().length < 1){
+	    //   $('#txtName').focus();
+	    //   $('#reqTxtName').html('Este campo es requerido');
+	    //   return false;
+	    // }else{
+	    //   $('#reqTxtNombre').empty();
+	    // }
+			//
+			// if($('#txtLastName').val().length < 1){
+			// 	$('#txtLastName').focus();
+			// 	$('#reqTxtLastName').html('Este campo es requerido');
+			// 	return false;
+			// }else{
+			// 	$('#reqTxtLastName').empty();
+			// }
+			//
+			// if($('#txtMLastName').val().length < 1){
+			// 	$('#txtMLastName').focus();
+			// 	$('#reqTxtMLastName').html('Este campo es requerido');
+			// 	return false;
+			// }else{
+			// 	$('#reqTxtMLastName').empty();
+			// }
+			//
+			// if($('#txtAddress').val().length < 1){
+			// 	$('#txtAddress').focus();
+			// 	$('#reqTxtAddress').html('Este campo es requerido');
+			// 	return false;
+			// }else{
+			// 	$('#reqTxtAddress').empty();
+			// }
+			//
+			// if($('#txtIMSS').val().length < 11){
+			// 	$('#txtIMSS').focus();
+			// 	$('#reqTxtIMSS').html('Verifica este campo');
+			// 	return false;
+			// }else{
+			// 	$('#reqTxtCURP').empty();
+			// }
+			//
+			// if($('#txtCURP').val().length < 18){
+			// 	$('#txtCURP').focus();
+			// 	$('#reqTxtCURP').html('Verifica este campo');
+			// 	return false;
+			// }else{
+			// 	$('#reqTxtCURP').empty();
+			// }
+			//
+			// if($('#admissionDate').val().length < 1){
+			// 	$('#admissionDate').focus();
+			// 	$('#reqAdmissionDate').html('Este campo es requerido');
+			// 	return false;
+			// }else{
+			// 	$('#reqAdmissionDate').empty();
+			// }
 
-	    if($('#txtName').val().length < 1){
-	      $('#txtName').focus();
-	      $('#reqTxtName').html('Este campo es requerido');
-	      return false;
-	    }else{
-	      $('#reqTxtNombre').empty();
-	    }
-
-			if($('#txtLastName').val().length < 1){
-				$('#txtLastName').focus();
-				$('#reqTxtLastName').html('Este campo es requerido');
-				return false;
-			}else{
-				$('#reqTxtLastName').empty();
-			}
-
-			if($('#txtMLastName').val().length < 1){
-				$('#txtMLastName').focus();
-				$('#reqTxtMLastName').html('Este campo es requerido');
-				return false;
-			}else{
-				$('#reqTxtMLastName').empty();
-			}
-
-			if($('#txtAddress').val().length < 1){
-				$('#txtAddress').focus();
-				$('#reqTxtAddress').html('Este campo es requerido');
-				return false;
-			}else{
-				$('#reqTxtAddress').empty();
-			}
-
-			if($('#txtCURP').val().length < 1){
-				$('#txtCURP').focus();
-				$('#reqTxtCURP').html('Este campo es requerido');
-				return false;
-			}else{
-				$('#reqTxtCURP').empty();
-			}
-
-			if($('#admissionDate').val().length < 1){
-				$('#admissionDate').focus();
-				$('#reqAdmissionDate').html('Este campo es requerido');
-				return false;
-			}else{
-				$('#reqAdmissionDate').empty();
-			}
-
-	    let formData = new FormData(document.getElementById('frmAddEmployee'));
+	    let formData = new FormData($(this)[0]);
 
 	    $.ajax({
 	      beforeSend: function(){
@@ -853,7 +897,7 @@ $('#btnAddEmployee').click(function(){
 							$('#btnNewEmployee').slideToggle();
 							$('#btnSearchEmployee').slideToggle();
 	          }else{
-							$('#respServer').html('Ocurrió un error al intentar guardar en la base de datos');
+							$('#respServer').html('<p class="text-danger">Ocurrió un error al intentar guardar en la base de datos <br>Verifique que la CURP, IMSS o RFC no hayan sido agregadas antes.</p>');
 	          }
 	      }
 	    });
@@ -890,10 +934,7 @@ function editEmployee(id) {
             $('#respServer').empty('');
         }
   });
-	$('#frmAddEmployee').slideToggle();
-	$('#btnNewEmployee').slideToggle();
-	$('#btnSearchEmployee').slideToggle();
-	$('#txtName').focus();
+	$('#btnNewEmployee').trigger('click');
 }
 
 function deleteEmployee(id, name){
@@ -925,6 +966,25 @@ function deleteEmployee(id, name){
 	              }
 	          });
 	      });
+}
+
+function departmentChanged(){
+	let idDpt = $('#txtDepartment').val();
+	$.ajax({
+		beforeSend: function(){
+			$('#respServerArea').html(cargando);
+		},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: {id: idDpt, opt: 27},
+		success: function(resp){
+			$('#respServerArea').html('');
+			$('#txtArea').empty();
+			$('#txtArea').append(resp.htmlcode);
+			$('#txtArea').removeAttr('disabled');
+		}
+	});
 }
 
 /*******************************************************************************
@@ -1088,36 +1148,183 @@ $('#cancelPaymentBtn').click(function(){
 $('#frmPayment').submit(function(event){
 
 		event.preventDefault();
+		if($('#work').val() > 0 || $('#employee').val() > 0){
+			swal({
+						html: true,
+						title: '¿Está seguro?',
+						text: 'Una vez agregado un pago, no se puede modificar ni eliminar',
+						type: 'warning',
+						showCancelButton: true,
+						cancelButtonClass: 'btn-primary',
+						confirmButtonColor: '#7BED81',
+						confirmButtonText: 'Aceptar',
+						cancelButtonText: 'Prefiero revisar los datos',
+						closeOnConfirm: true
+					},
+					function(){
+							let formData = new FormData(document.getElementById('frmPayment'));
+							$.ajax({
+									type:    'POST',
+									url:     urlSubir3,
+									data:    formData,
+									dataType: 'json',
+									cache: false,
+									contentType: false,
+									processData: false,
+									success: function(resp){
+										if(resp.resp == 1){
+											listPayments();
+											$('#cancelPaymentBtn').trigger('click');
+										}
+									}
+							});
+					});
+		} else {
+			let opciones = {
+  			appendTo:'#frmPayment',
+  			minWidth:300,
+  			maxWidth: 350,
+  		};
+  		parent.mensaje("Debes escoger una obra y/o un empleado",'warning',opciones);
+		}
+
+});
+
+function seePaymentDetails(id){
+	$('#paymentDetailsLabel').html('Detalles del pago');
+	$('#paymentDataModal').removeAttr('style');
+	$('#flAddedActivities').attr('style', 'display: none;');
+	$.ajax({
+		beforeSend: function(){
+			$('#respServerModal').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		url: urlConsultas3,
+		data: {id: id, opt: 26},
+		success: function(resp){
+			$('#respServerModal').html('');
+			$('#idPaymentModal').html(id);
+			$('#idModal').val(id);
+			$('#employeeModal').html(resp.employee);
+			$('#workModal').html(resp.work);
+			$('#totalAmountModal').html('$'+resp.totalAmount);
+			$('#foodAmountModal').html('$'+resp.foodAmount);
+			$('#totalPaymentModal').html('$'+resp.baseAmount);
+			$('#periodModal').html('de '+resp.dateStart+' a '+resp.dateFinish);
+			$('#statusModal').html(resp.status);
+			if(resp.remarks.length > 0){
+				$('#remarksModal').html(resp.remarks);
+			} else {
+				$('#remarksModal').html('<cite>No hay observaciones</cite>');
+			}
+
+			$('#registerDate').html(resp.registerDate);
+		}
+	});
+}
+
+function addPaymentActivities(id, name, work, period){
+	$('#paymentDetailsLabel').html('Agregar actividades añadidas');
+	$('#paymentDataModal').attr('style', 'display: none;');
+	$('#flAddedActivities').removeAttr('style');
+	$('#idModal').val(id);
+	$('#employeeCiteModal').html(name);
+	$('#workCiteModal').html(work);
+	$('#periodCiteModal').html(period);
+	let urlPag = 'pg/raya_modal_listado.php';
+	$.ajax({
+				beforeSend: function(){
+						$('#cntnListPaymentActivitiesModal').html(cargando);
+				},
+				type:    'POST',
+				data: {id: id},
+				url:     urlPag,
+				dataType: 'HTML',
+				success: function(data){
+						$('#cntnListPaymentActivitiesModal').html(data);
+				}
+	});
+}
+
+$('#frmAddActivity').submit(function(event){
+	if($('#addedActivity').val() > 0){
+		event.preventDefault();
+			let formData = new FormData(document.getElementById('frmAddActivity'));
+		$.ajax({
+			beforeSend: function(){
+				$('#cntnListPaymentActivitiesModal').html(cargando);
+			},
+			url: urlSubir3,
+			type: 'POST',
+			dataType: 'JSON',
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success(resp){
+				$('#employeeCiteModal').html();
+				$('#workCiteModal').html();
+				$('#periodCiteModal').html();
+				addPaymentActivities($('#idModal').val(), $('#employeeCiteModal').html(), $('#workCiteModal').html(), $('#periodCiteModal').html());
+				resetForm('frmAddActivity');
+			}
+		})
+	} else {
+		let opciones = {
+			appendTo:'#frmAddActivity',
+			minWidth:300,
+			maxWidth: 350,
+		};
+		parent.mensaje("Debes escoger una actividad para añadir",'warning',opciones);
+		event.preventDefault();
+	}
+
+});
+
+function listAddedActivities(id){
+	let urlPag = 'pg/raya_modal_listado.php';
+	$.ajax({
+				beforeSend: function(){
+						$('#cntnListPaymentActivitiesModal').html(cargando);
+				},
+				type:    'POST',
+				data: {id: id},
+				url:     urlPag,
+				dataType: 'HTML',
+				success: function(data){
+						$('#cntnListPaymentActivitiesModal').html(data);
+				}
+	});
+}
+
+function deleteAssAddedActivity(id, name, quant){
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Una vez agregado un pago, no se puede modificar ni eliminar',
+				text: '¿Eliminará el registro de la actividad añadida de tipo <strong>' + name + '</strong> y de cantidad '+ quant +'?',
 				type: 'warning',
 				showCancelButton: true,
-				cancelButtonClass: 'btn-primary',
-				confirmButtonColor: '#7BED81',
-				confirmButtonText: 'Aceptar',
-				cancelButtonText: 'Prefiero revisar los datos',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Eliminar',
+				cancelButtonText: 'Cancelar',
 				closeOnConfirm: true
 			},
 			function(){
-					let formData = new FormData(document.getElementById('frmPayment'));
+					let params = {'id':id, 'opt':51};
 					$.ajax({
 							type:    'POST',
-							url:     urlSubir3,
-							data:    formData,
+							url:     urlEliminar3,
+							data:    params,
 							dataType: 'json',
-							cache: false,
-							contentType: false,
-							processData: false,
 							success: function(resp){
 										if(resp.resp == 1){
-												listPayments();
+												listAddedActivities($('#idModal').val());
 										}
 							}
 					});
 			});
-});
+}
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -1372,7 +1579,6 @@ $('#frmAdmPayment').submit(function(event){
 				closeOnConfirm: true
 			},
 			function(){
-					let formData = new FormData(document.getElementById("frmPayment"));
 					$.ajax({beforeSend: function(){
 										$("#respServer").html(cargando);
 									},
@@ -1398,6 +1604,139 @@ $('#frmAdmPayment').submit(function(event){
 					});
 			});
 });
+
+function seeAdmPaymentDetails(id){
+	$('#admPaymentDetailsLabel').html('Detalles del pago de nómina');
+	$('#admPaymentDataModal').removeAttr('style');
+	$('#flAdmAddedActivities').attr('style', 'display: none;');
+	$.ajax({
+		beforeSend: function(){
+			$('#respServerModal').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		url: urlConsultas3,
+		data: {id: id, opt: 28},
+		success: function(resp){
+			$('#respServerModal').html('');
+			$('#idPaymentModal').html(id);
+			$('#idModal').val(id);
+			$('#employeeModal').html(resp.employee);
+			$('#totalAmountModal').html('$'+resp.totalAmount);
+			$('#foodAmountModal').html('$'+resp.foodAmount);
+			$('#totalPaymentModal').html('$'+resp.baseAmount);
+			$('#periodModal').html('de ' + resp.dateStart + ' a ' + resp.dateFinish);
+			$('#statusModal').html(resp.status);
+			if(resp.remarks.length > 0){
+				$('#remarksModal').html(resp.remarks);
+			} else {
+				$('#remarksModal').html('<cite>No hay observaciones</cite>');
+			}
+
+			$('#registerDate').html(resp.registerDate);
+		}
+	});
+}
+
+function addAdmPaymentActivities(id, name, period){
+	$('#admPaymentDetailsLabel').html('Agregar actividades añadidas');
+	$('#admPaymentDataModal').attr('style', 'display: none;');
+	$('#flAdmAddedActivities').removeAttr('style');
+	$('#idModal').val(id);
+	$('#employeeCiteModal').html(name);
+	$('#periodCiteModal').html(period);
+	let urlPag = 'pg/nom_adm_modal_listado.php';
+	$.ajax({
+				beforeSend: function(){
+						$('#cntnListAdmPaymentActivitiesModal').html(cargando);
+				},
+				type:    'POST',
+				data: {id: id},
+				url:     urlPag,
+				dataType: 'HTML',
+				success: function(data){
+						$('#cntnListAdmPaymentActivitiesModal').html(data);
+				}
+	});
+}
+
+$('#frmAdmAddActivity').submit(function(event){
+	if($('#addedActivity').val() > 0){
+			event.preventDefault();
+			let formData = new FormData($(this)[0]);
+		$.ajax({
+			beforeSend: function(){
+				$('#cntnListAdmPaymentActivitiesModal').html(cargando);
+			},
+			url: urlSubir3,
+			type: 'POST',
+			dataType: 'JSON',
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success(resp){
+				$('#employeeCiteModal').html();
+				$('#periodCiteModal').html();
+				addAdmPaymentActivities($('#idModal').val(), $('#employeeCiteModal').html(), $('#periodCiteModal').html());
+				resetForm('frmAdmAddActivity');
+			}
+		})
+	} else {
+		let opciones = {
+			appendTo:'#frmAdmAddActivity',
+			minWidth:300,
+			maxWidth: 350,
+		};
+		parent.mensaje("Debes escoger una actividad para añadir",'warning',opciones);
+		event.preventDefault();
+	}
+
+});
+
+function listAdmAddedActivities(id){
+	let urlPag = 'pg/nom_adm_modal_listado.php';
+	$.ajax({
+				beforeSend: function(){
+						$('#cntnListAdmPaymentActivitiesModal').html(cargando);
+				},
+				type:    'POST',
+				data: {id: id},
+				url:     urlPag,
+				dataType: 'HTML',
+				success: function(data){
+						$('#cntnListAdmPaymentActivitiesModal').html(data);
+				}
+	});
+}
+
+function deleteAssAdmAddedActivity(id, name, quant){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: '¿Eliminará el registro de la actividad añadida de tipo <strong>' + name + '</strong> y de cantidad '+ quant +'?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Eliminar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt':52};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'json',
+							success: function(resp){
+										if(resp.resp == 1){
+												listAdmAddedActivities($('#idModal').val());
+										}
+							}
+					});
+			});
+}
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -2904,6 +3243,124 @@ function deleteProviderAcc(id, name){
 	});
 }
 
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*********************************MÓDULO INGRESOS*******************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+$('#btnNewIncome').click(function(){
+	if($('#frmIncome').is(':hidden')){
+		$('#frmIncome').slideToggle();
+	}
+	if($('#btnNewIncome').is(':visible')){
+		$('#btnNewIncome').slideToggle();
+	}
+});
+
+$('#cancelIncome').click(function(){
+	if($('#frmIncome').is(':visible')){
+		$('#frmIncome').slideToggle();
+	}
+	if($('#btnNewIncome').is(':hidden')){
+		$('#btnNewIncome').slideToggle();
+	}
+	resetForm('frmIncome');
+	$('#opcion').val('39')
+});
+
+$('#frmIncome').submit(function(event){
+	event.preventDefault();
+	if($('#concept').val() > 0){
+		if($('#provider').val() > 0){
+			let formData = new FormData($(this)[0]);
+			$.ajax({
+				beforeSend: function(){
+					$('#respServer').html(cargando);
+				},
+				type: 'POST',
+				dataType: 'JSON',
+				data: formData,
+				url: urlSubir3,
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function(resp){
+					$('#respServer').html('');
+					if(resp.resp == 1){
+						$('#cancelIncome').trigger('click');
+						listIncomes();
+					} else {
+						$('#respServer').html(resp.msg);
+					}
+				}
+			});
+		} else {
+			let opciones = {
+				appendTo:'#frmIncome',
+				minWidth:300,
+				maxWidth: 350,
+			};
+			parent.mensaje('Debes seleccionar un proveedor','warning',opciones);
+		}
+	} else {
+		let opciones = {
+			appendTo:'#frmIncome',
+			minWidth:300,
+			maxWidth: 350,
+		};
+		parent.mensaje('Debes seleccionar un concepto','warning',opciones);
+	}
+});
+
+function listIncomes(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListIncomes').html(cargando);
+		},
+		url: 'pg/ingresos_listado.php',
+		dataType: 'HTML',
+		type: 'POST',
+		success: function(data){
+			$('#cntnListIncomes').html(data);
+		}
+	});
+}
+
+function listAssConceptsAcc(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListIncomesModal').html(cargando);
+		},
+		data: {id: id},
+		url: 'pg/ingresos_modal_listado.php',
+		dataType: 'HTML',
+		type: 'POST',
+		success: function (data){
+			$('#cntnListIncomesModal').html(data);
+		}
+	});
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/****************************MÓDULO DEPARTAMENTOS*******************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function listEmpDepts(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListEmpDept').html(cargando);
+		},
+		url: 'pg/deptos_emp_listado.php',
+		type: 'POST'
+	});
+}
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/

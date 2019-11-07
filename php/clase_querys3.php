@@ -288,7 +288,7 @@ class Querys3 {
 		if($id != ''){
 			$cond = ' AND id_categoria = '.$id;
 		}
-		$strQuery = 'SELECT * FROM tblc_categorias WHERE fecha_eliminacion IS NULL'.$cond;
+		$strQuery = 'SELECT *, CONCAT(nombre, " ($", FORMAT(sueldo*dias,2), ", por ", dias," dias)") as valor, id_categoria as id FROM tblc_categorias WHERE fecha_eliminacion IS NULL'.$cond;
 		return $strQuery;
 	}
 
@@ -316,22 +316,27 @@ class Querys3 {
 
 	//QUERY FOR ADDING RAYA
 	public function addPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
-	$addedActivities, $addedActAmount, $totalAmount, $status, $observations, $employeeSelected,
+	$addedActivities, $totalAmount, $status, $observations, $employeeSelected,
 	$workSelected, $currentDate){
 	$strQuery = 'INSERT INTO tbl_rayas ';
 	$strQuery.=	'(fecha_inicio, fecha_finalizacion, sueldo, alimentos, ot_act,
-		ot_act_monto, total_raya, status, observaciones, id_empleado, id_obra, fecha_registro) VALUES ';
+	total_raya, status, observaciones, id_empleado, id_obra, fecha_registro) VALUES ';
 
-	$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$addedActivities.','.$addedActAmount.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.','.$workSelected.',"'.$currentDate.'")';
+	$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$addedActivities.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.','.$workSelected.',"'.$currentDate.'")';
 
 	return $strQuery;
 	}
 
 	//QUERY FOR SEARCHING RAYA
-	public function searchPayments(){
-
-		return 'SELECT * FROM tbl_rayas';
+	public function searchPayments($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond = ' WHERE id_raya = '.$id;
+		}
+		return 'SELECT * FROM tbl_rayas'.$cond;
 	}
+
+
 
 	//QUERY FOR ADDING NEW CONTRACTS
 	public function addContract($folio, $id_cliente, $periodo, $id_propiedad,
@@ -379,20 +384,90 @@ public function getContracts($id = 0){
 	}
 
 	/**Administration Payments**/
-	public function searchAdmPayments(){
-		return 'SELECT * FROM tbl_nomina_adm';
+	public function searchAdmPayments($id = ''){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' WHERE id_nom_adm = '.$id;
+		}
+		$strQuery = 'SELECT * FROM tbl_nomina_adm'.$cond;
+		return $strQuery;
 	}
 	//AGREGA UN NUEVO PAGO
 	public function addAdmPayment($dateStart, $dateFinish, $payment, $foodTotalAmount,
-	$addedActivities, $addedActAmount, $totalAmount, $status, $observations,
-	$employeeSelected, $currentDate){
+		$totalAmount, $status, $observations,
+		$employeeSelected, $currentDate){
 		$strQuery = 'INSERT INTO tbl_nomina_adm ';
-		$strQuery.=	'(fecha_inicio, fecha_finalizacion, sueldo, alimentos, ot_act,
-			ot_act_monto, total_nomina, status, observaciones, id_empleado, fecha_registro) VALUES ';
+		$strQuery.=	'(fecha_inicio, fecha_finalizacion, sueldo, alimentos,
+		total_nomina, status, observaciones, id_empleado, fecha_registro) VALUES ';
 
-		$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$addedActivities.','.$addedActAmount.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.',"'.$currentDate.'")';
+		$strQuery.= '("'.$dateStart.'","'.$dateFinish.'",'.$payment.','.$foodTotalAmount.','.$totalAmount.','.$status.',"'.$observations.'",'.$employeeSelected.',"'.$currentDate.'")';
 
 		return $strQuery;
+	}
+	//OBTIENE LAS ACTIVIDADES AÑADIDAS DE UN PAGO DE NÓMINA
+	public function getAssAdmAddedActivities($id, $idPayment, $idCatalog){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' AND id_act_an = '.$id;
+		}
+		if($idPayment != ''){
+			$cond.= ' AND id_nom_adm = '.$idPayment;
+		}
+		if($idCatalog != ''){
+			$cond.= ' AND id_act_an_rrhh = '.$idCatalog;
+		}
+		$strQuery = 'SELECT * FROM tbl_act_an_nom WHERE fecha_eliminacion IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+		return $strQuery;
+	}
+	// AGREGA UNA ACTIVIDAD AÑADIDA A UN PAGO DE NÓMINA
+	public function assignAdmAddedActivitiesPayment($idPayment, $idAddedAct, $name, $amount, $date){
+		$strQuery = 'INSERT INTO tbl_act_an_nom (id_nom_adm, id_act_an_rrhh, concepto, monto, fecha_registro) VALUES ('.$idPayment.', '.$idAddedAct.', \''.$name.'\','.$amount.', \''.$date.'\');';
+		return $strQuery;
+	}
+	//ELIMINA UNA ACTIVIDAD AÑADIDA A UN PAGO DE NÓMINA
+	public function deleteAdmAddedActivitiesPayment($id, $date){
+		$strQuery = 'UPDATE tbl_act_an_nom SET fecha_eliminado = \''.$date.'\' WHERE id_act_an = '.$id;
+		return $strQuery;
+	}
+	//OBTIENE LAS ACTIVIDADES AÑADIDAS DE UN PAGO DE RAYA
+	public function getAssAddedActivities($id, $idPayment, $idCatalog){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' AND id_act_an = '.$id;
+		}
+		if($idPayment != ''){
+			$cond.= ' AND id_raya = '.$idPayment;
+		}
+		if($idCatalog != ''){
+			$cond.= ' AND id_act_an_rrhh = '.$idCatalog;
+		}
+		$strQuery = 'SELECT * FROM tbl_act_an_raya WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+		return $strQuery;
+	}
+	// AGREGA UNA ACTIVIDAD AÑADIDA A UN PAGO DE RAYA
+	public function assignAddedActivitiesPayment($idPayment, $idAddedAct, $name, $amount, $date){
+		$strQuery = 'INSERT INTO tbl_act_an_raya (id_raya, id_act_an_rrhh, concepto, monto, fecha_registro) VALUES ('.$idPayment.', '.$idAddedAct.', \''.$name.'\', '.$amount.', \''.$date.'\');';
+		return $strQuery;
+	}
+	//ELIMINA UNA ACTIVIDAD AÑADIDA A UN PAGO DE RAYA
+	public function deleteAddedActivitiesPayment($id, $date){
+		$strQuery = 'UPDATE tbl_act_an_raya SET fecha_eliminado = \''.$date.'\' WHERE id_act_an = '.$id;
+		return $strQuery;
+	}
+	//OBTIENE EL CATÁLOGO DE ACTIVIDADES AÑADIDAS
+	public function getAddedActivities($id=""){
+		$cond = '';
+		if($id != ''){
+			$cond.= ' AND id_actividad = '.$id;
+		}
+		$strQuery = 'SELECT *, id_actividad as id, nombre as valor FROM tblc_act_anadidas_rrhh WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+		return $strQuery;
+	}
+
+	public function deleteAddedActivity($id, $date){
+		$strQuery = 'UPDATE tblc_act_anadidas_rrhh SET fecha_eliminado = \''.$date.'\' WHERE id_actividad = '.$id;
+		return $strQuery;
+
 	}
 	/****************************************************************************/
 	/****************************************************************************/
@@ -902,6 +977,60 @@ public function getContracts($id = 0){
 		 							(id_ingreso, nombre, monto, fecha_registro) VALUES
 									('.$idIncome.', \''.$name.'\', '.$amount.', \''.$date.'\')';
 		return $strQuery;
+	 }
+
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /**************************CATÁLOGO DEPARTAMENTOS****************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+
+	 public function listDepartments($id='', $order = ''){
+		 $cond = '';
+		 if($id != ''){
+			 $cond.= ' AND id_departamento = '.$id;
+		 }
+
+		 if($order == ''){
+			 $cond.= ' ORDER BY nombre ASC';
+		 } else {
+			 switch($order){
+				 case 1:
+				 	$cond.= ' ORDER BY id_departamento DESC';
+				 break;
+			 }
+		 }
+
+		 $strQuery = 'SELECT *, nombre as valor, id_departamento as id FROM tblc_departamentos WHERE fecha_eliminado IS NULL'.$cond;
+		 return $strQuery;
+	 }
+
+	 public function addDepartment($name, $date){
+		 $strQuery = 'INSERT INTO tblc_departamentos (nombre) VALUES (\''.$name.'\')';
+		 return $strQuery;
+	 }
+
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /*******************************CATÁLOGO AREA********************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+
+	 public function listAreas($id='', $idDpt = ''){
+		 $cond = '';
+		 if($id != ''){
+			 $cond.= ' AND id_area = '.$id;
+		 }
+		 if($idDpt != ''){
+			 $cond.= ' AND id_departamento = '.$idDpt;
+		 }
+
+		 $strQuery = 'SELECT *, nombre as valor, id_area as id FROM tblc_areas WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY id_area DESC';
+		 return $strQuery;
 	 }
 
 	/****************************************************************************/
