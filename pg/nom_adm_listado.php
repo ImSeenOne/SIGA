@@ -9,8 +9,9 @@
     <thead>
       <th class="col">Empleado</th>
       <th class="col">Monto</th>
-      <th class="col">Período</th>
-      <th class="col">Status</th>
+      <th class="col" style="width: 20%;">Período</th>
+      <th class="col text-center" style="width: 10%;">Status</th>
+      <th class="col">Detalle</th>
     </thead>
     <tbody>
       <?php foreach ($listado as $key) { ?>
@@ -20,26 +21,32 @@
               $resp = @$conexion->fetch_array($querys3->getEmpleadosById($key->id_empleado));
               $nombre = $resp['nombre'];
               $apellidos = $resp['apellido_paterno'].' '.$resp['apellido_materno'];
-              echo $nombre.' '.$apellidos;
+              $employee = $nombre.' '.$apellidos;
+              echo $employee;
             ?>
           </td>
           <td>$<?= number_format($key->total_nomina,2) ?></td>
           <td><?= date("d/m/Y", strtotime($key->fecha_inicio)) ?> a <?= date("d/m/Y", strtotime($key->fecha_finalizacion)) ?></td>
-          <td>
+          <td class="text-center">
             <?php
-              switch ($key->status) {
-                case 1:
-                  echo "Pagado";
-                break;
-                case 2:
-                echo "Pendiente";
-                break;
-
-                case 3:
-                echo "Cancelado";
-                break;
-              }
+            switch ($key->status) {
+              case 1:
+                echo '<span class="badge progress-bar-success">Pagado</span>';
+              break;
+              case 2:
+              echo '<span class="badge progress-bar-warning">Pendiente</span>';
+              break;
+              case 3:
+              echo '<span class="badge progress-bar-danger">Cancelado</span>';
+              break;
+            }
             ?>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm" type="button" onclick="seeAdmPaymentDetails(<?= $key->id_nom_adm ?>)" data-toggle="modal" data-target="#admPaymentDetails"> <i class="fa fa-eye"></i> </button>
+            <button class="btn btn-success btn-sm" type="button" onclick="addAdmPaymentActivities(<?= $key->id_nom_adm ?>, '<?= $employee ?>', '<?= date('d/m/Y', strtotime($key->fecha_inicio)) ?> a <?= date('d/m/Y', strtotime($key->fecha_finalizacion)) ?>')" data-toggle="modal" data-target="#admPaymentDetails">
+              <i class="fa fa-plus"></i>
+            </button>
           </td>
         </tr>
       <?php } ?>
@@ -47,8 +54,9 @@
     <tfoot>
       <th class="col">Empleado</th>
       <th class="col">Monto</th>
-      <th class="col">Período</th>
+      <th class="col" style="width: 20%;">Período</th>
       <th class="col">Status</th>
+      <th class="col">Detalle</th>
     </tfoot>
   </table>
 </div>

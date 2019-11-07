@@ -38,15 +38,8 @@
            <?php } ?>
          </div>
 
-          <form id="frmAdmPayment" name="frmAdmPayment" style="display:none;">
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateStart">Fecha de inicio</label>
-                <input required class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio">
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateFinish">Fecha de finalización</label>
-                <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización">
-              </div>
+          <form id="frmAdmPayment" name="frmAdmPayment" style="display:none;" autocomplete="off">
+            <input autocomplete="false" name="hidden" type="hidden" style="display:none;">
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                   <label for="employee" style="display: block;">Empleado</label>
                   <select required name="employee" id="employee" class="form-control" onchange="employeeId()" style="width: 100%;">
@@ -66,10 +59,17 @@
                 <label for="payment">Sueldo (por día) </label>
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
               </div>
-
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="workDays">Días de trabajo</label>
-                <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo" readonly>
+                <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo">
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-6">
+                <label for="dateStart">Fecha de inicio</label>
+                <input required class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()" onkeypress="return false">
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-6">
+                <label for="dateFinish">Fecha de finalización</label>
+                <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()" onkeypress="return false">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="paymentAmount">Monto</label>
@@ -89,28 +89,15 @@
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" placeholder="Monto a pagar" name="foodTotalAmount" id="foodTotalAmount" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="addedActivities">Otras actividades</label>
-                <select class="form-control" id="addedActivities" name="addedActivities" onchange="totalAmountCalc()">
-                  <option value="0">N/A</option>
-                  <option value="1">Percepciones</option>
-                  <option value="2">Deducciones</option>
-                </select>
-              </div>
-
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="addedActAmount">Monto</label>
-                <input onkeyup="keyUpAddedActAmount()" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="addedActAmount" id="addedActAmount" placeholder="Monto de actividades añadidas">
-              </div>
-              <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="totalAmount">Total a pagar</label>
                 <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalAmount" id="totalAmount" placeholder="Total de la raya" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="paymentStatus">Status</label>
-                <select class="form-control" name="paymentStatus">
-                  <option value="1">Pagado</option>
-                  <option value="2">Pendiente</option>
+                <select class="form-control" name="paymentStatus" id="paymentStatus">
                   <option value="3">Cancelado</option>
+                  <option value="1">Pagado</option>
+                  <option value="2" selected>Pendiente</option>
                 </select>
               </div>
 
@@ -120,7 +107,7 @@
               </div>
               <input type="hidden" name="opcion" id="opcion" value="14">
               &nbsp;
-              <div class="form-group col-lg-12 col-md-4 col-sm-12">
+              <div class="form-group col-lg-8 col-md-4 col-sm-12">
                 <div class="col-sm-12 col-lg-6 col-md-6 mt-1">
                   <button class="btn btn-primary btn-block" id="saveAdmPaymentBtn" type="submit">Guardar</button>
                 </div>
@@ -130,7 +117,7 @@
               </div>
           </form>
 
-          <form id="searchAdmPaymentFrm" style="display: none;" method="post">
+          <form id="searchAdmPaymentFrm" style="display: none;">
             <div class="form-group col-lg-3 col-md-4 col-sm-6">
               <label for="">Empleado</label>
               <input type="text" name="employeeSearch" class="form-control" id="employeeSearch" onkeyup="listPayments()">
@@ -162,18 +149,38 @@
       </div>
   </section>
 </div>
-
+<?php include('nom_adm_modal.php'); ?>
 <script type="text/javascript">
   window.onload = function() {
-    activaDatePicker('dateStart');
-    activaDatePicker('dateFinish');
+    dateControl('dateStart');
+    dateControl('dateFinish');
     listAdmPayments();
     $('#employee').select2();
     $('#work').select2();
     $('#foodDays').val("1");
     $('#totalAmount').val("0");
-    if(!parseInt($('#addedActivities').val())){
-      $('#addedActAmount').prop('readonly',true);
+  }
+
+  function verifyMinorDate(){
+    let descomponeFecha1 = $('#dateStart').val().split("/");
+    let fecha1 = new Date(descomponeFecha1[2],descomponeFecha1[1],descomponeFecha1[0]);
+    let descomponeFecha2 = $('#dateFinish').val().split("/");
+    let fecha2 = new Date(descomponeFecha2[2],descomponeFecha2[1],descomponeFecha2[0]);
+
+    if(fecha1 > fecha2){
+      let opciones = {
+  			appendTo:'#frmAdmPayment',
+  			minWidth:300,
+  			maxWidth: 350,
+  		};
+  		parent.mensaje("La fecha inicial debe ser menor que la final",'warning',opciones);
+      $('#dateFinish').val($('#dateStart').val());
+    } else {
+      let date1 = new Date($('#dateStart').val().split('/')[1]+'/'+$('#dateStart').val().split('/')[0]+'/'+$('#dateStart').val().split('/')[2]);
+      let date2 = new Date($('#dateFinish').val().split('/')[1]+'/'+$('#dateFinish').val().split('/')[0]+'/'+$('#dateFinish').val().split('/')[2]);
+      let dif_in_time = date2.getTime() - date1.getTime();
+      let dif_in_days = dif_in_time / (1000 * 3600 * 24);
+      $('#workDays').val(parseInt(dif_in_days));
     }
   }
 
@@ -182,27 +189,8 @@
 
     let totalFood =($('#foodTotalAmount').val()) ? parseFloat($('#foodTotalAmount').val().replace("$","").replace(",","")) : 0;
     let paymentAmount = ($('#paymentAmount').val()) ? parseFloat($('#paymentAmount').val().replace("$","").replace(",","")) : 0;
-    let addedActAmount = ($('#addedActAmount').val()) ? parseFloat($('#addedActAmount').val().replace("$","").replace(",","")) : 0;
     let operation = parseInt($('#addedActivities').val());
-
-    switch (operation) {
-      case 0:
-        $('#totalAmount').val(totalFood + paymentAmount);
-        $('#addedActAmount').val("");
-        $('#addedActAmount').prop('readonly',true);
-        break;
-      case 1:
-        $('#addedActAmount').prop('readonly',false);
-        $('#totalAmount').val(totalFood + paymentAmount + addedActAmount);
-      break;
-      case 2:
-      $('#addedActAmount').prop('readonly',false);
-        $('#totalAmount').val(totalFood + paymentAmount - addedActAmount);
-        if(addedActAmount > (totalFood + paymentAmount)){
-          $('#totalAmount').val("0");
-        }
-      break;
-    }
+    $('#totalAmount').val(totalFood + paymentAmount);
     $('#totalAmount').keyup();
   }
 
@@ -223,6 +211,7 @@
           success: function(resp){
               $('#category').append('<option value="' + category + '" selected>'+resp.name+'</option>');
               $('#payment').val(resp.pay);
+              $('#payment').keyup();
               $('#workDays').val(resp.days);
               $('#paymentAmount').val(resp.pay * resp.days);
               totalAmountCalc();
@@ -248,9 +237,5 @@
     foodCalc();
     $('#foodTotalAmount').keyup();
     $('#foodPieceAmount').focus();
-  }
-
-  function keyUpAddedActAmount(){
-    totalAmountCalc();
   }
 </script>
