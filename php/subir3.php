@@ -1170,5 +1170,30 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+	//AGREGA UN NUEVO DEPARTAMENTO AL CATÁLOGO
+	case 43:
+		$name = $funciones->limpia($_POST['name']);
+		if(!@$conexion->consulta($querys->addDepartment($name, $datos['fecha_actual']))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN DEPARTAMENTO EXISTENTE DEL CATÁLOGO
+	case 44:
+		$id = $funciones->limpia($_POST['id']);
+		$name = $funciones->limpia($_POST['name']);
+		if(!@$conexion->consulta($querys->updateDepartment($id, $name))){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
 }
 ?>

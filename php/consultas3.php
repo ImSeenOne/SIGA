@@ -274,6 +274,12 @@ switch($_POST['opt']){
 		$resp = @$conexion->fetch_array($querys3->listProvidersAcc($id));
 		$jsondata['name'] = $resp['nombre'];
 	break;
+	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DEL CATÁLOGO DEPARTAMENTOS EMPLEADOS
+	case 18:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listDepartments($id, 0));
+		$jsondata['name'] = $resp['nombre'];
+	break;
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:

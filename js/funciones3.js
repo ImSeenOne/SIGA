@@ -3358,7 +3358,68 @@ function listEmpDepts(){
 			$('#cntnListEmpDept').html(cargando);
 		},
 		url: 'pg/deptos_emp_listado.php',
-		type: 'POST'
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+				$('#cntnListEmpDept').html(data);
+		}
+	});
+}
+
+$('#frmEmpDept').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		data: formData,
+		url: urlSubir3,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			$('#respServer').html('');
+			if(resp.resp == 1){
+				listEmpDepts();
+				$('#name').val('');
+			} else {
+				$('#respServer').html(resp.msg);
+			}
+			$('#opcion').val('43');
+		}
+	});
+});
+
+function editEmpDept(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		data: {id: id, opt: 18},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		success: function(resp){
+				$('#respServer').html('');
+				$('#name').val(resp.name);
+				$('#id').val(id);
+				$('#opcion').val('44');
+		}
+	});
+}
+
+function deleteEmpDept(id){
+	$.ajax({
+		data: {id: id, opt: 19},
+		url: urlEliminar3,
+		type: 'POST',
+		dataType: 'JSON',
+		success: function(resp){
+			listEmpDepts();
+		}
 	});
 }
 /*******************************************************************************/

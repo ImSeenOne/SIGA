@@ -997,6 +997,9 @@ public function getContracts($id = 0){
 			 $cond.= ' ORDER BY nombre ASC';
 		 } else {
 			 switch($order){
+				 case 0:
+				 	$cond.= '';
+				 break;
 				 case 1:
 				 	$cond.= ' ORDER BY id_departamento DESC';
 				 break;
@@ -1010,6 +1013,16 @@ public function getContracts($id = 0){
 	 public function addDepartment($name, $date){
 		 $strQuery = 'INSERT INTO tblc_departamentos (nombre) VALUES (\''.$name.'\')';
 		 return $strQuery;
+	 }
+
+	 public function updateDepartment($id, $name){
+		 $strQuery = 'UPDATE tblc_departamentos set nombre = \''.$name.'\' WHERE id_departamento = '.$id;
+		 return $strQuery;
+	 }
+
+	 public function deleteDepartment($id, $date){
+		 $strQuery = 'UPDATE tblc_departamentos set fecha_eliminado = \''.$date.'\' WHERE id_departamento = '.$id;
+		return $strQuery;
 	 }
 
 	 /****************************************************************************/
