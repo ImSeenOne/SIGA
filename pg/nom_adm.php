@@ -57,18 +57,18 @@
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="payment">Sueldo (por día) </label>
-                <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo" readonly>
+                <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="workDays">Días de trabajo</label>
                 <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateStart">Fecha de inicio</label>
+                <label for="dateStart">Fecha Inicio</label>
                 <input required class="form-control" name="dateStart" id="dateStart" placeholder="Fecha de inicio" onchange="verifyMinorDate()" onkeypress="return false">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="dateFinish">Fecha de finalización</label>
+                <label for="dateFinish">Fecha Final</label>
                 <input required class="form-control" type="text" name="dateFinish" id="dateFinish" placeholder="Fecha de finalización" onchange="verifyMinorDate()" onkeypress="return false">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
@@ -90,7 +90,7 @@
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="totalAmount">Total a pagar</label>
-                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalAmount" id="totalAmount" placeholder="Total de la raya" readonly>
+                <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalAmount" id="totalAmount" placeholder="Total de la raya">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
                 <label for="paymentStatus">Status</label>
