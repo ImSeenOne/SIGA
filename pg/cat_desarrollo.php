@@ -73,19 +73,29 @@
             </div>
           </div>
 
-          <div id="respServer"></div>
-          <div class="form-group col-lg-6 col-md-4 col-sm-12 mt-2em pull-right">
+          
+
+          
+          <div class="form-group col-lg-12 col-md-4 col-sm-12 mt-2em pull-right">
             <input type="hidden" id="idDesarrollo" name="idDesarrollo">
             <input type="hidden" id="opcion" name="opcion" value="1">
-            <div class="col-sm-12 col-lg-6 col-md-6">
+            <input type="hidden" id="latitud" name="latitud" value="16.7473613"/>
+            <input type="hidden" id="longitud" name="longitud" value="-93.1203101"/>
+            <div class="col-sm-12 col-lg-4 col-md-6">
+            
+              <button id="btnSaveGeo" type="button" 
+                  class="form-control btn btn-success btn-sm">Geolocalizar</button>&nbsp;
+          </div>
+            <div class="col-sm-12 col-lg-4 col-md-6">
               <button id="btnGuardaDesarrollo" type="button" class="btn btn-primary btn-block">Guardar</button>&nbsp;
             </div>
-            <div class="col-sm-12 col-lg-6 col-md-6">
+            <div class="col-sm-12 col-lg-4 col-md-6">
               <button id="btnCancelarDesarrollo" type="button" class="btn btn-secondary btn-block">Cancelar</button>
             </div>
           </div>
         </div>
       </form>
+      <div id="respServer"></div>
       <hr>
       <div class="row">
         <div id="cntnListPagos" class="col-lg-12 col-md-12 col-sm-12 table-responsive">
@@ -96,10 +106,22 @@
 <!-- /.row -->
 </section>
 <!-- /.content -->
-
+<div class="form-group mfp-hide" id="geolocalizacion">
+    <label class="form-label" for="mapa_canvas">Localización</label>
+    <br>
+    <div id="color-palette" style="display:none;"></div>
+    <a class="btn btn-success btn-sm pull-right" href="javascript:$.magnificPopup.close();">Cerrar</a>
+    
+    <div id="pac-input"></div>
+    <div id="cursel" style="display:none !important;"></div>
+    <div style="width: 100%; height: 70vh; " id="mapa_canvas"></div>
+</div>
 <script type="text/javascript">
   window.onload = function() {
     desarrollo_listado();
+    
+    Geo("btnSaveGeo");
+    setTimeout(mapa_formregistro, 1000);
   }
 
 function isNumberKey(evt) {
