@@ -15,7 +15,7 @@
   <section class="content">
       <div class="box box-default">
         <div class="box-header with-border">
-          <h3 class="box-title">Nuevo pago</h3>
+          <h3 class="box-title">Nuevo Pago</h3>
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"> <i class="fa fa-minus"></i> </button>
 
@@ -29,7 +29,7 @@
               if($totRegs > 0){
              ?>
              <button id="btnNewAdmPayment" type="button" class="btn btn-primary btn-sm pull-right mt-2em" >
-               Agregar un nuevo pago
+               Agregar un Nuevo Pago
              </button>
            <?php } else {?>
              <p id="noEmployees" class="text-danger">
@@ -60,7 +60,7 @@
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency"  class="form-control" name="payment" id="payment" placeholder="Sueldo">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="workDays">Días de trabajo</label>
+                <label for="workDays">Días de Trabajo</label>
                 <input required onkeypress="return isNumberKey(event)" class="form-control" type="text" name="workDays" id="workDays" placeholder="Número de días de trabajo">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
@@ -81,7 +81,7 @@
               </div>
 
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="foodDays">Días de alimentos</label>
+                <label for="foodDays">Días de Alimentos</label>
                 <input required maxlength="2" onkeyup="keyUpFoodDays()" onkeypress="return isNumberKey(event)" class="form-control" name="foodDays" id="foodDays" placeholder="Días de alimentos pagados">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
@@ -89,7 +89,7 @@
                 <input required pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" placeholder="Monto a pagar" name="foodTotalAmount" id="foodTotalAmount" readonly>
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">
-                <label for="totalAmount">Total a pagar</label>
+                <label for="totalAmount">Total a Pagar</label>
                 <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control" name="totalAmount" id="totalAmount" placeholder="Total de la raya">
               </div>
               <div class="form-group col-lg-4 col-md-4 col-sm-6">

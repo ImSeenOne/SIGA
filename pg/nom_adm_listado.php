@@ -43,6 +43,28 @@
             ?>
           </td>
           <td>
+            <?php if($_SESSION["dUsuario"]["editar"] == 1){?>
+              <div class="btn-group" id="buttonChangePaymentStatus">
+                  <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                      <?php if(!($key->status == 1)){  ?>
+                        <li>
+                          <a type="button" class="pointer" title="Cambiar status a pagado" onclick="changePaymentStatus(2,<?= $key->id_nom_adm ?>, 1);"><i class="fa fa-check"></i>Pagado</a>
+                        </li>
+                      <?php } ?>
+                      <?php if(!($key->status == 2)){  ?>
+                        <li>
+                          <a type="button" class="pointer" title="Cambiar status a pendiente" onclick="changePaymentStatus(2,<?= $key->id_nom_adm ?>, 2);"><i class="fa fa-exclamation"></i>Pendiente</a>
+                        </li>
+                      <?php } ?>
+                      <?php if(!($key->status == 3)){  ?>
+                        <li>
+                          <a type="button" class="pointer" title="Cambiar status a cancelado" onclick="changePaymentStatus(2,<?= $key->id_nom_adm ?>, 3);"><i class="fa fa-times"></i>Cancelado</a>
+                        </li>
+                      <?php } ?>
+                    </ul>
+              </div>
+            <?php } ?>
             <button class="btn btn-primary btn-sm" type="button" onclick="seeAdmPaymentDetails(<?= $key->id_nom_adm ?>)" data-toggle="modal" data-target="#admPaymentDetails"> <i class="fa fa-eye"></i> </button>
             <button class="btn btn-success btn-sm" type="button" onclick="addAdmPaymentActivities(<?= $key->id_nom_adm ?>, '<?= $employee ?>', '<?= date('d/m/Y', strtotime($key->fecha_inicio)) ?> a <?= date('d/m/Y', strtotime($key->fecha_finalizacion)) ?>')" data-toggle="modal" data-target="#admPaymentDetails">
               <i class="fa fa-plus"></i>

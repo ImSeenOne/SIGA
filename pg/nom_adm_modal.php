@@ -59,9 +59,11 @@
             <ul class="list-group">
               <li class="list-group-item active text-center">ID: <div id="idPaymentModal" style="color: #FFF; display: inline;"></div></li>
               <li class="list-group-item text-center">Empleado: <div id="employeeModal" style="color: #335cbd; display: inline;"></div></li>
-              <li class="list-group-item text-center">Monto Total: <div id="totalAmountModal" style="color: #335cbd; display: inline;"></div></li>
-              <li class="list-group-item text-center">Monto Alimentos: <div id="foodAmountModal" style="color: #335cbd; display: inline;"></div></li>
               <li class="list-group-item text-center">Sueldo Base: <div id="totalPaymentModal" style="color: #335cbd; display: inline;"></div></li>
+              <li class="list-group-item text-center">Monto Alimentos: <div id="foodAmountModal" style="color: #335cbd; display: inline;"></div></li>
+              <li class="list-group-item text-center">Sumatoria percepciones: <div id="perceptionsModal" style="color: #335cbd; display: inline;"></div></li>
+              <li class="list-group-item text-center">Sumatoria deducciones: <div id="deductionsModal" style="color: #335cbd; display: inline;"></div></li>
+              <li class="list-group-item text-center">Monto Total: <div id="totalAmountModal" style="color: #335cbd; display: inline;"></div></li>
               <li class="list-group-item text-center">Período: <div id="periodModal" style="color: #335cbd; display: inline;"></div></li>
               <li class="list-group-item text-center">Status:&nbsp;<div id="statusModal" style="color: #335cbd; display: inline;"></div></li>
               <li class="list-group-item text-center">Observaciones: <div id="remarksModal" style="color: #335cbd; display: inline;"></div></li>
