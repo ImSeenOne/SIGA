@@ -1124,10 +1124,12 @@ break;
 		$concept = $funciones->limpia($_POST['concept']);
 		$provider = $funciones->limpia($_POST['provider']);
 		$conceptText = $funciones->limpia($_POST['conceptText']);
-		$withhold = $funciones->limpia(str_replace(",", "", $_POST['withhold']));
-		$repAdvance = $funciones->limpia(str_replace(",", "", $_POST['repAdvance']));
-		$repIVA = $funciones->limpia(str_replace(",", "", $_POST['repIVA']));
-		if(!@$conexion->consulta($querys->addIncome($billNum, $billDate, $chargeDate, $concept, $provider, $conceptText, $withhold, $repAdvance, $repIVA, $datos['fecha_actual']))){
+		$withhold = (strlen($_POST['withhold']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['withhold'])) : 0;
+		$repAdvance = (strlen($_POST['repAdvance']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['repAdvance'])) : 0;
+		$repIVA = (strlen($_POST['repIVA']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['repIVA'])) : 0;
+		$iva = $funciones->limpia($_POST['iva']);
+		$subtotal = $funciones->limpia(str_replace(",", "", $_POST['subtotal']));
+		if(!@$conexion->consulta($querys->addIncome($billNum, $billDate, $chargeDate, $concept, $provider, $conceptText, $withhold, $repAdvance, $repIVA, $datos['fecha_actual'], $iva, $subtotal))){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
 		} else {
@@ -1138,6 +1140,40 @@ break;
 	break;
 	//EDITA UN INGRESO EXISTENTE
 	case 40:
+	$id = $funciones->limpia($_POST['id']);
+	$billNum = $funciones->limpia($_POST['billNum']);
+	$billDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['billDate']) ) ) );
+	$chargeDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['chargeDate']) ) ) );
+	$concept = $funciones->limpia($_POST['concept']);
+	$provider = $funciones->limpia($_POST['provider']);
+	$conceptText = $funciones->limpia($_POST['conceptText']);
+	$withhold = (strlen($_POST['withhold']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['withhold'])) : 0;
+	$repAdvance = (strlen($_POST['repAdvance']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['repAdvance'])) : 0;
+	$repIVA = (strlen($_POST['repIVA']) > 0) ? $funciones->limpia(str_replace(",", "", $_POST['repIVA'])) : 0;
+	$iva = $funciones->limpia($_POST['iva']);
+	$subtotal = $funciones->limpia(str_replace(",", "", $_POST['subtotal']));
+	if(!@$conexion->consulta($querys->updateIncome($id, $billNum, $billDate, $chargeDate, $concept, $provider, $conceptText, $withhold, $repAdvance, $repIVA, $iva, $subtotal))){
+		$jsondata['resp'] = 0;
+		$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+	} else {
+		$jsondata['resp'] = 1;
+		$resp = @$conexion->fetch_array($querys->listIncomes($id));
+		$concResp = @$conexion->obtenerlista($querys->listAssConceptsAcc('', $id));
+		$sum = 0;
+		foreach ($concResp as $key) {
+			$sum += $key->monto;
+		}
+		$iva = ($resp['iva'] < 1) ? $resp['iva'] : floatval('0.'.$resp['iva']);
+		$totalAmount = ($resp['subtotal'] + ($resp['subtotal'] * $iva)) - $sum;
+		if(@$conexion->consulta('UPDATE tbl_ingresos SET monto_total = '.$totalAmount.' WHERE id_ingreso = '.$id) == 0){
+			$jsondata['resp'] = 2;
+			$jsondata['msg'] = 'Ocurrió un error al calcular el monto total del ingreso';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	}
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
 	break;
 
 	//AGREGA UNA NUEVA ACTIVIDAD AÑADIDA (RAYA)
@@ -1189,6 +1225,60 @@ break;
 		if(!@$conexion->consulta($querys->updateDepartment($id, $name))){
 			$jsondata['resp'] = 0;
 			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UN NUEVO CONCEPTO DEPENDIENTE A UN INGRESO
+	case 45:
+		$id = $funciones->limpia($_POST['id']);
+		$concept = $funciones->limpia($_POST['concept']);
+		$amount = $funciones->limpia(str_replace(",", "",$_POST['amount']));
+		if(@$conexion->consulta($querys->addAssConceptAcc($id, $concept, $amount, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al guardar en la base de datos';
+		} else {
+			$jsondata['resp'] = 1;
+			$resp = @$conexion->fetch_array($querys->listIncomes($id));
+			$concResp = @$conexion->obtenerlista($querys->listAssConceptsAcc('', $id));
+			$sum = 0;
+			foreach ($concResp as $key) {
+				$sum += $key->monto;
+			}
+			$iva = ($resp['iva'] < 1) ? $resp['iva'] : floatval('0.'.$resp['iva']);
+			$totalAmount = ($resp['subtotal'] + ($resp['subtotal'] * $iva)) - $sum;
+			if(@$conexion->consulta('UPDATE tbl_ingresos SET monto_total = '.$totalAmount.' WHERE id_ingreso = '.$id) == 0){
+				$jsondata['resp'] = 2;
+				$jsondata['msg'] = 'Ocurrió un error al calcular el monto total del ingreso';
+			} else {
+				$jsondata['resp'] = 1;
+			}
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//CAMBIA EL STATUS DE UN PAGO DE Raya
+	case 46:
+		$id = $funciones->limpia($_POST['id']);
+		$status = $funciones->limpia($_POST['status']);
+		if(@$conexion->consulta('UPDATE tbl_rayas SET status = '.$status.' WHERE (id_raya = '.$id.')') == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//CAMBIA EL STATUS DE UN PAGO DE Nómina ADMINISTRATIVA
+	case 47:
+		$id = $funciones->limpia($_POST['id']);
+		$status = $funciones->limpia($_POST['status']);
+		if(@$conexion->consulta('UPDATE tbl_nomina_adm SET status = '.$status.' WHERE (id_nom_adm = '.$id.')') == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
 		} else {
 			$jsondata['resp'] = 1;
 		}

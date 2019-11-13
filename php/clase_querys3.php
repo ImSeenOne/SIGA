@@ -945,18 +945,31 @@ public function getContracts($id = 0){
 			$cond = ' AND id_ingreso = '.$id;
 		}
 
-		$strQuery = 'SELECT * FROM tbl_ingresos WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY fecha_registro DESC';
+		$strQuery = 'SELECT * FROM tbl_ingresos WHERE fecha_eliminado IS NULL'.$cond.' ORDER BY id_ingreso DESC';
 
 		return $strQuery;
 	}
 
 	public function addIncome($billNum, $billDate, $chargeDate, $concept, $provider,
-	 $conceptText, $withhold, $repAvance, $repIVA, $date){
+	 $conceptText, $withhold, $repAvance, $repIVA, $date, $iva, $subtotal){
 		 $strQuery = 'INSERT INTO tbl_ingresos (numero_factura, fecha_factura,
-			 fecha_cobro, id_tipo_concepto, id_proveedor, concepto, retencion_iva, amort_anticipo,
-			 iva_amort, fecha_registro) VALUES (\''.$billNum.'\', \''.$billDate.'\',
-				 \''.$chargeDate.'\', '.$concept.', '.$provider.', \''.$conceptText.'\',
-				 '.$withhold.', '.$repAvance.', '.$repIVA.', \''.$date.'\')';
+			 fecha_cobro, monto_total, id_tipo_concepto, id_proveedor, concepto, retencion_iva, amort_anticipo,
+			 iva_amort, fecha_registro, iva, subtotal) VALUES (\''.$billNum.'\', \''.$billDate.'\',
+				 \''.$chargeDate.'\', '.$subtotal.','.$concept.', '.$provider.', \''.$conceptText.'\',
+				 '.$withhold.', '.$repAvance.', '.$repIVA.', \''.$date.'\', '.$iva.', '.$subtotal.')';
+		 return $strQuery;
+	 }
+
+	public function updateIncome($id, $billNum, $billDate, $chargeDate, $concept, $provider,
+	 $conceptText, $withhold, $repAvance, $repIVA, $iva, $subtotal){
+		 $strQuery = 'UPDATE tbl_ingresos SET numero_factura = \''.$billNum.'\', fecha_factura = \''.$billDate.'\',
+			 fecha_cobro = \''.$chargeDate.'\', id_tipo_concepto = '.$concept.', id_proveedor = '.$provider.', concepto = \''.$conceptText.'\', retencion_iva = '.$withhold.', amort_anticipo = '.$repAvance.',
+			 iva_amort = '.$repIVA.', fecha_registro = \''.$date.'\', iva = '.$iva.', subtotal = '.$subtotal.' WHERE id_ingreso = '.$id;
+		 return $strQuery;
+	 }
+
+	 public function deleteIncome($id, $date){
+		 $strQuery = 'UPDATE tbl_ingresos set fecha_eliminado = \''.$date.'\' WHERE id_ingreso ='.$id;
 		 return $strQuery;
 	 }
 
@@ -977,6 +990,11 @@ public function getContracts($id = 0){
 		 							(id_ingreso, nombre, monto, fecha_registro) VALUES
 									('.$idIncome.', \''.$name.'\', '.$amount.', \''.$date.'\')';
 		return $strQuery;
+	 }
+
+	 public function deleteAssConceptAcc($id, $date){
+		 $strQuery = 'UPDATE tbl_conceptos_ingr SET fecha_eliminado = \''.$date.'\' WHERE id_concepto = '.$id;
+		 return $strQuery;
 	 }
 
 	 /****************************************************************************/

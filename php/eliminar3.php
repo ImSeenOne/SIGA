@@ -230,6 +230,39 @@ switch($_POST['opt']){
 			$jsondata['resp'] = 1;
 		}
 	break;
+	case 20:
+		$id = $funciones->limpia($_POST['id']);
+		if(@$conexion->consulta($querys->deleteIncome($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar eliminar, intente de nuevo más tarde';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+	break;
+	case 21:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys->listAssConceptsAcc($id));
+		if(@$conexion->consulta($querys->deleteAssConceptAcc($id, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al intentar eliminar, intente de nuevo más tarde';
+		} else {
+			$jsondata['resp'] = 1;
+			$concResp = @$conexion->obtenerlista($querys->listAssConceptsAcc('', $resp['id_ingreso']));
+			$respI = @$conexion->fetch_array($querys->listIncomes($resp['id_ingreso']));
+			$sum = 0;
+			foreach ($concResp as $key) {
+				$sum += $key->monto;
+			}
+			$iva = ($respI['iva'] < 1) ? $respI['iva'] : floatval('0.'.$respI['iva']);
+			$totalAmount = ($respI['subtotal'] + ($respI['subtotal'] * $iva)) - $sum;
+			if(@$conexion->consulta('UPDATE tbl_ingresos SET monto_total = '.$totalAmount.' WHERE id_ingreso = '.$resp['id_ingreso']) == 0){
+				$jsondata['resp'] = 2;
+				$jsondata['msg'] = 'Ocurrió un error al calcular el monto total del ingreso';
+			} else {
+				$jsondata['resp'] = 1;
+			}
+		}
+	break;
 	case 50:
 		$idConcept = $funciones->limpia($_POST['id']);
 

@@ -274,12 +274,32 @@ switch($_POST['opt']){
 		$resp = @$conexion->fetch_array($querys3->listProvidersAcc($id));
 		$jsondata['name'] = $resp['nombre'];
 	break;
-	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DEL CATÁLOGO DEPARTAMENTOS EMPLEADOS
+	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DEL MÓDULO INGRESOS
 	case 18:
+		$id = $funciones->limpia($_POST['id']);
+		$resp = @$conexion->fetch_array($querys3->listIncomes($id));
+		$jsondata['billNum'] = $resp['numero_factura'];
+		$jsondata['billDate'] = date('d/m/Y', strtotime($resp['fecha_factura']));
+		$jsondata['chargeDate'] = date('d/m/Y', strtotime($resp['fecha_cobro']));
+		$jsondata['concept'] = $resp['id_tipo_concepto'];
+		$jsondata['textConcept'] = @$conexion->fetch_array($querys3->listConceptsAcc($resp['id_tipo_concepto']))['nombre'];
+		$jsondata['textProvider'] = @$conexion->fetch_array($querys3->listProvidersAcc($resp['id_proveedor']))['nombre'];
+		$jsondata['provider'] = $resp['id_proveedor'];
+		$jsondata['conceptText'] = $resp['concepto'];
+		$jsondata['withhold'] = $resp['retencion_iva'];
+		$jsondata['repAdvance'] = $resp['amort_anticipo'];
+		$jsondata['repIVA'] = $resp['iva_amort'];
+		$jsondata['iva'] = $resp['iva'];
+		$jsondata['subtotal'] = $resp['subtotal'];
+		$jsondata['totalAmount'] = $resp['monto_total'];
+	break;
+	//FUNCION PARA OBTENER Y EDITAR LOS DATOS DEL MÓDULO Departamentos
+	case 19:
 		$id = $funciones->limpia($_POST['id']);
 		$resp = @$conexion->fetch_array($querys3->listDepartments($id, 0));
 		$jsondata['name'] = $resp['nombre'];
 	break;
+
 	//FUNCIÓN PARA OBTENER LA CATEGPRÍA DE UN EMPLEADO POR ID, RETORNA EL NOMBRE DE LA CATEGORÍA, LOS DÍAS
 	//DE TRABAJO Y EL SUELDO POR DÍA
 	case 20:
@@ -405,7 +425,19 @@ switch($_POST['opt']){
 				$jsondata['status'] = '<span class="badge progress-bar-danger">Cancelado</span>';
 				break;
 			}
-
+			$perc = @$conexion->obtenerlista($querys3->getAssAddedActivities('', $id, 2));
+			$ded = @$conexion->obtenerlista($querys3->getAssAddedActivities('', $id, 1));
+			$sumP = 0;
+			$sumD = 0;
+			foreach ($perc as $key) {
+				$sumP+= $key->monto;
+			}
+			foreach ($ded as $key) {
+				$sumD+= $key->monto;
+			}
+			$jsondata['perceptions'] = number_format($sumP, 2);
+			$jsondata['deductions'] = number_format($sumD, 2);
+			$jsondata['totalAmount'] = number_format(floatval($resp['total_raya'] + $sumP - $sumD),2);
 			$jsondata['remarks'] = $resp['observaciones'];
 			$jsondata['registerDate'] = date('d/m/y', strtotime($resp['fecha_registro']));
 		break;
@@ -427,7 +459,6 @@ switch($_POST['opt']){
 			$resp = @$conexion->fetch_array($querys3->searchAdmPayments($id));
 			$employee = @$conexion->fetch_array($querys3->getEmpleadosById($resp['id_empleado']));
 			$jsondata['employee'] = $employee['nombre'].' '.$employee['apellido_paterno'].' '.$employee['apellido_materno'];
-			$jsondata['totalAmount'] = number_format(floatval($resp['total_nomina']),2);
 			$jsondata['foodAmount'] = number_format(floatval($resp['alimentos']),2);
 			$jsondata['baseAmount'] = number_format(floatval($resp['sueldo']),2);
 			$jsondata['dateStart'] = date('d/m/Y', strtotime($resp['fecha_inicio']));
@@ -443,7 +474,19 @@ switch($_POST['opt']){
 				$jsondata['status'] = '<span class="badge progress-bar-danger">Cancelado</span>';
 				break;
 			}
-
+			$perc = @$conexion->obtenerlista($querys3->getAssAdmAddedActivities('', $id, 2));
+			$ded = @$conexion->obtenerlista($querys3->getAssAdmAddedActivities('', $id, 1));
+			$sumP = 0;
+			$sumD = 0;
+			foreach ($perc as $key) {
+				$sumP+= $key->monto;
+			}
+			foreach ($ded as $key) {
+				$sumD+= $key->monto;
+			}
+			$jsondata['perceptions'] = number_format($sumP, 2);
+			$jsondata['deductions'] = number_format($sumD, 2);
+			$jsondata['totalAmount'] = number_format(floatval($resp['total_nomina'] + $sumP - $sumD),2);
 			$jsondata['remarks'] = $resp['observaciones'];
 			$jsondata['registerDate'] = date('d/m/y', strtotime($resp['fecha_registro']));
 		break;

@@ -1005,6 +1005,7 @@ function listEmpCategories(){
 		dataType: 'HTML',
 		success: function(data){
 			$('#cntnListEmpCategory').html(data);
+			loadDataTable('listEmpCategory', false);
 		}
 	})
 }
@@ -1213,6 +1214,8 @@ function seePaymentDetails(id){
 			$('#totalPaymentModal').html('$'+resp.baseAmount);
 			$('#periodModal').html('de '+resp.dateStart+' a '+resp.dateFinish);
 			$('#statusModal').html(resp.status);
+			$('#perceptionsModal').html('$'+resp.perceptions);
+			$('#deductionsModal').html('$'+resp.deductions);
 			if(resp.remarks.length > 0){
 				$('#remarksModal').html(resp.remarks);
 			} else {
@@ -1627,6 +1630,8 @@ function seeAdmPaymentDetails(id){
 			$('#totalPaymentModal').html('$'+resp.baseAmount);
 			$('#periodModal').html('de ' + resp.dateStart + ' a ' + resp.dateFinish);
 			$('#statusModal').html(resp.status);
+			$('#perceptionsModal').html('$'+resp.perceptions);
+			$('#deductionsModal').html('$'+resp.deductions);
 			if(resp.remarks.length > 0){
 				$('#remarksModal').html(resp.remarks);
 			} else {
@@ -1736,6 +1741,47 @@ function deleteAssAdmAddedActivity(id, name, quant){
 							}
 					});
 			});
+}
+
+function changePaymentStatus(type, id, status){
+	switch (type) {
+		//CAMBIA EL STATUS DE UN PAGO DE RAYA
+		case 1:
+			$.ajax({
+				beforeSend: function(){
+					$('#buttonChangePaymentStatus').hide('blind');
+				},
+				type: 'POST',
+				dataType: 'JSON',
+				data: {id: id, status: status, opcion: 46},
+				url: urlSubir3,
+				success: function(resp){
+					if(resp.resp == 1){
+						listPayments();
+					}
+					$('#buttonChangePaymentStatus').show('blind');
+				}
+			});
+		break;
+		//CAMBIA EL STATUS DE UNA NÓMINA ADMINISTRATIVA
+		case 2:
+		$.ajax({
+			beforeSend: function(){
+				$('#buttonChangePaymentStatus').hide('blind');
+			},
+			type: 'POST',
+			dataType: 'JSON',
+			data: {id: id, status: status, opcion: 47},
+			url: urlSubir3,
+			success: function(resp){
+				if(resp.resp == 1){
+					listAdmPayments();
+				}
+				$('#buttonChangePaymentStatus').show('blind');
+			}
+		});
+		break;
+	}
 }
 
 /*******************************************************************************/
@@ -2688,6 +2734,7 @@ function listInsFuelExps(){
 		dataType: 'HTML',
 		success: function(data){
 			$('#cntnListInsFuelExp').html(data);
+			loadDataTable('listInsFuelExp', true);
 		}
 	});
 }
@@ -2962,6 +3009,7 @@ function listStatusInsFuel(){
 		url: 'pg/status_gerencia_listado.php',
 		success: function(resp){
 			$('#cntnListStatusInsFuel').html(resp);
+			loadDataTable('list')
 		}
 	});
 }
@@ -3258,6 +3306,7 @@ $('#btnNewIncome').click(function(){
 	if($('#btnNewIncome').is(':visible')){
 		$('#btnNewIncome').slideToggle();
 	}
+	$('#opcion').val('39');
 });
 
 $('#cancelIncome').click(function(){
@@ -3268,8 +3317,23 @@ $('#cancelIncome').click(function(){
 		$('#btnNewIncome').slideToggle();
 	}
 	resetForm('frmIncome');
-	$('#opcion').val('39')
+	$('#opcion').val('39');
 });
+
+function listIncomes(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListIncomes').html(cargando);
+		},
+		url: 'pg/ingresos_listado.php',
+		dataType: 'HTML',
+		type: 'POST',
+		success: function(data){
+			$('#cntnListIncomes').html(data);
+			loadDataTable('listIncomes', true);
+		}
+	});
+}
 
 $('#frmIncome').submit(function(event){
 	event.preventDefault();
@@ -3315,21 +3379,82 @@ $('#frmIncome').submit(function(event){
 	}
 });
 
-function listIncomes(){
+function editIncome(id){
+	if($('#frmIncome').is(':hidden')){
+		$('#frmIncome').slideToggle();
+	}
+	if($('#btnNewIncome').is(':visible')){
+		$('#btnNewIncome').slideToggle();
+	}
 	$.ajax({
 		beforeSend: function(){
-			$('#cntnListIncomes').html(cargando);
+			$('#respServer').html(cargando);
 		},
-		url: 'pg/ingresos_listado.php',
-		dataType: 'HTML',
 		type: 'POST',
-		success: function(data){
-			$('#cntnListIncomes').html(data);
+		dataType: 'JSON',
+		data: {id: id, opt: 18},
+		url: urlConsultas3,
+		success: function(resp){
+			console.log(resp);
+			$('#respServer').html('');
+			$('#billNum').val(resp.billNum);
+			$('#billDate').val(resp.billDate);
+			$('#chargeDate').val(resp.chargeDate);
+			$('#concept').val(resp.concept);
+			$('#provider').val(resp.provider);
+			$('#conceptText').val(resp.conceptText);
+			$('#withhold').val(resp.withhold);
+			$('#repAdvance').val(resp.repAdvance);
+			$('#repAdvance').keyup();
+			$('#repIVA').val(resp.repIVA);
+			$('#subtotal').val(resp.subtotal);
+			$('#subtotal').keyup();
+			$('#iva').val(resp.iva)
+			$('#id').val(id);
+			$('#opcion').val('40');
+			$('#provider').select2().next().show();
+			$('#concept').select2().next().show();
 		}
 	});
 }
 
+function deleteIncome(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el ingreso <strong>#' + id + ', de concepto:</strong> \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 20};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listIncomes();
+										$('#cancelIncome').trigger('click');
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+
+							}
+					});
+	});
+}
+
 function listAssConceptsAcc(id){
+	$('#assignConceptAccModalLabel').html('Retenciones');
+	$('#fillIncome').removeAttr('style');
+	$('#viewIncome').attr('style', 'display: none;');
 	$.ajax({
 		beforeSend: function(){
 			$('#cntnListIncomesModal').html(cargando);
@@ -3339,9 +3464,117 @@ function listAssConceptsAcc(id){
 		dataType: 'HTML',
 		type: 'POST',
 		success: function (data){
+			$('#idModal').val(id);
 			$('#cntnListIncomesModal').html(data);
 		}
 	});
+}
+
+$('#frmRepModal').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+		beforeSend: function(){
+			$('#buttonModal').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		data: formData,
+		url: urlSubir3,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			if(resp.resp == 1){
+				$('#buttonModal').html('<button type="submit" class="btn btn-primary btn-block">Agregar concepto</button>');
+				listAssConceptsAcc($('#idModal').val());
+			} else {
+				$('#buttonModal').html('<button type="submit" class="btn btn-primary btn-block">Agregar concepto</button>');
+				let opciones = {
+	  			appendTo:'#frmIncome',
+	  			minWidth:300,
+	  			maxWidth: 350,
+	  		};
+	  		parent.mensaje(resp.msg,'danger',opciones);
+			}
+			resetForm('frmRepModal');
+		}
+	});
+});
+
+function deleteConceptIncome(id, name){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el concepto <strong>#' + id + ', de nombre:</strong> \''+ name +'\'',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 21};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listAssConceptsAcc($('#idModal').val());
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+
+							}
+					});
+	});
+}
+
+function viewIncomeDetails(id){
+	$('#assignConceptAccModalLabel').html('Detalles de la factura');
+	$('#fillIncome').attr('style', 'display: none;');
+	$('#viewIncome').removeAttr('style');
+	$.ajax({
+		beforeSend: function(){
+			$('#idIncomeModal').html('Cargando...');
+			$('#incomeNumberModal').html('Cargando...');
+			$('#billDateModal').html('Cargando...');
+			$('#chargeDateModal').html('Cargando...');
+			$('#typeConceptModal').html('Cargando...');
+			$('#providerModal').html('Cargando...');
+			$('#conceptTextModal').html('Cargando...');
+			$('#withholdModal').html('Cargando...');
+			$('#repAdvanceModal').html('Cargando...');
+			$('#repIVAModal').html('Cargando...');
+			$('#subtotalModal').html('Cargando...');
+			$('#ivaModal').html('Cargando...');
+			$('#totalAmountModal').html('Cargando...');
+		},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: {id: id, opt: 18},
+		 success: function(resp){
+			 $('#idIncomeModal').html(id);
+ 			$('#incomeNumberModal').html(resp.billNum);
+ 			$('#billDateModal').html(resp.billDate);
+ 			$('#chargeDateModal').html(resp.chargeDate);
+ 			$('#typeConceptModal').html(resp.textConcept);
+ 			$('#providerModal').html(resp.textProvider);
+ 			$('#conceptTextModal').html(resp.conceptText);
+ 			$('#withholdModal').html(resp.withhold+'%');
+ 			$('#repAdvanceModal').html('$'+formatMoney(resp.repAdvance));
+ 			$('#repIVAModal').html(resp.repIVA+'%');
+ 			$('#subtotalModal').html('$'+formatMoney(resp.subtotal));
+ 			$('#ivaModal').html(resp.iva+'%');
+ 			$('#totalAmountModal').html('$'+formatMoney(resp.totalAmount));
+		 }
+
+	})
 }
 
 /*******************************************************************************/
@@ -3362,6 +3595,7 @@ function listEmpDepts(){
 		dataType: 'HTML',
 		success: function(data){
 				$('#cntnListEmpDept').html(data);
+				loadDataTable('listEmpDept', true);
 		}
 	});
 }
@@ -3618,4 +3852,8 @@ function isEmpty(obj){
 		opt = false;
 	}
 	return opt;
+}
+
+function formatMoney(number) {
+	return parseFloat(number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
