@@ -18,23 +18,24 @@
   $busqueda    = $funciones->limpia($_POST['busqueda']);
   $tipoCte     = $funciones->limpia($_POST['tipoCteBusq']);
   $modalidad   = $funciones->limpia($_POST['modalidadBusq']);
+  $idPropiedad = $funciones->limpia($_POST['idPropiedad']);
 
   $aTipo = array(1 => 'Arrendatario', 2 => 'Comprador');
   $aModalidad = array(1 => 'Infonavit', 2 => 'Fovissste', 3 => 'Bancario', 4 => 'Contado', 5 => 'Otra');
-
-  @$conexion->obtenerlista($querys->getClientesData('', $optSelected, $busqueda, $tipoCte, $modalidad));
+  //exit($querys->getClientesData('', $optSelected, $busqueda, $tipoCte, $modalidad, $idPropiedad));
+  @$conexion->obtenerlista($querys->getClientesData('', $optSelected, $busqueda, $tipoCte, $modalidad, $idPropiedad));
   $totRegistros = $conexion->numregistros();
 
   $limite = 5;
   $inicio = ($pagina - 1) * $limite;
   $totalPaginas = ceil($totRegistros / $limite);
-  $listado = @$conexion->obtenerlista($querys->getClientesData('', $optSelected, $busqueda, $tipoCte, $modalidad)." LIMIT ".$inicio.','.$limite);
+  $listado = @$conexion->obtenerlista($querys->getClientesData('', $optSelected, $busqueda, $tipoCte, $modalidad, $idPropiedad)." LIMIT ".$inicio.','.$limite);
 
     //------------------------------------
       $pag = new Paginador();
-      $pag->setCantidadRegistros($limite);
+      $pag->setCantidadRegistros($limite);                                
       $pag->setCantidadEnlaces(7);
-      $datos = $pag->paginar($pagina, $totRegistros);
+      $datos = $pag->paginar($pagina, $totRegistros);    
       if(!$datos){
          $currentPage = 1;
       }else{
@@ -42,7 +43,7 @@
           if($key['active']) $currentPage = $key['vista'];
         }
       }
-
+    
     //------------------------------------
 
   if($totRegistros > 0){
@@ -50,7 +51,7 @@
 <table id="listCloset" class="table table-bordered table-striped">
   <thead>
     <tr>
-      <th class="text-left" style="width:35%;">&nbsp;</th>
+      <th class="text-left" style="width:35%;">&nbsp;</th>      
       <th class="text-center" style="width:15%;">Tipo</th>
       <th class="text-center" style="width:10%;">Modalidad</th>
       <th class="text-center" style="width:20%;">Propiedades Asignadas</th>
@@ -80,11 +81,11 @@
       <td class="text-left v-align pt_2em">
         <p class="mg-1em"><label>RFC:</label> <strong><cite><?= $key->rfc ?></cite></strong></p>
         <p class="mg-1em"><label>CURP:</label> <strong><cite><?= $key->curp ?></cite></strong></p>
-        <p class="mg-1em"><label>NOMBRE:</label> <?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?></p>
+        <p class="mg-1em"><label>NOMBRE:</label> <?= $funciones->MayusMin($key->nombre.' '.$key->apellido_p.' '.$key->apellido_m) ?></p>
         <p class="mg-1em"><label>CORREO:</label> <cite><?= $key->correo ?></cite></p>
         <p class="mg-1em"><label>TELÉFONO:</label> <cite><?= $key->telefono ?></cite></p>
         <p class="mg-1em"><label>FECHA REGISTRO:</label> <cite><?= $funciones->ordenaFechaHora($key->fecha_registro); ?></cite></p>
-      </td>
+      </td>      
       <td class="text-center v-align"><?= $aTipo[$key->id_tipo]; ?></td>
       <td class="text-center v-align"><?= $aModalidad[$key->id_modalidad].$modalidadOtro; ?></td>
       <td class="text-center v-align">
@@ -99,13 +100,13 @@
             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i> <span class="caret"></span></button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a type="button" class="cusor" title="Archivos Personales" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-archivos-cliente" onclick="cliente_archivos_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-file-archive-o"></i>Archivos Personales</a>
+                  <a type="button" class="cusor" title="Archivos Personales" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-archivos-cliente" onclick="cliente_archivos_listado(<?= $key->id_cliente ?>, '<?= $funciones->MayusMin($key->nombre.' '.$key->apellido_p.' '.$key->apellido_m) ?>');"><i class="fa fa-file-archive-o"></i>Archivos Personales</a>
                 </li>
                 <li>
-                  <a type="button" class="cusor" title="Referencias" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-referencias-cliente" onclick="cliente_referencias_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-user"></i>Referencias</a>
+                  <a type="button" class="cusor" title="Referencias" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-referencias-cliente" onclick="cliente_referencias_listado(<?= $key->id_cliente ?>, '<?= $funciones->MayusMin($key->nombre.' '.$key->apellido_p.' '.$key->apellido_m) ?>');"><i class="fa fa-user"></i>Referencias</a>
                 </li>
                 <li>
-                  <a type="button" class="cusor" title="Seguimiento" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-interes-cliente" onclick="cliente_interes_listado(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-building" ></i>Seguimiento</a>
+                  <a type="button" class="cusor" title="Seguimiento" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-interes-cliente" onclick="cliente_interes_listado(<?= $key->id_cliente ?>, '<?= $funciones->MayusMin($key->nombre.' '.$key->apellido_p.' '.$key->apellido_m) ?>');"><i class="fa fa-building" ></i>Seguimiento</a>
                 </li>
               </ul>
         </div>
@@ -114,7 +115,7 @@
         <?php }
           if($_SESSION["dUsuario"]['eliminar'] == 1){
         ?>
-          <button type="button" class="btn btn-danger btn-sm" onclick="eliminarCliente(<?= $key->id_cliente ?>, '<?= $key->nombre.' '.$key->apellido_p.' '.$key->apellido_m ?>');"><i class="fa fa-trash"></i></button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="eliminarCliente(<?= $key->id_cliente ?>, '<?= $funciones->MayusMin($key->nombre.' '.$key->apellido_p.' '.$key->apellido_m) ?>');"><i class="fa fa-trash"></i></button>
         <?php } ?>
       </td>
     </tr>
@@ -125,7 +126,7 @@
       <th colspan="7">
         <nav style="width: 100%!important;">
                         <span style="float: left;">
-                            <?php
+                            <?php 
                             if($datos){
                                 echo '
                                     <span style="color:#464949!important;">Resultados encontrados: <b>'.$totRegistros.'</b></span>
@@ -142,10 +143,10 @@
                                         <li class="page-item"><a  class="page-link" href="javascript:clientes_listado(<?php echo $enlace['numero'] ?>);"><?php echo $enlace['vista']; ?></a></li><?php
                                     }else{ ?>
                                         <li class="page-item active" ><a  class="page-link"><?php echo $enlace['vista']; ?></a></li>
-                            <?php
+                            <?php 
                                     }
                                 }
-                            }
+                            }       
                             ?>
                         </ul>
                     </nav>

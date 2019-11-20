@@ -30,6 +30,8 @@
       <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
       <!--Magnific Popu-->
       <link rel="stylesheet" href="bower_components/magnific-popup/magnific-popup.css">
+      <!-- bootstrap-toggle -->
+      <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
       <!-- Theme style -->
       <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
       <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -37,8 +39,8 @@
       <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
        <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
        <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="plugins/iCheck/all.css">
-
+        <link rel="stylesheet" href="plugins/iCheck/all.css">
+       
       <!-- style -->
       <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -93,7 +95,8 @@
             </footer>
         </div>
         <!-- Google Maps -->
-         <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAhwvP2m1CQmeYARAKBXVLrB0LjA5b2s1o&libraries=drawing,visualization,geometry"></script>
+        <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAhwvP2m1CQmeYARAKBXVLrB0LjA5b2s1o&libraries=drawing,visualization,geometry"></script>
+        <script src="js/scriptsGoogleMaps.js"></script>
         <!-- jQuery 3 -->
         <script src="bower_components/jquery/dist/jquery-3.4.1.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
@@ -113,7 +116,7 @@
         <!-- FastClick -->
         <script src="bower_components/fastclick/lib/fastclick.js"></script>
         <!-- iCheck --->
-        <script src="plugins/iCheck/icheck.min.js"></script>
+        <script src="plugins/iCheck/icheck.min.js"></script> 
         <!-- Morris.js charts -->
         <script src="bower_components/raphael/raphael.min.js"></script>
         <script src="bower_components/morris.js/morris.min.js"></script>
@@ -140,14 +143,13 @@
         <script src="plugins/input-mask/jquery.inputmask.js"></script>
         <!-- FANCYBOX -->
         <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+        <!-- bootstrap-toggle -->
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <!-- -------- -->
         <!-- magnific-popup -->
         <script src="bower_components/magnific-popup/jquery.magnific-popup.min.js"></script>
-        <!--icheck-->
-        <script src="plugins/iCheck/icheck.min.js"></script>
-        <!-- Validación Formularios-->
-        <script type="text/javascript" src="plugins/mdbB/js/popper.min.js"></script>
-        <script type="text/javascript" src="plugins/mdbB/js/mdb.min.js"></script>
+        
+     
         <!-- funciones -->
         <script src="js/sweetalert.min.js"></script>
         <script src="js/simply-toast.js"></script>
