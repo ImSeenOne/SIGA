@@ -1285,5 +1285,46 @@ break;
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($jsondata);
 	break;
+	//AGREGA UNA NUEVA SOLICITUD DE ASFALTO
+	case 48:
+		$work = $funciones->limpia($_POST['work']);
+		$workR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['requestDate']) ) ) );
+		$asphalt = $funciones->limpia($_POST['asphaltLiters']);
+		$asphaltR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['asphaltDelivery']) ) ) );
+		$emul = $funciones->limpia($_POST['emulsionLiters']);
+		$emulR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['emulsionDelivery']) ) ) );
+		$fuel = $funciones->limpia($_POST['alternateFuelLiters']);
+		$fuelR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['alternateFuelDelivery']) ) ) );
+		$date = $datos['fecha_actual'];
+		if(@$conexion->consulta($querys->addAsphaltRequest($work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR, $date)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UNA NUEVA SOLICITUD DE ASFALTO
+	case 49:
+		$id = $funciones->limpia($_POST['id']);
+		$work = $funciones->limpia($_POST['work']);
+		$workR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['requestDate']) ) ) );
+		$asphalt = $funciones->limpia($_POST['asphaltLiters']);
+		$asphaltR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['asphaltDelivery']) ) ) );
+		$emul = $funciones->limpia($_POST['emulsionLiters']);
+		$emulR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['emulsionDelivery']) ) ) );
+		$fuel = $funciones->limpia($_POST['alternateFuelLiters']);
+		$fuelR = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['alternateFuelDelivery']) ) ) );
+		$date = $datos['fecha_actual'];
+		if(@$conexion->consulta($querys->updateAsphaltRequest($id, $work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
 }
 ?>

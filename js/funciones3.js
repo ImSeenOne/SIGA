@@ -3646,16 +3646,174 @@ function editEmpDept(id){
 }
 
 function deleteEmpDept(id){
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el departamento <strong>#' + id + '</strong>',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					$.ajax({
+						data: {id: id, opt: 19},
+						url: urlEliminar3,
+						type: 'POST',
+						dataType: 'JSON',
+						success: function(resp){
+							listEmpDepts();
+						}
+					});
+	});
+
+}
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/***************************MODULO SOLICITUD ASFALTO****************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+
+$('#btnNewAsphaltRequest').click(function(){
+	if($('#frmAsphaltRequest').is(':hidden')){
+		$('#frmAsphaltRequest').slideToggle();
+	}
+	if($('#btnNewAsphaltRequest').is(':visible')){
+		$('#btnNewAsphaltRequest').slideToggle();
+	}
+});
+
+$('#cancelAsphaltRequest').click(function(){
+	if($('#frmAsphaltRequest').is(':visible')){
+		$('#frmAsphaltRequest').slideToggle();
+	}
+	if($('#btnNewAsphaltRequest').is(':hidden')){
+		$('#btnNewAsphaltRequest').slideToggle();
+	}
+	$('#opcion').val('48');
+	$('#id').val('');
+	resetForm('frmAsphaltRequest');
+});
+
+$('#frmAsphaltRequest').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
 	$.ajax({
-		data: {id: id, opt: 19},
-		url: urlEliminar3,
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
 		type: 'POST',
 		dataType: 'JSON',
+		data: formData,
+		url: urlSubir3,
+		cache: false,
+		contentType: false,
+		processData: false,
 		success: function(resp){
-			listEmpDepts();
+			if(resp.resp == 1){
+				$('#cancelAsphaltRequest').trigger('click');
+				$('#respServer').html('');
+			} else {
+				$('#respServer').html(resp.msg);
+			}
+			$('#opcion').val('48');
+			$('#id').val('');
+			listAsphaltRequests();
+		}
+	});
+});
+
+function listAsphaltRequests(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListAsphaltRequests').html(cargando);
+		},
+		url: 'pg/solicitud_asfalto_listado.php',
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+				$('#cntnListAsphaltRequests').html(data);
+				loadDataTable('listAsphaltRequests', true);
+				$(function () {
+				  $('[data-toggle="popover"]').popover({
+						container: 'body'
+					});
+				});
 		}
 	});
 }
+
+function editAsphaltRequest(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		url: urlConsultas3,
+		type: 'POST',
+		dataType: 'JSON',
+		data: {id: id, opt: 29},
+		success: function(resp){
+			if($('#frmAsphaltRequest').is(':hidden')){
+				$('#frmAsphaltRequest').slideToggle();
+			}
+			if($('#btnNewAsphaltRequest').is(':visible')){
+				$('#btnNewAsphaltRequest').slideToggle();
+			}
+			$('#work').val(resp.work);
+			$('#requestDate').val(resp.requestDate);
+			$('#asphaltLiters').val(resp.asphaltLiters);
+			$('#asphaltDelivery').val(resp.asphaltDelivery);
+			$('#emulsionLiters').val(resp.emulsionLiters);
+			$('#emulsionDelivery').val(resp.emulsionDelivery);
+			$('#alternateFuelLiters').val(resp.alternateFuelLiters);
+			$('#alternateFuelDelivery').val(resp.alternateFuelDelivery);
+			$('#id').val(id);
+			$('#opcion').val('49');
+			$('#work').select2().next().show();
+			$('#respServer').html('');
+		}
+	});
+}
+
+function deleteAsphaltRequest(id){
+	$('#cancelAsphaltRequest').trigger('click');
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el concepto <strong>#' + id + '</strong>',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					let params = {'id':id, 'opt': 22};
+					$.ajax({
+							type:    'POST',
+							url:     urlEliminar3,
+							data:    params,
+							dataType: 'JSON',
+							success: function(resp){
+								if(resp.resp == 1){
+										listAsphaltRequests();
+								} else {
+									$('#respServer').html(resp.msg);
+								}
+
+							}
+					});
+	});
+}
+
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/

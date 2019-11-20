@@ -1064,6 +1064,57 @@ public function getContracts($id = 0){
 		 return $strQuery;
 	 }
 
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /**************************MODULO SOLICITUD ASFALTO**************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+
+	 public function listAsphaltRequests($id = '', $work = '', $ord = ''){
+		 $cond = '';
+		 if($id != ''){
+			 $cond.= ' AND id_solicitud ='.$id;
+		 }
+
+		 if($work != ''){
+			 $cond.= ' AND id_obra ='.$work;
+		 }
+
+		 $order = '';
+
+		 switch ($ord) {
+			case 1:
+				$order = ' ORDER BY fecha_registro DESC';
+			break;
+			default:
+				$order = ' ORDER BY id_solicitud ASC';
+			break;
+		 }
+
+		 $strQuery = 'SELECT * FROM tbl_solicitudes_asfalto WHERE fecha_eliminado IS NULL'.$cond.$order;
+		 return $strQuery;
+	 }
+
+	 public function addAsphaltRequest($work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR, $date){
+		 $strQuery = 'INSERT INTO tbl_solicitudes_asfalto
+		 							(id_obra, fecha_entrega, litros_asfalto, entrega_asfalto, litros_emulsion,
+									entrega_emulsion, litros_combust_alt, entrega_combust, fecha_registro) VALUES
+									('.$work.', \''.$workR.'\', '.$asphalt.', \''.$asphaltR.'\', '.$emul.', \''.$emulR.'\', '.$fuel.', \''.$fuelR.'\', \''.$date.'\');';
+		 return $strQuery;
+	 }
+
+	 public function updateAsphaltRequest($id, $work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR){
+		 $strQuery = 'UPDATE tbl_solicitudes_asfalto SET id_obra = '.$work.', fecha_entrega = \''.$workR.'\', litros_asfalto = '.$asphalt.', entrega_asfalto = \''.$asphaltR.'\', litros_emulsion = '.$emul.', entrega_emulsion = \''.$emulR.'\', litros_combust_alt = '.$fuel.', entrega_combust = \''.$fuelR.'\' WHERE (id_solicitud = '.$id.');';
+		 return $strQuery;
+	 }
+
+	 public function deleteAsphaltRequest($id, $date){
+		 $strQuery = 'UPDATE tbl_solicitudes_asfalto SET fecha_eliminado = \''.$date.'\' WHERE (id_solicitud = '.$id.');';
+		 return $strQuery;
+	 }
+
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/

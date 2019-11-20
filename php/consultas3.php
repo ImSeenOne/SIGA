@@ -488,7 +488,20 @@ switch($_POST['opt']){
 			$jsondata['deductions'] = number_format($sumD, 2);
 			$jsondata['totalAmount'] = number_format(floatval($resp['total_nomina'] + $sumP - $sumD),2);
 			$jsondata['remarks'] = $resp['observaciones'];
-			$jsondata['registerDate'] = date('d/m/y', strtotime($resp['fecha_registro']));
+			$jsondata['registerDate'] = date('d/m/Y', strtotime($resp['fecha_registro']));
+		break;
+		//OBTIENE LOS DATOS DE UNA SOLICITUD DE ASFALTO PARA SER EDITADOS
+		case 29:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->listAsphaltRequests($id));
+			$jsondata['work'] = $resp['id_obra'];
+			$jsondata['requestDate'] = date('d/m/Y', strtotime($resp['fecha_entrega']));
+			$jsondata['asphaltLiters'] = $resp['litros_asfalto'];
+			$jsondata['asphaltDelivery'] = date('d/m/Y', strtotime($resp['entrega_asfalto']));
+			$jsondata['emulsionLiters'] = $resp['litros_emulsion'];
+			$jsondata['emulsionDelivery'] = date('d/m/Y', strtotime($resp['entrega_emulsion']));
+			$jsondata['alternateFuelLiters'] = $resp['litros_combust_alt'];
+			$jsondata['alternateFuelDelivery'] = date('d/m/Y', strtotime($resp['entrega_combust']));
 		break;
 
 }
