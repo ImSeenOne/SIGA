@@ -1278,7 +1278,7 @@ break;
 		$status = $funciones->limpia($_POST['status']);
 		if(@$conexion->consulta('UPDATE tbl_nomina_adm SET status = '.$status.' WHERE (id_nom_adm = '.$id.')') == 0){
 			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la nómina';
 		} else {
 			$jsondata['resp'] = 1;
 		}
@@ -1298,7 +1298,7 @@ break;
 		$date = $datos['fecha_actual'];
 		if(@$conexion->consulta($querys->addAsphaltRequest($work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR, $date)) == 0){
 			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+			$jsondata['msg'] = 'Ocurrió un error al agregar ésta solicitud';
 		} else {
 			$jsondata['resp'] = 1;
 		}
@@ -1319,7 +1319,64 @@ break;
 		$date = $datos['fecha_actual'];
 		if(@$conexion->consulta($querys->updateAsphaltRequest($id, $work, $workR, $asphalt, $asphaltR, $emul, $emulR, $fuel, $fuelR)) == 0){
 			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 'Ocurrió un error al actualizar el status de la raya';
+			$jsondata['msg'] = 'Ocurrió un error al actualizar ésta solicitud';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UN NUEVO REPORTE DE ASFALTO
+	case 50:
+		$work = $funciones->limpia($_POST['work']);
+		$reportDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['reportDate']) ) ) );
+		$asphaltLiters = $funciones->limpia($_POST['asphaltLiters']);
+		$asphaltConsumed = $funciones->limpia($_POST['asphaltConsumed']);
+		$emulsionLiters = $funciones->limpia($_POST['emulsionLiters']);
+		$emulsionConsumed = $funciones->limpia($_POST['emulsionConsumed']);
+		$termoCapacity = $funciones->limpia($_POST['termoCapacity']);
+		$plantOperator = $funciones->limpia($_POST['plantOperator']);
+		// echo $querys->addAsphaltReport($reportDate, $work, $asphaltLiters, $asphaltConsumed, $emulsionLiters, $emulsionConsumed, $termoCapacity, $plantOperator, $datos['fecha_actual']);
+		if(@$conexion->consulta($querys->addAsphaltReport($reportDate, $work, $asphaltLiters, $asphaltConsumed, $emulsionLiters, $emulsionConsumed, $termoCapacity, $plantOperator, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al agregar éste reporte';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//EDITA UN REPORTE DE ASFALTO
+	case 51:
+		$id = $funciones->limpia($_POST['id']);
+		$work = $funciones->limpia($_POST['work']);
+		$reportDate = date('Y-m-d',strtotime( str_replace('/', '-', $funciones->limpia($_POST['reportDate']) ) ) );
+		$asphaltLiters = $funciones->limpia($_POST['asphaltLiters']);
+		$asphaltConsumed = $funciones->limpia($_POST['asphaltConsumed']);
+		$emulsionLiters = $funciones->limpia($_POST['emulsionLiters']);
+		$emulsionConsumed = $funciones->limpia($_POST['emulsionConsumed']);
+		$termoCapacity = $funciones->limpia($_POST['termoCapacity']);
+		$plantOperator = $funciones->limpia($_POST['plantOperator']);
+		if(@$conexion->consulta($querys->editAsphaltReport($id, $reportDate, $work, $asphaltLiters, $asphaltConsumed, $emulsionLiters, $emulsionConsumed, $termoCapacity, $plantOperator)) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al agregar éste reporte';
+		} else {
+			$jsondata['resp'] = 1;
+		}
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($jsondata);
+	break;
+	//AGREGA UN REPORTE DE CONSUMO A UN REPORTE DE ASFALTO
+	case 52:
+		$idReport = $funciones->limpia($_POST['id']);
+		$carries = $funciones->limpia($_POST['carriesNumber']);
+		$plant = $funciones->limpia($_POST['plant']);
+		$generator = $funciones->limpia($_POST['generator']);
+		$caldrown = $funciones->limpia($_POST['caldrown']);
+		$auxiliar = $funciones->limpia($_POST['auxiliar']);
+		if(@$conexion->consulta($querys->addAsphaltReportConsumption($idReport, $carries, $plant, $generator, $caldrown, $auxiliar, $datos['fecha_actual'])) == 0){
+			$jsondata['resp'] = 0;
+			$jsondata['msg'] = 'Ocurrió un error al agregar éste reporte';
 		} else {
 			$jsondata['resp'] = 1;
 		}
@@ -1327,4 +1384,5 @@ break;
 		echo json_encode($jsondata);
 	break;
 }
+
 ?>

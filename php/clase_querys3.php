@@ -1115,6 +1115,82 @@ public function getContracts($id = 0){
 		 return $strQuery;
 	 }
 
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /**************************MODULO SOLICITUD ASFALTO**************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+	 /****************************************************************************/
+
+	 public function listAsphaltReports($id = '', $work = '', $ord = ''){
+		 $cond = '';
+		 if($id != ''){
+			 $cond.= ' AND id_reporte ='.$id;
+		 }
+
+		 if($work != ''){
+			 $cond.= ' AND id_obra ='.$work;
+		 }
+
+		 $order = '';
+
+		 switch ($ord) {
+			case 1:
+				$order = ' ORDER BY fecha_registro DESC';
+			break;
+			default:
+				$order = ' ORDER BY id_reporte ASC';
+			break;
+		 }
+
+		 $strQuery = 'SELECT * FROM tbl_reportes_asfalto WHERE fecha_eliminado IS NULL'.$cond.$order;
+		 return $strQuery;
+	 }
+
+	 public function addAsphaltReport($date, $work, $asphalt, $conAsphalt, $emul, $conEmul, $termoCapacity, $operatorName, $dateRegister){
+		 $strQuery = 'INSERT INTO tbl_reportes_asfalto
+		 							(fecha_reporte, id_obra, litros_asfalto, asfalto_consumido,
+										litros_emulsion, emulsion_consumida, capacidad_termo,
+										nombre_operador, fecha_registro) VALUES
+										(\''.$date.'\', '.$work.', '.$asphalt.', '.$conAsphalt.', '.$emul.', '.$conEmul.', '.$termoCapacity.', \''.$operatorName.'\', \''.$dateRegister.'\');';
+		 return $strQuery;
+	 }
+
+	 public function editAsphaltReport($id, $reportDate, $work, $asphaltLiters, $asphaltConsumed, $emulsionLiters, $emulsionConsumed, $termoCapacity, $plantOperator){
+		 $strQuery = 'UPDATE tbl_reportes_asfalto SET fecha_reporte = \''.$reportDate.'\', id_obra = '.$work.', litros_asfalto = '.$asphaltLiters.', asfalto_consumido = '.$asphaltConsumed.', litros_emulsion = '.$emulsionLiters.', emulsion_consumida = '.$emulsionConsumed.', capacidad_termo = '.$termoCapacity.', nombre_operador = \''.$plantOperator.'\' WHERE (id_reporte = '.$id.');';
+		 return $strQuery;
+	 }
+
+	 public function deleteAsphaltReport($id, $date){
+		 $strQuery = 'UPDATE tbl_reportes_asfalto SET fecha_eliminado = \''.$date.'\' WHERE (id_reporte = '.$id.');';
+		 return $strQuery;
+	 }
+
+	 public function listAsphaltReportConsumption($id, $idReport){
+		 $cond = '';
+
+		 if($id != ''){
+			 $cond = ' AND id_consumo = '.$id;
+		 }
+
+		 if($idReport != ''){
+			 $cond = ' AND id_reporte = '.$idReport;
+		 }
+
+		 $strQuery = 'SELECT * FROM tbl_reporte_asfalto_consumo WHERE fecha_eliminado IS NULL'.$cond;
+		 return $strQuery;
+	 }
+
+	 public function addAsphaltReportConsumption($idReport, $carries, $plant, $generator, $caldrown, $auxiliar, $date){
+		 $strQuery = 'INSERT INTO tbl_reporte_asfalto_consumo (id_reporte, numero_viajes, consumo_planta, consumo_generador, consumo_caldera, consumo_auxiliar, fecha_registro) VALUES ('.$idReport.', '.$carries.','.$plant.', '.$generator.', '.$caldrown.', '.$auxiliar.', \''.$date.'\');';
+		 return $strQuery;
+	 }
+
+	 public function deleteAsphaltReportConsumption($id, $date){
+		 $strQuery = 'UPDATE tbl_reporte_asfalto_consumo SET fecha_eliminado = \''.$date.'\' WHERE (id_consumo = '.$id.');';
+		return $strQuery;
+	 }
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/

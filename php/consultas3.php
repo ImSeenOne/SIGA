@@ -503,7 +503,19 @@ switch($_POST['opt']){
 			$jsondata['alternateFuelLiters'] = $resp['litros_combust_alt'];
 			$jsondata['alternateFuelDelivery'] = date('d/m/Y', strtotime($resp['entrega_combust']));
 		break;
-
+		//OBTIENE LOS DATOS DE UN REPORTE DE ASFALTO PARA SER EDITADOS
+		case 30:
+			$id = $funciones->limpia($_POST['id']);
+			$resp = @$conexion->fetch_array($querys3->listAsphaltReports($id));
+			$jsondata['work'] = $resp['id_obra'];
+			$jsondata['reportDate'] = date('d/m/Y', strtotime($resp['fecha_reporte']));
+			$jsondata['asphaltLiters'] = $resp['litros_asfalto'];
+			$jsondata['asphaltConsumed'] = $resp['asfalto_consumido'];
+			$jsondata['emulsionLiters'] = $resp['litros_emulsion'];
+			$jsondata['emulsionConsumed'] = $resp['emulsion_consumida'];
+			$jsondata['termoCapacity'] = $resp['capacidad_termo'];
+			$jsondata['plantOperator'] = $resp['nombre_operador'];
+		break;
 }
 
 header('Content-type: application/json; charset=utf-8');

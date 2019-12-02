@@ -3786,7 +3786,7 @@ function deleteAsphaltRequest(id){
 	swal({
 				html: true,
 				title: '¿Está seguro?',
-				text: 'Se eliminará el concepto <strong>#' + id + '</strong>',
+				text: 'Se eliminará la solicitud <strong>#' + id + '</strong>',
 				type: 'warning',
 				showCancelButton: true,
 				cancelButtonClass: 'btn-primary',
@@ -3816,6 +3816,243 @@ function deleteAsphaltRequest(id){
 
 /*******************************************************************************/
 /*******************************************************************************/
+/*******************************************************************************/
+/*****************************REPORTE DE ASFALTO********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+$('#btnNewAsphaltReport').click(function(){
+	if($('#frmAsphaltReport').is(':hidden')){
+		$('#frmAsphaltReport').slideToggle();
+	}
+	if($('#btnNewAsphaltReport').is(':visible')){
+		$('#btnNewAsphaltReport').slideToggle();
+	}
+});
+
+$('#cancelAsphaltReport').click(function(){
+	if($('#frmAsphaltReport').is(':visible')){
+		$('#frmAsphaltReport').slideToggle();
+	}
+	if($('#btnNewAsphaltReport').is(':hidden')){
+		$('#btnNewAsphaltReport').slideToggle();
+	}
+	$('#opcion').val('50');
+	$('#id').val('');
+	resetForm('frmAsphaltReport');
+	$('#work').select2().next().show();
+});
+
+function listAsphaltReports(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListAsphaltReports').html(cargando);
+		},
+		url: 'pg/reporte_asfalto_listado.php',
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+				$('#cntnListAsphaltReports').html(data);
+				loadDataTable('listAsphaltReports', true);
+				$(function () {
+				  $('[data-toggle="popover"]').popover({
+						container: 'body'
+					});
+				});
+		}
+	});
+}
+
+$('#frmAsphaltReport').submit(function(event){
+	event.preventDefault();
+	if($('#work').val()>0){
+		let formData = new FormData($(this)[0]);
+		$.ajax({
+			beforeSend: function(){
+				$('#respServer').html(cargando);
+			},
+			type: 'POST',
+			dataType: 'JSON',
+			data: formData,
+			url: urlSubir3,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(resp){
+				if(resp.resp == 1){
+					$('#cancelAsphaltReport').trigger('click');
+					$('#respServer').html('');
+					$('#opcion').val('50');
+					$('#id').val('');
+					listAsphaltReports();
+				} else {
+					$('#respServer').html('<div class="text-danger">'+resp.msg+'</div>');
+				}
+			}
+		});
+	} else {
+		let opciones = {
+			appendTo:'#frmAsphaltReport',
+			minWidth:300,
+			maxWidth: 350,
+		};
+		parent.mensaje("Debes seleccionar una obra",'warning',opciones);
+	}
+
+});
+
+function editAsphaltReport(id){
+	$.ajax({
+		beforeSend: function(){
+			$('#respServer').html(cargando);
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		url: urlConsultas3,
+		data: {id: id, opt: 30},
+		success: function(resp){
+			$('#work').val(resp.work);
+			$('#work').select2().next().show();
+			$('#reportDate').val(resp.reportDate);
+			$('#asphaltLiters').val(resp.asphaltLiters);
+			$('#asphaltConsumed').val(resp.asphaltConsumed);
+			$('#emulsionLiters').val(resp.emulsionLiters);
+			$('#emulsionConsumed').val(resp.emulsionConsumed);
+			$('#termoCapacity').val(resp.termoCapacity);
+			$('#plantOperator').val(resp.plantOperator);
+			$('#btnNewAsphaltReport').trigger('click');
+			$('#opcion').val(51);
+			$('#id').val(id);
+			$('#respServer').html('');
+		}
+	});
+}
+
+function deleteAsphaltReport(id){
+	$('#cancelAsphaltReport').trigger('click');
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el reporte <strong>#' + id + '</strong>',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					$.ajax({
+						url: urlEliminar3,
+						data: {id: id, opt: 23},
+						type: 'POST',
+						dataType: 'JSON',
+						success: function(resp){
+							if(resp.resp == 1){
+								listAsphaltReports();
+							}
+						}
+					});
+	});
+
+}
+
+$('#btnNewAsphalftReportConsumption').click(function(){
+	if($('#frmAsphaltReportConsumption').is(':hidden')){
+		$('#frmAsphaltReportConsumption').slideToggle();
+	}
+	if($('#btnNewAsphalftReportConsumption').is(':visible')){
+		$('#btnNewAsphalftReportConsumption').slideToggle();
+	}
+});
+
+$('#cancelAsphalftReportConsumption').click(function(){
+	if($('#frmAsphaltReportConsumption').is(':visible')){
+		$('#frmAsphaltReportConsumption').slideToggle();
+	}
+	if($('#btnNewAsphalftReportConsumption').is(':hidden')){
+		$('#btnNewAsphalftReportConsumption').slideToggle();
+	}
+	resetForm('frmAsphaltReportConsumption');
+});
+
+function listAsphaltReportConsumptions(id, name){
+	$('#assignAsphaltReportConsumptionLabel').html('Obra: '+name);
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListAsphaltReportsConsumption').html(cargando);
+		},
+		data: {id: id},
+		url: 'pg/reporte_asfalto_modal_listado.php',
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+				$('#cntnListAsphaltReportsConsumption').html(data);
+				loadDataTable('listAsphaltReportsConsumption', true);
+				$('#idModal').val(id);
+		}
+	});
+}
+
+$('#frmAsphaltReportConsumption').submit(function(event){
+	event.preventDefault();
+	let formData = new FormData($(this)[0]);
+	$.ajax({
+		beforeSend:	function(){
+			$('#respServerModal').html(cargando);
+			$('#buttonModal').slideToggle();
+		},
+		type: 'POST',
+		dataType: 'JSON',
+		url: urlSubir3,
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(resp){
+			$('#respServerModal').html('');
+			$('#buttonModal').slideToggle();
+			if(resp.resp == 1){
+				$('#cancelAsphalftReportConsumption').trigger('click');
+				listAsphaltReportConsumptions($('#idModal').val());
+			} else {
+				$('#respServerModal').html('<div class="text-danger">'+resp.msg+'</div>')
+			}
+		}
+	});
+});
+
+function deleteAsphaltConsumption(id){
+	$('#cancelAsphalftReportConsumption').trigger('click');
+	swal({
+				html: true,
+				title: '¿Está seguro?',
+				text: 'Se eliminará el reporte <strong>#' + id + '</strong>',
+				type: 'warning',
+				showCancelButton: true,
+				cancelButtonClass: 'btn-primary',
+				confirmButtonColor: '#DD6B55',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				closeOnConfirm: true
+			},
+			function(){
+					$.ajax({
+						url: urlEliminar3,
+						data: {id: id, opt: 24},
+						type: 'POST',
+						dataType: 'JSON',
+						success: function(resp){
+							if(resp.resp == 1){
+								listAsphaltReportConsumptions($('#idModal').val());
+							}
+						}
+					});
+	});
+}
+
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
