@@ -4061,6 +4061,10 @@ function deleteAsphaltConsumption(id){
 /*******************************************************************************/
 /*******************************************************************************/
 
+function openPDF(id){
+	window.open('php/imprimir3.php?opcion=1&idProperty='+id,'blank');
+}
+
 $("input[data-type='currency']").on({
     keyup: function() {
       formatCurrency($(this));

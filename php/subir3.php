@@ -422,185 +422,163 @@ break;
 	break;
 
 	//AGREGA UN NUEVO CONTRATO
-	case 12:
-	//$ = $funciones->limpia($_POST['']);
-		$dateContractTmp = $funciones->limpia($_POST['dateContract']);
-		$validityTmp = $funciones->limpia($_POST['contractValidity']);
+		case 12:
+			$dateContractTmp = $funciones->limpia($_POST['dateContract']);
+			$validityTmp = $funciones->limpia($_POST['contractValidity']);
 
-		$validity = explode("/", $validityTmp);
-		$dateContract = explode("/", $dateContractTmp);
+			$validity = explode("/", $validityTmp);
+			$dateContract = explode("/", $dateContractTmp);
 
-		$property = $funciones->limpia($_POST['propertySelected']);
-		$period = $funciones->limpia($_POST['period']);
-		$client = $funciones->limpia($_POST['clientSelected']);
-		$type = $funciones->limpia($_POST['contractType']);
-		$remarks = $funciones->limpia($_POST['remarks']);
-		$amountTmp = $funciones->limpia($_POST['contractAmount']);
-		$hitchTmp = $funciones->limpia($_POST['hitch']);
+			$property = $funciones->limpia($_POST['propertySelected']);
+			$period = $funciones->limpia($_POST['period']);
+			$client = $funciones->limpia($_POST['clientSelected']);
+			$type = $funciones->limpia($_POST['contractType']);
+			$remarks = $funciones->limpia($_POST['remarks']);
+			$amountTmp = $funciones->limpia($_POST['contractAmount']);
+			$hitchTmp = $funciones->limpia($_POST['hitch']);
 
-		$dev = $funciones->limpia($_POST['idDevelopment']);
+			$dev = $funciones->limpia($_POST['idDevelopment']);
 
-		$res = @$conexion->obtenerlista($querys->getListadoDesarrollo($dev));
+			$res = @$conexion->obtenerlista($querys->getListadoDesarrollo($dev));
 
-		foreach ($res as $key) {
-			$folio=$key->alias;
-		}
-		$folio.="-";
-		$folios = @$conexion->obtenerlista($querys->checkExistingFolio($folio));
-		$major = "0001";
-		$pre = "000";
-		foreach ($folios as $key) {
-			$tmp = explode("-",$key->folio);
-			if(((int)$major)<((int)$tmp[1])){
-				if(((int)$tmp[1])+1 > 10 && ((int)$tmp[1])+1 < 100){$pre = "00";}
-
-				if(((int)$tmp[1])+1 > 100 && ((int)$tmp[1])+1 < 1000){$pre = "0";}
-
-				if(((int)$tmp[1])+1 > 1000 && ((int)$tmp[1])+1 < 10000){$pre="";}
-				$value=((int)$tmp[1])+2;
-				$major = $pre.$value;
+			foreach ($res as $key) {
+				$folio=$key->alias;
 			}
-		}
-		$folio.=$major;
+			$folio.="-";
+			$folios = @$conexion->obtenerlista($querys->checkExistingFolio($folio));
+			$major = "0001";
+			$pre = "000";
+			foreach ($folios as $key) {
+				$tmp = explode("-",$key->folio);
+				if(((int)$major)<((int)$tmp[1])){
+					if(((int)$tmp[1])+1 > 10 && ((int)$tmp[1])+1 < 100){$pre = "00";}
 
-		switch ($type) {
-			case '1':
-					$lessee = $funciones->limpia($_POST['contractLessee']);
-					$owner = 0;
-				break;
+					if(((int)$tmp[1])+1 > 100 && ((int)$tmp[1])+1 < 1000){$pre = "0";}
 
-			case '2':
-				$owner = $funciones->limpia($_POST['contractOwner']);
-				$lessee = 0;
-			break;
-		}
-
-		$amount = str_replace(",", "", $amountTmp);
-		$hitch = str_replace(",", "", $hitchTmp);
-
-		if(isset($_FILES["flContract"]["tmp_name"]) and $_FILES["flContract"]["tmp_name"] != ""){
-				if($upload->load("flContract") === false){
-					echo '<script languaje="javascript">
-							parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
-							</script>';
-					exit(0);
+					if(((int)$tmp[1])+1 > 1000 && ((int)$tmp[1])+1 < 10000){$pre="";}
+					$value=((int)$tmp[1])+2;
+					$major = $pre.$value;
 				}
-				$archivo = "archivos/contratos/".$upload->nombre_final;
-				$upload->setisimage(false);
-				if($upload->save('../'.$archivo) === false){
-					echo '<script languaje="javascript">
-							parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
-							</script>';
-					exit(0);
-				}
-				$datos['flContract'] = $archivo;
-		}else{
+			}
+			$folio.=$major;
+			$owner = $funciones->limpia($_POST['contractOwner']);
+			$lessee = 0;
+
+
+			$amount = str_replace(",", "", $amountTmp);
+			$hitch = str_replace(",", "", $hitchTmp);
+
+			if(isset($_FILES["flContract"]["tmp_name"]) and $_FILES["flContract"]["tmp_name"] != ""){
+					if($upload->load("flContract") === false){
+						echo '<script languaje="javascript">
+								parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
+								</script>';
+						exit(0);
+					}
+					$archivo = "archivos/contratos/".$upload->nombre_final;
+					$upload->setisimage(false);
+					if($upload->save('../'.$archivo) === false){
+						echo '<script languaje="javascript">
+								parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
+								</script>';
+						exit(0);
+					}
+					$datos['flContract'] = $archivo;
+			}else{
 				$datos['flContract'] = null;
-		}
-
-		if($conexion->consulta($querys->addContract($folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
-			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 0;
-		} else {
-			$jsondata['resp'] = 1;
-		}
-
-		header('Content-type: application/json; charset=utf-8');
-		echo json_encode($jsondata);
-	break;
-
-	//edita un contrato
-	case 13:
-
-		$id = $funciones->limpia($_POST['idContract']);
-
-		$dateContractTmp = $funciones->limpia($_POST['dateContract']);
-		$validityTmp = $funciones->limpia($_POST['contractValidity']);
-
-		$validity = explode("-", $validityTmp);
-		$dateContract = explode("-", $dateContractTmp);
-
-		$property = $funciones->limpia($_POST['propertySelected']);
-		$client = $funciones->limpia($_POST['clientSelected']);
-		$type = $funciones->limpia($_POST['contractType']);
-		$remarks = $funciones->limpia($_POST['remarks']);
-		$amountTmp = $funciones->limpia($_POST['contractAmount']);
-		$hitchTmp = $funciones->limpia($_POST['hitch']);
-		$period =  $funciones->limpia($_POST['period']);
-		$dev = $funciones->limpia($_POST['idDevelopment']);
-
-		$res = @$conexion->obtenerlista($querys->getListadoDesarrollo($dev));
-
-		foreach ($res as $key) {
-			$folio=$key->alias;
-		}
-		$folio.="-";
-		$folios = @$conexion->obtenerlista($querys->checkExistingFolio($folio));
-		$major = "0001";
-		$pre = "000";
-		foreach ($folios as $key) {
-			$tmp = explode("-",$key->folio);
-			if(((int)$major)<((int)$tmp[1])){
-				if(((int)$tmp[1])+1 > 10 && ((int)$tmp[1])+1 < 100){$pre = "00";}
-
-				if(((int)$tmp[1])+1 > 100 && ((int)$tmp[1])+1 < 1000){$pre = "0";}
-
-				if(((int)$tmp[1])+1 > 1000 && ((int)$tmp[1])+1 < 10000){$pre="";}
-				$value=((int)$tmp[1])+2;
-				$major = $pre.$value;
+				$archivo = '';
 			}
-		}
-		$folio.=$major;
 
-		$owner = $funciones->limpia($_POST['contractOwner']);
-		$lessee = 0;
+			if($conexion->consulta($querys->addContract($folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$archivo,$remarks,$datos['fecha_actual'])) == 0){
+				$jsondata['resp'] = 0;
+				$jsondata['msg'] = 0;
+			} else {
+				$jsondata['resp'] = 1;
+			}
 
-		/*switch ($type) {
-			case '2':
-					$lessee = $funciones->limpia($_POST['contractLessee']);
-					$owner = 0;
-				break;
+			header('Content-type: application/json; charset=utf-8');
+			echo json_encode($jsondata);
+		break;
 
-			case '1':
-				$owner = $funciones->limpia($_POST['contractOwner']);
-				$lessee = 0;
-			break;
-		}*/
+		//edita un contrato
+		case 13:
 
-		$amount = str_replace(",", "", $amountTmp);
-		$hitch = str_replace(",", "", $hitchTmp);
+			$id = $funciones->limpia($_POST['idContract']);
 
-		if(isset($_FILES["flContract"]["tmp_name"]) and $_FILES["flContract"]["tmp_name"] != ""){
-				if($upload->load("flContract") === false){
-					echo '<script languaje="javascript">
-							parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
-							</script>';
-					exit(0);
+			$dateContractTmp = $funciones->limpia($_POST['dateContract']);
+			$validityTmp = $funciones->limpia($_POST['contractValidity']);
+
+			$validity = explode("/", $validityTmp);
+			$dateContract = explode("/", $dateContractTmp);
+
+
+			$property = $funciones->limpia($_POST['propertySelected']);
+			$client = $funciones->limpia($_POST['clientSelected']);
+			$type = $funciones->limpia($_POST['contractType']);
+			$remarks = $funciones->limpia($_POST['remarks']);
+			$amountTmp = $funciones->limpia($_POST['contractAmount']);
+			$hitchTmp = $funciones->limpia($_POST['hitch']);
+			$period =  $funciones->limpia($_POST['period']);
+			$dev = $funciones->limpia($_POST['idDevelopment']);
+
+			$res = @$conexion->obtenerlista($querys->getListadoDesarrollo($dev));
+
+			foreach ($res as $key) {
+				$folio=$key->alias;
+			}
+			$folio.="-";
+			$folios = @$conexion->obtenerlista($querys->checkExistingFolio($folio));
+			$major = "0001";
+			$pre = "000";
+			foreach ($folios as $key) {
+				$tmp = explode("-",$key->folio);
+				if(((int)$major)<((int)$tmp[1])){
+					if(((int)$tmp[1])+1 > 10 && ((int)$tmp[1])+1 < 100){$pre = "00";}
+
+					if(((int)$tmp[1])+1 > 100 && ((int)$tmp[1])+1 < 1000){$pre = "0";}
+
+					if(((int)$tmp[1])+1 > 1000 && ((int)$tmp[1])+1 < 10000){$pre="";}
+					$value=((int)$tmp[1])+2;
+					$major = $pre.$value;
 				}
-				$archivo = "archivos/contratos/".$upload->nombre_final;
-				$upload->setisimage(false);
-				if($upload->save('../'.$archivo) === false){
-					echo '<script languaje="javascript">
-							parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
-							</script>';
-					exit(0);
-				}
-				$datos['flContract'] = $archivo;
-		}else{
-				$datos['flContract'] = $_POST['hdFlContract'];
-		}
+			}
+			$folio.=$major;
 
-		if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$datos['flContract'],$remarks,$datos['fecha_actual'])) == 0){
-			$jsondata['resp'] = 0;
-			$jsondata['msg'] = 0;
-		} else {
-			$jsondata['resp'] = 1;
-		}
+			$owner = $funciones->limpia($_POST['contractOwner']);
+			$lessee = 0;
+			$amount = str_replace(",", "", $amountTmp);
+			$hitch = str_replace(",", "", $hitchTmp);
 
-		header('Content-type: application/json; charset=utf-8');
-		echo json_encode($jsondata);
-	break;
+			if(isset($_FILES["flContract"]["tmp_name"]) and $_FILES["flContract"]["tmp_name"] != ""){
+					if($upload->load("flContract") === false){
+						echo '<script languaje="javascript">
+								parent.msg_alerta_default("Formato de archivo no permitido...","Notificación","'.$upload->msj_error.'");
+								</script>';
+						exit(0);
+					}
+					$archivo = "archivos/contratos/".$upload->nombre_final;
+					$upload->setisimage(false);
+					if($upload->save('../'.$archivo) === false){
+						echo '<script languaje="javascript">
+								parent.msg_alerta_default("ERROR! Fallo al guardar el archivo: '.$archivo.'...","Notificación!!","'.$upload->msj_error.'");
+								</script>';
+						exit(0);
+					}
+					$datos['flContract'] = $archivo;
+			}else{
+					$datos['flContract'] = $_POST['hdFlContract'];
+			}
 
+			if($conexion->consulta($querys->updateContract($id,$folio,$client,$period,$property,$dateContract[2].'-'.$dateContract[1].'-'.$dateContract[0],$validity[2].'-'.$validity[1].'-'.$validity[0],$type,$amount,$lessee,$owner,$hitch,$datos['flContract'],$remarks,$datos['fecha_actual'])) == 0){
+				$jsondata['resp'] = 0;
+				$jsondata['msg'] = 0;
+			} else {
+				$jsondata['resp'] = 1;
+			}
+
+			header('Content-type: application/json; charset=utf-8');
+			echo json_encode($jsondata);
+		break;
 	//AGREGA UN NUEVO PAGO DE NÓMINA ADMINISTRATIVA
 	case 14:
 	$dateStart = date('Y-m-d', strtotime(str_replace("/", "-", $funciones->limpia($_POST['dateStart']))));
