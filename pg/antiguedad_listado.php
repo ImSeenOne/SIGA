@@ -29,7 +29,7 @@
          	<button type="button" class="btn btn-success btn-sm" onclick="editarRegAntiguedad(<?= $key->id_antiguedad ?>)"><i class="fa fa-edit"></i></button>
           <?php } ?>
           <?php if($_SESSION["dUsuario"]["eliminar"] == 1){?>
-         	<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash" onclick="eliminarRegAntiguedad(<?= $key->id_antiguedad ?>, '<?= $key->nombre ?>')"></i></button>
+         	<button type="button" class="btn btn-danger btn-sm" onclick="eliminarRegAntiguedad(<?= $key->id_antiguedad ?>, '<?= $key->nombre ?>')"><i class="fa fa-trash"></i></button>
           <?php } ?>
         </td>
       </tr>

@@ -4056,6 +4056,36 @@ function deleteAsphaltConsumption(id){
 /*******************************************************************************/
 /*******************************************************************************/
 /*******************************************************************************/
+/*******************************CLIENTES MOROSOS********************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function listSluggishClients(){
+	$.ajax({
+		beforeSend: function(){
+			$('#cntnListSluggishClients').html(cargando);
+		},
+		url: 'pg/morosos_listado.php',
+		type: 'POST',
+		dataType: 'HTML',
+		success: function(data){
+				$('#cntnListSluggishClients').html(data);
+				loadDataTable('listSluggishClients', true);
+				if($('#slug').val() == 1){
+					$('#buttonPrint').slideToggle();
+				}
+		}
+	});
+}
+
+function openPDFSlugClients(){
+	window.open('php/imprimir3.php?opcion=3','blank');
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
 /**************************FORMAT CURRENCY FUNCTIONS****************************/
 /*******************************************************************************/
 /*******************************************************************************/
@@ -4063,6 +4093,10 @@ function deleteAsphaltConsumption(id){
 
 function openPDF(id){
 	window.open('php/imprimir3.php?opcion=1&idProperty='+id,'blank');
+}
+
+function openPDFBuyOrder(id){
+	window.open('php/imprimir3.php?opcion=2&id='+id,'blank');
 }
 
 $("input[data-type='currency']").on({

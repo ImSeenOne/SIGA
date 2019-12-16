@@ -24,14 +24,16 @@
 switch($_POST['opt']){
 	case 1: //ELIMINAR UN REGISTRO DE DESARROLLO Y SU RESPECTIVA IMAGEN DE LA GALERÍA DE DESARROLLO
 		$id   = $funciones->limpia($_POST['id']);
-		$icono= $_POST['icono'];
+		$icono = $funciones->limpia($_POST['icono']);
 
-		if($conexion->consulta($querys->eliminaRegCatDesarrollo($id, $datos['fecha_actual'])) == 0){
+		if(@$conexion->consulta($querys->eliminaRegCatDesarrollo($id, $datos['fecha_actual'])) == 0){
 			$jsondata['resp'] = 0;
 		}else{
 			$jsondata['resp'] = 1;
-			if(unlink('../'.$icono) == false){
-				$jsondata['resp'] = 2;
+			if($icono != ''){
+				if(unlink('../'.$icono) == false){
+					$jsondata['resp'] = 2;
+				}
 			}
 		}
 

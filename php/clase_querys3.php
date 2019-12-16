@@ -43,7 +43,7 @@ class Querys3 {
 	public function eliminaRegCatDesarrollo($id, $fecha){
 		$strQuery = 'UPDATE tblc_desarrollo ';
 		$strQuery.= 'SET fecha_eliminacion = "'.$fecha.'" ';
-		$strQuery.= 'WHERE id_obras = '.$id;
+		$strQuery.= 'WHERE id_desarrollo = '.$id;
 
 		return $strQuery;
 	}
