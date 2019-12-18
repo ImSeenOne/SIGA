@@ -2,6 +2,20 @@ body{
   margin-top: 100px;
 }
 
+.email{
+  text-transform: lowercase;
+  text-decoration: none;
+  color: steelblue;
+}
+
+.upper{
+  text-transform: uppercase;
+}
+
+.proper-name{
+  text-transform: capitalize;
+}
+
 .fancy {
     font-family: sans-serif;
     color: #131e21;
@@ -78,6 +92,23 @@ body{
 
 .text-center{
   text-align: center;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.text-right{
+  text-align: right;
+}
+
+.v-mid{
+  vertical-align: middle;
+}
+
+.mt-1em{
+  margin-top: -1em!important;
+  display: block;
 }
 
 .table-wrapper{
